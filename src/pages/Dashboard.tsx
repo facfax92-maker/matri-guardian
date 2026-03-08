@@ -61,7 +61,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <OfflineIndicator />
+      <SyncStatusBar />
 
       {/* Header */}
       <header className="gradient-primary px-4 py-6 text-primary-foreground" style={{ borderRadius: '0 0 1.5rem 1.5rem' }}>
