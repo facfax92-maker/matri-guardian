@@ -15,10 +15,14 @@ const PatientDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [patient, setPatient] = useState<Patient | null>(null);
+  const [ppVisits, setPpVisits] = useState<PostpartumVisit[]>([]);
 
   useEffect(() => {
     initStorage();
-    if (id) setPatient(getPatient(id) || null);
+    if (id) {
+      setPatient(getPatient(id) || null);
+      setPpVisits(getPostpartumVisits(id));
+    }
   }, [id]);
 
   if (!patient) {
