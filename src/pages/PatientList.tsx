@@ -3,23 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { getPatients, initStorage } from '@/lib/storage';
 import { Patient, RiskLevel } from '@/lib/types';
 import { RiskBadge } from '@/components/RiskBadge';
+import { getOverdueStatus, getDaysSinceLastVisit } from '@/lib/visit-utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Plus, Search, Filter, ArrowUpDown, Clock, Users } from 'lucide-react';
+import { ArrowLeft, Plus, Search, Filter, ArrowUpDown, Clock, Users, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 type SortOption = 'name' | 'ga-desc' | 'ga-asc' | 'last-visit';
-type FilterOption = 'ALL' | RiskLevel;
-
-function isDueForVisit(patient: Patient): boolean {
-  const last = patient.visits[patient.visits.length - 1];
-  if (!last) return true;
-  const fourWeeksAgo = Date.now() - 28 * 24 * 60 * 60 * 1000;
-  return new Date(last.date).getTime() < fourWeeksAgo;
-}
+type FilterOption = 'ALL' | RiskLevel | 'OVERDUE';
 
 const PatientList = () => {
   const navigate = useNavigate();
@@ -39,7 +32,9 @@ const PatientList = () => {
       p.village.toLowerCase().includes(search.toLowerCase())
     );
 
-    if (riskFilter !== 'ALL') {
+    if (riskFilter === 'OVERDUE') {
+      result = result.filter(p => getOverdueStatus(p) !== 'none');
+    } else if (riskFilter !== 'ALL') {
       result = result.filter(p => {
         const last = p.visits[p.visits.length - 1];
         return last?.riskLevel === riskFilter;
@@ -64,11 +59,12 @@ const PatientList = () => {
   }, [patients, search, riskFilter, sortBy]);
 
   const riskCounts = useMemo(() => {
-    const counts = { ALL: patients.length, LOW: 0, MODERATE: 0, HIGH: 0 };
+    const counts = { ALL: patients.length, LOW: 0, MODERATE: 0, HIGH: 0, OVERDUE: 0 };
     patients.forEach(p => {
       const last = p.visits[p.visits.length - 1];
       if (last) counts[last.riskLevel]++;
       else counts.LOW++;
+      if (getOverdueStatus(p) !== 'none') counts.OVERDUE++;
     });
     return counts;
   }, [patients]);
@@ -104,7 +100,7 @@ const PatientList = () => {
         <div className="flex items-center gap-2">
           <Filter className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
           <div className="flex gap-1.5 overflow-x-auto">
-            {(['ALL', 'LOW', 'MODERATE', 'HIGH'] as FilterOption[]).map(level => (
+            {(['ALL', 'LOW', 'MODERATE', 'HIGH', 'OVERDUE'] as FilterOption[]).map(level => (
               <button
                 key={level}
                 onClick={() => setRiskFilter(level)}
@@ -113,11 +109,12 @@ const PatientList = () => {
                     ? level === 'ALL' ? 'bg-primary text-primary-foreground border-primary'
                     : level === 'LOW' ? 'bg-success-bg text-success-foreground border-success'
                     : level === 'MODERATE' ? 'bg-warning-bg text-warning-foreground border-warning'
-                    : 'bg-danger-bg text-danger-foreground border-danger'
+                    : level === 'HIGH' ? 'bg-danger-bg text-danger-foreground border-danger'
+                    : 'bg-warning-bg text-warning-foreground border-warning'
                     : 'bg-muted text-muted-foreground border-transparent'
                 }`}
               >
-                {level === 'ALL' ? 'All' : level} ({riskCounts[level]})
+                {level === 'ALL' ? 'All' : level === 'OVERDUE' ? '⏰ Overdue' : level} ({riskCounts[level]})
               </button>
             ))}
           </div>
@@ -143,7 +140,8 @@ const PatientList = () => {
         <div className="space-y-3">
           {processed.map((patient, i) => {
             const lastVisit = patient.visits[patient.visits.length - 1];
-            const due = isDueForVisit(patient);
+            const overdueStatus = getOverdueStatus(patient);
+            const daysSince = getDaysSinceLastVisit(patient);
             return (
               <motion.div
                 key={patient.id}
@@ -152,18 +150,26 @@ const PatientList = () => {
                 transition={{ delay: i * 0.05 }}
               >
                 <Card
-                  className="cursor-pointer hover:shadow-md transition-all card-gradient border-0 shadow-sm"
+                  className={`cursor-pointer hover:shadow-md transition-all card-gradient border-0 shadow-sm ${
+                    overdueStatus === 'urgent-overdue' ? 'ring-2 ring-danger/50' : ''
+                  }`}
                   onClick={() => navigate(`/patients/${patient.id}`)}
                 >
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <h3 className="font-semibold">{patient.name}</h3>
-                          {due && (
+                          {overdueStatus === 'urgent-overdue' && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-danger-bg text-danger-foreground text-[10px] font-bold border border-danger animate-pulse">
+                              <AlertTriangle className="h-2.5 w-2.5" />
+                              URGENT: High Risk + Overdue
+                            </span>
+                          )}
+                          {overdueStatus === 'followup-overdue' && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-warning-bg text-warning-foreground text-[10px] font-semibold border border-warning">
                               <Clock className="h-2.5 w-2.5" />
-                              DUE
+                              Follow-up Overdue
                             </span>
                           )}
                         </div>
@@ -174,6 +180,9 @@ const PatientList = () => {
                         {lastVisit && (
                           <p className="text-xs text-muted-foreground mt-1">
                             Last visit: {lastVisit.date}
+                            {overdueStatus !== 'none' && (
+                              <span className="font-medium text-warning-foreground"> ({daysSince}d ago)</span>
+                            )}
                           </p>
                         )}
                       </div>
