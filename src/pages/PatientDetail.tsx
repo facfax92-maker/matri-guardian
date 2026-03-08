@@ -29,12 +29,14 @@ const PatientDetail = () => {
   const isHighRisk = lastVisit?.riskLevel === 'HIGH';
   const hasEscalation = prevVisit && lastVisit && lastVisit.riskScore > prevVisit.riskScore;
 
-  const chartData = patient.visits.map(v => ({
+  const chartData = patient.visits.map((v, i) => ({
     name: `Visit ${v.visitNumber}`,
     score: v.riskScore,
+    systolic: v.systolic,
     date: v.date,
     ga: `${v.gestationalAge}wk`,
     riskLevel: v.riskLevel,
+    escalation: i > 0 && v.riskScore - patient.visits[i - 1].riskScore > 20,
   }));
 
   const trendIcon = (current: string | number | boolean, previous: string | number | boolean | undefined, higherIsWorse = true) => {
