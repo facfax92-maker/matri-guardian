@@ -8,12 +8,15 @@ import { migrateFromLocalStorage } from '@/lib/indexed-db';
 import { getOverdueStatus } from '@/lib/visit-utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, AlertTriangle, Plus, ChevronRight, Activity, PieChart, Bell, Clock, Moon, Sun, CalendarClock } from 'lucide-react';
+import { Users, AlertTriangle, Plus, ChevronRight, Activity, PieChart, Bell, Clock, Moon, Sun, CalendarClock, LogOut } from 'lucide-react';
 import { PieChart as RePieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/hooks/use-theme';
+import { useAuth } from '@/hooks/use-auth';
+import { Badge } from '@/components/ui/badge';
 
 const Dashboard = () => {
+  const { profile, roles, signOut } = useAuth();
   const { isDark, toggle } = useTheme();
   const navigate = useNavigate();
   const [patients, setPatients] = useState<Patient[]>([]);
