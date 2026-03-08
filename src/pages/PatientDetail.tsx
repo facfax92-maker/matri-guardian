@@ -6,7 +6,7 @@ import { RiskBadge } from '@/components/RiskBadge';
 import { CompareVisits } from '@/components/CompareVisits';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity } from 'lucide-react';
+import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User } from 'lucide-react';
 import { XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Area, ComposedChart, Tooltip } from 'recharts';
 import { motion } from 'framer-motion';
 
@@ -76,7 +76,7 @@ const PatientDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="gradient-primary px-4 py-4 text-primary-foreground">
+      <header className="gradient-primary px-4 py-4 text-primary-foreground" style={{ borderRadius: '0 0 1.5rem 1.5rem' }}>
         <div className="container max-w-lg mx-auto flex items-center gap-3">
           <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20" onClick={() => navigate('/patients')}>
             <ArrowLeft className="h-5 w-5" />
@@ -87,7 +87,7 @@ const PatientDetail = () => {
               {patient.age}y · G{patient.gravida}P{patient.para} · {patient.gestationalAge}wk
             </p>
           </div>
-          {lastVisit && <RiskBadge level={lastVisit.riskLevel} score={lastVisit.riskScore} size="md" />}
+          {lastVisit && <RiskBadge level={lastVisit.riskLevel} score={lastVisit.riskScore} size="lg" showIcon />}
         </div>
       </header>
 
@@ -95,7 +95,7 @@ const PatientDetail = () => {
         {/* Risk Escalation Alert */}
         {hasEscalation && isHighRisk && (
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
-            <Card className="border-danger bg-danger-bg">
+            <Card className="border-danger bg-danger-bg border-2">
               <CardContent className="p-4 flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-danger shrink-0 mt-0.5" />
                 <div>
@@ -111,8 +111,14 @@ const PatientDetail = () => {
         )}
 
         {/* Patient Info */}
-        <Card>
-          <CardContent className="p-4">
+        <Card className="card-gradient border-0 shadow-sm">
+          <CardHeader className="pb-2">
+            <div className="flex items-center gap-2">
+              <User className="h-4 w-4 text-primary" />
+              <CardTitle className="text-base">Patient Info</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div><span className="text-muted-foreground">Village:</span> <span className="font-medium">{patient.village}</span></div>
               <div><span className="text-muted-foreground">Phone:</span> <span className="font-medium">{patient.phone}</span></div>
@@ -124,8 +130,13 @@ const PatientDetail = () => {
 
         {/* Visit Timeline */}
         {patient.visits.length > 0 && (
-          <Card>
-            <CardHeader className="pb-2"><CardTitle className="text-base">Visit Timeline</CardTitle></CardHeader>
+          <Card className="card-gradient border-0 shadow-sm">
+            <CardHeader className="pb-2">
+              <div className="flex items-center gap-2">
+                <CalendarDays className="h-4 w-4 text-primary" />
+                <CardTitle className="text-base">Visit Timeline</CardTitle>
+              </div>
+            </CardHeader>
             <CardContent className="p-4 pt-0">
               <div className="overflow-x-auto">
                 <div className="flex items-center gap-0 min-w-max py-3">
@@ -181,7 +192,7 @@ const PatientDetail = () => {
         {/* Risk Trend Chart — Hero */}
         {chartData.length > 1 && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <Card className="border-2 border-primary/20 shadow-md">
+            <Card className="card-gradient-primary border-2 border-primary/20 shadow-md">
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-2">
                   <Activity className="h-5 w-5 text-primary" />
@@ -277,8 +288,13 @@ const PatientDetail = () => {
 
         {/* Symptom Trends Table */}
         {patient.visits.length > 0 && (
-          <Card>
-            <CardHeader className="pb-2"><CardTitle className="text-base">Symptom Trends</CardTitle></CardHeader>
+          <Card className="card-gradient border-0 shadow-sm">
+            <CardHeader className="pb-2">
+              <div className="flex items-center gap-2">
+                <Stethoscope className="h-4 w-4 text-primary" />
+                <CardTitle className="text-base">Symptom Trends</CardTitle>
+              </div>
+            </CardHeader>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
