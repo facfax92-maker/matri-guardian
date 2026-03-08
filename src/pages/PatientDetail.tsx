@@ -454,11 +454,32 @@ const PatientDetail = () => {
           </Card>
         )}
 
+        {/* Image Capture */}
+        {showImageCapture && (
+          <ImageCapture
+            patientId={patient.id}
+            patientName={patient.name}
+            onCapture={() => setShowImageCapture(false)}
+            onClose={() => setShowImageCapture(false)}
+          />
+        )}
+
+        {/* Image Gallery */}
+        <ImageGallery patientId={patient.id} />
+
         {/* Actions */}
         <div className="flex flex-col gap-3 pb-6">
           <Button className="gradient-primary text-primary-foreground border-0 h-12" onClick={() => navigate(`/patients/${patient.id}/visits/new`)}>
             <Plus className="h-4 w-4 mr-2" />
             Add New Visit
+          </Button>
+          <Button
+            variant="outline"
+            className="h-12 rounded-xl"
+            onClick={() => setShowImageCapture(true)}
+          >
+            <Camera className="h-4 w-4 mr-2" />
+            Capture Clinical Image
           </Button>
           <Button
             className="bg-gradient-to-r from-[hsl(280,60%,50%)] to-[hsl(320,60%,50%)] text-primary-foreground border-0 h-12"
