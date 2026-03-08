@@ -76,7 +76,7 @@ const PatientDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="gradient-primary px-4 py-4 text-primary-foreground">
+      <header className="gradient-primary px-4 py-4 text-primary-foreground" style={{ borderRadius: '0 0 1.5rem 1.5rem' }}>
         <div className="container max-w-lg mx-auto flex items-center gap-3">
           <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20" onClick={() => navigate('/patients')}>
             <ArrowLeft className="h-5 w-5" />
@@ -87,7 +87,7 @@ const PatientDetail = () => {
               {patient.age}y · G{patient.gravida}P{patient.para} · {patient.gestationalAge}wk
             </p>
           </div>
-          {lastVisit && <RiskBadge level={lastVisit.riskLevel} score={lastVisit.riskScore} size="md" />}
+          {lastVisit && <RiskBadge level={lastVisit.riskLevel} score={lastVisit.riskScore} size="lg" showIcon />}
         </div>
       </header>
 
