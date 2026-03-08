@@ -70,6 +70,13 @@ const App = () => (
               </ProtectedRoute>
             } />
 
+            {/* Doctor-only routes */}
+            <Route path="/hospital-portal" element={
+              <ProtectedRoute allowedRoles={['doctor', 'admin']}>
+                <HospitalPortal />
+              </ProtectedRoute>
+            } />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
