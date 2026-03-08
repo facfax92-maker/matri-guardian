@@ -413,11 +413,54 @@ const PatientDetail = () => {
           </Card>
         )}
 
+        {/* Referral Tracking */}
+        <ReferralTracker patientId={patient.id} />
+
+        {/* Postpartum Screening Results */}
+        {ppVisits.length > 0 && (
+          <Card className="border-2 border-[hsl(280,60%,50%)]/20">
+            <CardHeader className="pb-2">
+              <div className="flex items-center gap-2">
+                <Brain className="h-4 w-4 text-[hsl(280,60%,50%)]" />
+                <CardTitle className="text-base">Postpartum Screening</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-2 pt-0">
+              {ppVisits.map(ppv => {
+                const riskConfig = ppv.ppdRisk === 'high'
+                  ? { color: 'text-danger-foreground', bg: 'bg-danger-bg', border: 'border-danger', icon: ShieldAlert, label: 'High PPD Risk' }
+                  : ppv.ppdRisk === 'moderate'
+                  ? { color: 'text-warning-foreground', bg: 'bg-warning-bg', border: 'border-warning', icon: AlertTriangle, label: 'Moderate PPD Risk' }
+                  : { color: 'text-success-foreground', bg: 'bg-success-bg', border: 'border-success', icon: CheckCircle2, label: 'Low PPD Risk' };
+                const Icon = riskConfig.icon;
+                return (
+                  <div key={ppv.id} className={`flex items-center justify-between p-3 rounded-xl ${riskConfig.bg} border ${riskConfig.border}`}>
+                    <div className="flex items-center gap-2">
+                      <Icon className={`h-4 w-4 ${riskConfig.color}`} />
+                      <div>
+                        <p className={`text-xs font-semibold ${riskConfig.color}`}>{riskConfig.label}</p>
+                        <p className="text-[10px] text-muted-foreground">{ppv.date} · {ppv.weeksPostpartum}wk postpartum · Score: {ppv.edinburghScore}/10</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </CardContent>
+          </Card>
+        )}
+
         {/* Actions */}
         <div className="flex flex-col gap-3 pb-6">
           <Button className="gradient-primary text-primary-foreground border-0 h-12" onClick={() => navigate(`/patients/${patient.id}/visits/new`)}>
             <Plus className="h-4 w-4 mr-2" />
             Add New Visit
+          </Button>
+          <Button
+            className="bg-gradient-to-r from-[hsl(280,60%,50%)] to-[hsl(320,60%,50%)] text-primary-foreground border-0 h-12"
+            onClick={() => navigate(`/patients/${patient.id}/postpartum`)}
+          >
+            <Brain className="h-4 w-4 mr-2" />
+            Postpartum Screening
           </Button>
           {isHighRisk && (
             <Button className="gradient-danger text-primary-foreground border-0 h-12" onClick={() => navigate(`/patients/${patient.id}/referral`)}>
