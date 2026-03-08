@@ -1,6 +1,6 @@
-import { openDB, DBSchema, IDBPDatabase } from 'idb';
+import { openDB, IDBPDatabase } from 'idb';
 
-interface MatriCareDB extends DBSchema {
+interface MatriCareDB {
   patients: {
     key: string;
     value: {
