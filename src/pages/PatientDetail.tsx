@@ -3,10 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getPatient, initStorage } from '@/lib/storage';
 import { Patient, Visit } from '@/lib/types';
 import { RiskBadge } from '@/components/RiskBadge';
+import { CompareVisits } from '@/components/CompareVisits';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Area, ComposedChart } from 'recharts';
+import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity } from 'lucide-react';
+import { XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Area, ComposedChart, Tooltip } from 'recharts';
 import { motion } from 'framer-motion';
 
 const PatientDetail = () => {
@@ -32,7 +33,8 @@ const PatientDetail = () => {
     name: `Visit ${v.visitNumber}`,
     score: v.riskScore,
     date: v.date,
-    ga: v.gestationalAge,
+    ga: `${v.gestationalAge}wk`,
+    riskLevel: v.riskLevel,
   }));
 
   const trendIcon = (current: string | number | boolean, previous: string | number | boolean | undefined, higherIsWorse = true) => {
@@ -44,6 +46,34 @@ const PatientDetail = () => {
       : <TrendingDown className="h-3 w-3 text-success" />;
   };
 
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="bg-card border rounded-lg p-3 shadow-lg text-sm">
+          <p className="font-semibold">{data.name}</p>
+          <p className="text-muted-foreground">{data.date} · {data.ga}</p>
+          <div className="mt-1 flex items-center gap-2">
+            <span className="font-bold text-lg">{data.score}</span>
+            <RiskBadge level={data.riskLevel} size="sm" animate={false} />
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const CustomDot = (props: any) => {
+    const { cx, cy, payload } = props;
+    const color = payload.riskLevel === 'HIGH' ? 'hsl(354, 70%, 54%)' : payload.riskLevel === 'MODERATE' ? 'hsl(45, 100%, 51%)' : 'hsl(134, 61%, 41%)';
+    return (
+      <g>
+        <circle cx={cx} cy={cy} r={8} fill={color} opacity={0.2} />
+        <circle cx={cx} cy={cy} r={5} fill={color} stroke="white" strokeWidth={2} />
+      </g>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <header className="gradient-primary px-4 py-4 text-primary-foreground">
@@ -51,12 +81,13 @@ const PatientDetail = () => {
           <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20" onClick={() => navigate('/patients')}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <div>
+          <div className="flex-1">
             <h1 className="text-lg font-bold">{patient.name}</h1>
             <p className="text-sm opacity-90">
               {patient.age}y · G{patient.gravida}P{patient.para} · {patient.gestationalAge}wk
             </p>
           </div>
+          {lastVisit && <RiskBadge level={lastVisit.riskLevel} score={lastVisit.riskScore} size="md" />}
         </div>
       </header>
 
@@ -99,28 +130,47 @@ const PatientDetail = () => {
               <div className="overflow-x-auto">
                 <div className="flex items-center gap-0 min-w-max py-3">
                   {patient.visits.map((visit, i) => (
-                    <div key={visit.id} className="flex items-center">
+                    <motion.div
+                      key={visit.id}
+                      className="flex items-center"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.15 }}
+                    >
                       <div
                         className="flex flex-col items-center cursor-pointer group"
                         onClick={() => navigate(`/patients/${patient.id}/visits/${visit.id}`)}
                       >
-                        <div className={`h-10 w-10 rounded-full border-2 flex items-center justify-center text-xs font-bold transition-transform group-hover:scale-110 ${
-                          visit.riskLevel === 'LOW' ? 'border-success bg-success-bg text-success-foreground' :
-                          visit.riskLevel === 'MODERATE' ? 'border-warning bg-warning-bg text-warning-foreground' :
-                          'border-danger bg-danger-bg text-danger-foreground'
-                        }`}>
+                        <motion.div
+                          className={`h-10 w-10 rounded-full border-2 flex items-center justify-center text-xs font-bold transition-transform group-hover:scale-110 ${
+                            visit.riskLevel === 'LOW' ? 'border-success bg-success-bg text-success-foreground' :
+                            visit.riskLevel === 'MODERATE' ? 'border-warning bg-warning-bg text-warning-foreground' :
+                            'border-danger bg-danger-bg text-danger-foreground'
+                          }`}
+                          whileHover={{ scale: 1.15 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
                           V{visit.visitNumber}
-                        </div>
+                        </motion.div>
                         <p className="text-xs text-muted-foreground mt-1">{visit.date.slice(5)}</p>
                         <p className="text-xs text-muted-foreground">{visit.gestationalAge}wk</p>
                         <RiskBadge level={visit.riskLevel} size="sm" className="mt-1" />
                       </div>
                       {i < patient.visits.length - 1 && (
-                        <div className="w-12 h-0.5 bg-border mx-1 relative">
-                          <ChevronRight className="h-3 w-3 text-muted-foreground absolute -right-1 -top-[5px]" />
-                        </div>
+                        <motion.div
+                          className={`w-12 h-0.5 mx-1 relative ${
+                            patient.visits[i + 1].riskScore > visit.riskScore ? 'bg-danger/40' : 'bg-success/40'
+                          }`}
+                          initial={{ scaleX: 0 }}
+                          animate={{ scaleX: 1 }}
+                          transition={{ delay: i * 0.15 + 0.1 }}
+                        >
+                          <ChevronRight className={`h-3 w-3 absolute -right-1 -top-[5px] ${
+                            patient.visits[i + 1].riskScore > visit.riskScore ? 'text-danger' : 'text-success'
+                          }`} />
+                        </motion.div>
                       )}
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
@@ -128,32 +178,101 @@ const PatientDetail = () => {
           </Card>
         )}
 
-        {/* Risk Trend Chart */}
+        {/* Risk Trend Chart — Hero */}
         {chartData.length > 1 && (
-          <Card>
-            <CardHeader className="pb-2"><CardTitle className="text-base">Risk Trend</CardTitle></CardHeader>
-            <CardContent className="p-4 pt-0">
-              <div className="h-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={chartData} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
-                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                    <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                    <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} />
-                    <ReferenceLine y={70} stroke="hsl(354, 70%, 54%)" strokeDasharray="4 4" label={{ value: 'HIGH', position: 'right', fontSize: 10, fill: 'hsl(354, 70%, 54%)' }} />
-                    <ReferenceLine y={40} stroke="hsl(45, 100%, 51%)" strokeDasharray="4 4" label={{ value: 'MOD', position: 'right', fontSize: 10, fill: 'hsl(45, 100%, 51%)' }} />
-                    <Line
-                      type="monotone"
-                      dataKey="score"
-                      stroke="hsl(231, 80%, 66%)"
-                      strokeWidth={3}
-                      dot={{ r: 6, fill: 'hsl(231, 80%, 66%)' }}
-                      activeDot={{ r: 8 }}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+            <Card className="border-2 border-primary/20 shadow-md">
+              <CardHeader className="pb-2">
+                <div className="flex items-center gap-2">
+                  <Activity className="h-5 w-5 text-primary" />
+                  <CardTitle className="text-base">Risk Trend Analysis</CardTitle>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Tracking risk progression across {chartData.length} visits
+                </p>
+              </CardHeader>
+              <CardContent className="p-4 pt-0">
+                {/* Risk score summary bar */}
+                <div className="flex items-center justify-between mb-4 py-2 px-3 bg-muted rounded-lg">
+                  <div className="text-center">
+                    <p className="text-xs text-muted-foreground">First Visit</p>
+                    <RiskBadge level={patient.visits[0].riskLevel} score={patient.visits[0].riskScore} size="sm" />
+                  </div>
+                  <div className="flex-1 mx-3 h-1.5 rounded-full overflow-hidden bg-border">
+                    <div
+                      className="h-full rounded-full transition-all"
+                      style={{
+                        width: `${lastVisit.riskScore}%`,
+                        background: lastVisit.riskLevel === 'HIGH'
+                          ? 'linear-gradient(90deg, hsl(134, 61%, 41%), hsl(45, 100%, 51%), hsl(354, 70%, 54%))'
+                          : lastVisit.riskLevel === 'MODERATE'
+                          ? 'linear-gradient(90deg, hsl(134, 61%, 41%), hsl(45, 100%, 51%))'
+                          : 'hsl(134, 61%, 41%)',
+                      }}
                     />
-                  </ComposedChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-xs text-muted-foreground">Latest</p>
+                    <RiskBadge level={lastVisit.riskLevel} score={lastVisit.riskScore} size="sm" />
+                  </div>
+                </div>
+
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <ComposedChart data={chartData} margin={{ top: 10, right: 10, bottom: 5, left: -15 }}>
+                      <defs>
+                        <linearGradient id="riskGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="hsl(354, 70%, 54%)" stopOpacity={0.3} />
+                          <stop offset="40%" stopColor="hsl(45, 100%, 51%)" stopOpacity={0.15} />
+                          <stop offset="100%" stopColor="hsl(134, 61%, 41%)" stopOpacity={0.05} />
+                        </linearGradient>
+                        <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
+                          <stop offset="0%" stopColor="hsl(134, 61%, 41%)" />
+                          <stop offset="50%" stopColor="hsl(45, 100%, 51%)" />
+                          <stop offset="100%" stopColor="hsl(354, 70%, 54%)" />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} className="opacity-20" />
+                      <XAxis dataKey="name" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                      <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                      <Tooltip content={<CustomTooltip />} />
+
+                      {/* Zone backgrounds */}
+                      <ReferenceLine y={70} stroke="hsl(354, 70%, 54%)" strokeDasharray="6 3" strokeWidth={1.5}
+                        label={{ value: 'HIGH RISK', position: 'insideTopRight', fontSize: 9, fill: 'hsl(354, 70%, 54%)', fontWeight: 600 }}
+                      />
+                      <ReferenceLine y={40} stroke="hsl(45, 100%, 51%)" strokeDasharray="6 3" strokeWidth={1.5}
+                        label={{ value: 'MODERATE', position: 'insideTopRight', fontSize: 9, fill: 'hsl(45, 100%, 51%)', fontWeight: 600 }}
+                      />
+
+                      <Area
+                        type="monotone"
+                        dataKey="score"
+                        fill="url(#riskGradient)"
+                        stroke="none"
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="score"
+                        fill="none"
+                        stroke="url(#lineGradient)"
+                        strokeWidth={3}
+                        dot={<CustomDot />}
+                        activeDot={{ r: 10, fill: 'hsl(231, 80%, 66%)', stroke: 'white', strokeWidth: 3 }}
+                      />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </div>
+
+                {/* Legend */}
+                <div className="flex items-center justify-center gap-4 mt-3 text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-success" />Low (0-39)</span>
+                  <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-warning" />Moderate (40-69)</span>
+                  <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-danger" />High (70+)</span>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
         )}
 
         {/* Symptom Trends Table */}
@@ -243,6 +362,9 @@ const PatientDetail = () => {
               <FileText className="h-4 w-4 mr-2" />
               Generate Referral
             </Button>
+          )}
+          {patient.visits.length >= 2 && (
+            <CompareVisits visits={patient.visits} />
           )}
         </div>
       </main>
