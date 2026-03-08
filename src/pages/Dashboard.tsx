@@ -61,9 +61,24 @@ const Dashboard = () => {
       {/* Header */}
       <header className="gradient-primary px-4 py-6 text-primary-foreground" style={{ borderRadius: '0 0 1.5rem 1.5rem' }}>
         <div className="container max-w-lg mx-auto">
-          <div className="flex items-center gap-2 mb-1">
-            <Activity className="h-6 w-6" />
-            <h1 className="text-xl font-bold tracking-tight">MatriCare</h1>
+          <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center gap-2">
+              <Activity className="h-6 w-6" />
+              <h1 className="text-xl font-bold tracking-tight">MatriCare</h1>
+            </div>
+            <button onClick={toggle} className="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={isDark ? 'dark' : 'light'}
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                </motion.div>
+              </AnimatePresence>
+            </button>
           </div>
           <p className="text-sm opacity-90">FCHV Dashboard</p>
           <p className="text-lg font-semibold mt-2">Welcome, Radha Thapa</p>
