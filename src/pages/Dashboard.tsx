@@ -21,6 +21,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     initStorage();
+    migrateFromLocalStorage().catch(() => {});
     setPatients(getPatients());
     setAlerts(getAlerts());
   }, []);
