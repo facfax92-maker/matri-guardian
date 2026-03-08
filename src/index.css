@@ -44,7 +44,7 @@
     --input: 214 32% 91%;
     --ring: 231 80% 66%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -125,5 +125,20 @@
   }
   .gradient-danger {
     background: linear-gradient(135deg, hsl(354, 70%, 54%), hsl(354, 80%, 45%));
+  }
+  .card-gradient {
+    background: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--muted) / 0.3) 100%);
+  }
+  .card-gradient-primary {
+    background: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--primary) / 0.06) 100%);
+  }
+  .card-gradient-success {
+    background: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--success) / 0.08) 100%);
+  }
+  .card-gradient-warning {
+    background: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--warning) / 0.08) 100%);
+  }
+  .card-gradient-danger {
+    background: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--danger) / 0.08) 100%);
   }
 }
