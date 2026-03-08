@@ -59,6 +59,12 @@ const PatientDetail = () => {
             <span className="font-bold text-lg">{data.score}</span>
             <RiskBadge level={data.riskLevel} size="sm" animate={false} />
           </div>
+          <p className="text-xs text-muted-foreground mt-1">BP Systolic: <span className="font-semibold text-foreground">{data.systolic} mmHg</span></p>
+          {data.escalation && (
+            <p className="text-xs font-bold text-danger mt-1 flex items-center gap-1">
+              <TrendingUp className="h-3 w-3" /> Escalation (&gt;20pt jump)
+            </p>
+          )}
         </div>
       );
     }
