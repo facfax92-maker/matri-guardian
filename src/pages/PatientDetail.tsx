@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getPatient, initStorage } from '@/lib/storage';
-import { Patient, Visit } from '@/lib/types';
+import { getPatient, initStorage, getPostpartumVisits } from '@/lib/storage';
+import { Patient, Visit, PostpartumVisit } from '@/lib/types';
 import { RiskBadge } from '@/components/RiskBadge';
 import { CompareVisits } from '@/components/CompareVisits';
+import { ReferralTracker } from '@/components/ReferralTracker';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User } from 'lucide-react';
+import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User, Brain, ShieldAlert, CheckCircle2 } from 'lucide-react';
 import { XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Area, ComposedChart, Tooltip, Line } from 'recharts';
 import { motion } from 'framer-motion';
 
@@ -14,10 +15,14 @@ const PatientDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [patient, setPatient] = useState<Patient | null>(null);
+  const [ppVisits, setPpVisits] = useState<PostpartumVisit[]>([]);
 
   useEffect(() => {
     initStorage();
-    if (id) setPatient(getPatient(id) || null);
+    if (id) {
+      setPatient(getPatient(id) || null);
+      setPpVisits(getPostpartumVisits(id));
+    }
   }, [id]);
 
   if (!patient) {
@@ -408,11 +413,54 @@ const PatientDetail = () => {
           </Card>
         )}
 
+        {/* Referral Tracking */}
+        <ReferralTracker patientId={patient.id} />
+
+        {/* Postpartum Screening Results */}
+        {ppVisits.length > 0 && (
+          <Card className="border-2 border-[hsl(280,60%,50%)]/20">
+            <CardHeader className="pb-2">
+              <div className="flex items-center gap-2">
+                <Brain className="h-4 w-4 text-[hsl(280,60%,50%)]" />
+                <CardTitle className="text-base">Postpartum Screening</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-2 pt-0">
+              {ppVisits.map(ppv => {
+                const riskConfig = ppv.ppdRisk === 'high'
+                  ? { color: 'text-danger-foreground', bg: 'bg-danger-bg', border: 'border-danger', icon: ShieldAlert, label: 'High PPD Risk' }
+                  : ppv.ppdRisk === 'moderate'
+                  ? { color: 'text-warning-foreground', bg: 'bg-warning-bg', border: 'border-warning', icon: AlertTriangle, label: 'Moderate PPD Risk' }
+                  : { color: 'text-success-foreground', bg: 'bg-success-bg', border: 'border-success', icon: CheckCircle2, label: 'Low PPD Risk' };
+                const Icon = riskConfig.icon;
+                return (
+                  <div key={ppv.id} className={`flex items-center justify-between p-3 rounded-xl ${riskConfig.bg} border ${riskConfig.border}`}>
+                    <div className="flex items-center gap-2">
+                      <Icon className={`h-4 w-4 ${riskConfig.color}`} />
+                      <div>
+                        <p className={`text-xs font-semibold ${riskConfig.color}`}>{riskConfig.label}</p>
+                        <p className="text-[10px] text-muted-foreground">{ppv.date} · {ppv.weeksPostpartum}wk postpartum · Score: {ppv.edinburghScore}/10</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </CardContent>
+          </Card>
+        )}
+
         {/* Actions */}
         <div className="flex flex-col gap-3 pb-6">
           <Button className="gradient-primary text-primary-foreground border-0 h-12" onClick={() => navigate(`/patients/${patient.id}/visits/new`)}>
             <Plus className="h-4 w-4 mr-2" />
             Add New Visit
+          </Button>
+          <Button
+            className="bg-gradient-to-r from-[hsl(280,60%,50%)] to-[hsl(320,60%,50%)] text-primary-foreground border-0 h-12"
+            onClick={() => navigate(`/patients/${patient.id}/postpartum`)}
+          >
+            <Brain className="h-4 w-4 mr-2" />
+            Postpartum Screening
           </Button>
           {isHighRisk && (
             <Button className="gradient-danger text-primary-foreground border-0 h-12" onClick={() => navigate(`/patients/${patient.id}/referral`)}>

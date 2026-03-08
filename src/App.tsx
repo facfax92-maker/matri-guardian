@@ -11,6 +11,7 @@ import NewVisitForm from "./pages/NewVisitForm";
 import VisitDetail from "./pages/VisitDetail";
 import ReferralForm from "./pages/ReferralForm";
 import ReferralSuccess from "./pages/ReferralSuccess";
+import PostpartumForm from "./pages/PostpartumForm";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/patients/:id/visits/:visitId" element={<VisitDetail />} />
           <Route path="/patients/:id/referral" element={<ReferralForm />} />
           <Route path="/patients/:id/referral-success" element={<ReferralSuccess />} />
+          <Route path="/patients/:id/postpartum" element={<PostpartumForm />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -71,6 +71,12 @@ MatriCare Alert System`;
       transportArranged,
       smsPreview,
       status,
+      trackingStatus: status === 'sent' ? 'pending' : 'pending',
+      updates: status === 'sent' ? [{
+        status: 'pending',
+        timestamp: new Date().toISOString(),
+        message: 'Referral sent via SMS to facility',
+      }] : [],
     };
     saveReferral(referral);
     if (status === 'sent') {
