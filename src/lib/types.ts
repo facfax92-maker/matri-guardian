@@ -49,6 +49,14 @@ export interface Patient {
   visits: Visit[];
 }
 
+export type ReferralStatus = 'pending' | 'patient-arrived' | 'treatment-started' | 'discharged';
+
+export interface ReferralUpdate {
+  status: ReferralStatus;
+  timestamp: string;
+  message: string;
+}
+
 export interface Referral {
   id: string;
   patientId: string;
@@ -60,6 +68,21 @@ export interface Referral {
   transportArranged: boolean;
   smsPreview: string;
   status: 'sent' | 'draft';
+  trackingStatus: ReferralStatus;
+  updates: ReferralUpdate[];
+}
+
+export type EdinburghAnswer = 'positive' | 'sometimes' | 'negative';
+
+export interface PostpartumVisit {
+  id: string;
+  patientId: string;
+  date: string;
+  weeksPostpartum: number;
+  edinburghAnswers: EdinburghAnswer[];
+  edinburghScore: number;
+  ppdRisk: 'low' | 'moderate' | 'high';
+  notes: string;
 }
 
 export interface Alert {
@@ -67,6 +90,6 @@ export interface Alert {
   patientId: string;
   patientName: string;
   message: string;
-  type: 'escalation' | 'followup' | 'referral';
+  type: 'escalation' | 'followup' | 'referral' | 'ppd';
   date: string;
 }
