@@ -14,6 +14,7 @@ import VisitDetail from "./pages/VisitDetail";
 import ReferralForm from "./pages/ReferralForm";
 import ReferralSuccess from "./pages/ReferralSuccess";
 import PostpartumForm from "./pages/PostpartumForm";
+import HospitalPortal from "./pages/HospitalPortal";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
