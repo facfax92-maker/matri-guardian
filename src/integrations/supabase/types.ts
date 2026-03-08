@@ -14,6 +14,100 @@ export type Database = {
   }
   public: {
     Tables: {
+      discharge_summaries: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          diagnosis: string
+          discharged_at: string
+          follow_up_instructions: string | null
+          id: string
+          medications: string | null
+          outcome: string
+          patient_id: string
+          referral_id: string
+          treatment_given: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          diagnosis?: string
+          discharged_at?: string
+          follow_up_instructions?: string | null
+          id?: string
+          medications?: string | null
+          outcome?: string
+          patient_id: string
+          referral_id: string
+          treatment_given?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          diagnosis?: string
+          discharged_at?: string
+          follow_up_instructions?: string | null
+          id?: string
+          medications?: string | null
+          outcome?: string
+          patient_id?: string
+          referral_id?: string
+          treatment_given?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discharge_summaries_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fchv_feedback: {
+        Row: {
+          created_at: string
+          feedback_type: string
+          from_doctor: string | null
+          id: string
+          is_read: boolean
+          message: string
+          referral_id: string
+          to_fchv: string | null
+        }
+        Insert: {
+          created_at?: string
+          feedback_type?: string
+          from_doctor?: string | null
+          id?: string
+          is_read?: boolean
+          message?: string
+          referral_id: string
+          to_fchv?: string | null
+        }
+        Update: {
+          created_at?: string
+          feedback_type?: string
+          from_doctor?: string | null
+          id?: string
+          is_read?: boolean
+          message?: string
+          referral_id?: string
+          to_fchv?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fchv_feedback_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       patient_images: {
         Row: {
           annotations: Json | null
@@ -110,6 +204,98 @@ export type Database = {
           role?: Database["public"]["Enums"]["app_role"]
           updated_at?: string
           ward?: string | null
+        }
+        Relationships: []
+      }
+      referral_updates: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          message: string
+          referral_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          message?: string
+          referral_id: string
+          status: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          message?: string
+          referral_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_updates_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referrals: {
+        Row: {
+          additional_notes: string | null
+          assigned_doctor: string | null
+          created_at: string
+          date: string
+          facility: string
+          id: string
+          patient_id: string
+          patient_name: string
+          provisional_diagnosis: string
+          referred_by: string | null
+          sms_preview: string | null
+          status: string
+          tracking_status: string
+          transport_arranged: boolean
+          updated_at: string
+          urgency: string
+        }
+        Insert: {
+          additional_notes?: string | null
+          assigned_doctor?: string | null
+          created_at?: string
+          date?: string
+          facility?: string
+          id?: string
+          patient_id: string
+          patient_name?: string
+          provisional_diagnosis?: string
+          referred_by?: string | null
+          sms_preview?: string | null
+          status?: string
+          tracking_status?: string
+          transport_arranged?: boolean
+          updated_at?: string
+          urgency?: string
+        }
+        Update: {
+          additional_notes?: string | null
+          assigned_doctor?: string | null
+          created_at?: string
+          date?: string
+          facility?: string
+          id?: string
+          patient_id?: string
+          patient_name?: string
+          provisional_diagnosis?: string
+          referred_by?: string | null
+          sms_preview?: string | null
+          status?: string
+          tracking_status?: string
+          transport_arranged?: boolean
+          updated_at?: string
+          urgency?: string
         }
         Relationships: []
       }
