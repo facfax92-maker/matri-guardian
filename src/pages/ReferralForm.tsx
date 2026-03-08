@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPatient, saveReferral, initStorage } from '@/lib/storage';
 import { Patient, Referral, Urgency } from '@/lib/types';
+import { emergencyContacts, EmergencyContact } from '@/lib/emergency-contacts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,9 +10,16 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Send, Save } from 'lucide-react';
+import { ArrowLeft, Send, Save, Phone, MessageSquare, Ambulance, Users, Building2, MapPin, Clock, AlertTriangle } from 'lucide-react';
 import { RiskBadge } from '@/components/RiskBadge';
 import { useToast } from '@/hooks/use-toast';
+import { motion } from 'framer-motion';
+
+const contactTypeConfig = {
+  ambulance: { icon: Ambulance, label: 'Ambulance Services', color: 'text-danger', bg: 'bg-danger-bg', border: 'border-danger/30' },
+  volunteer: { icon: Users, label: 'Transport Volunteers', color: 'text-primary', bg: 'bg-primary/5', border: 'border-primary/20' },
+  facility: { icon: Building2, label: 'Health Facilities', color: 'text-success', bg: 'bg-success-bg', border: 'border-success/30' },
+};
 
 const ReferralForm = () => {
   const { id } = useParams<{ id: string }>();
@@ -73,9 +81,27 @@ MatriCare Alert System`;
     }
   };
 
+  const handleSmsMultiple = () => {
+    const facilityContact = emergencyContacts.find(c => c.type === 'facility');
+    const ambulanceContact = emergencyContacts.find(c => c.type === 'ambulance');
+    const message = encodeURIComponent(
+      `EMERGENCY: ${patient.name}, ${patient.gestationalAge}wk, ${diagnosis}. BP: ${lastVisit?.systolic}/${lastVisit?.diastolic}. Need immediate transport. FCHV: ${patient.fchvAssigned}`
+    );
+    // Open SMS with multiple recipients
+    const numbers = [facilityContact?.phone, ambulanceContact?.phone].filter(Boolean).join(',');
+    window.open(`sms:${numbers}?body=${message}`, '_self');
+    toast({ title: 'Opening SMS app', description: 'Sending alert to facility & transport' });
+  };
+
+  const groupedContacts = (['ambulance', 'volunteer', 'facility'] as const).map(type => ({
+    type,
+    ...contactTypeConfig[type],
+    contacts: emergencyContacts.filter(c => c.type === type),
+  }));
+
   return (
     <div className="min-h-screen bg-background">
-      <header className="gradient-danger px-4 py-4 text-primary-foreground">
+      <header className="gradient-danger px-4 py-4 text-primary-foreground" style={{ borderRadius: '0 0 1.5rem 1.5rem' }}>
         <div className="container max-w-lg mx-auto flex items-center gap-3">
           <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20" onClick={() => navigate(-1)}>
             <ArrowLeft className="h-5 w-5" />
@@ -105,6 +131,87 @@ MatriCare Alert System`;
           </CardContent>
         </Card>
 
+        {/* Emergency Contacts */}
+        <Card className="border-2 border-danger/20">
+          <CardHeader className="pb-2">
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-xl bg-danger-bg flex items-center justify-center">
+                <AlertTriangle className="h-4 w-4 text-danger" />
+              </div>
+              <div>
+                <CardTitle className="text-base">Emergency Contacts</CardTitle>
+                <p className="text-xs text-muted-foreground">Tap to call or send SMS</p>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4 pt-0">
+            {groupedContacts.map(({ type, icon: Icon, label, color, bg, border, contacts }) => (
+              <div key={type}>
+                <div className="flex items-center gap-2 mb-2">
+                  <Icon className={`h-4 w-4 ${color}`} />
+                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+                </div>
+                <div className="space-y-2">
+                  {contacts.map((contact, i) => (
+                    <motion.div
+                      key={contact.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.05 }}
+                      className={`rounded-xl p-3 ${bg} border ${border}`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-sm">{contact.name}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">{contact.description}</p>
+                          <div className="flex items-center gap-3 mt-1.5">
+                            {contact.distance && (
+                              <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground">
+                                <MapPin className="h-2.5 w-2.5" />{contact.distance}
+                              </span>
+                            )}
+                            {contact.estimatedTime && (
+                              <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground">
+                                <Clock className="h-2.5 w-2.5" />{contact.estimatedTime}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex gap-1.5 shrink-0">
+                          <a
+                            href={`tel:${contact.phone}`}
+                            className="h-9 w-9 rounded-xl bg-success/10 border border-success/30 flex items-center justify-center hover:bg-success/20 transition-colors"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Phone className="h-4 w-4 text-success" />
+                          </a>
+                          <a
+                            href={`sms:${contact.phone}`}
+                            className="h-9 w-9 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center hover:bg-primary/20 transition-colors"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <MessageSquare className="h-4 w-4 text-primary" />
+                          </a>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            {/* SMS Multiple Button */}
+            <Button
+              className="w-full h-11 bg-danger/10 text-danger hover:bg-danger/20 border border-danger/30"
+              variant="ghost"
+              onClick={handleSmsMultiple}
+            >
+              <MessageSquare className="h-4 w-4 mr-2" />
+              SMS Multiple — Alert Facility & Transport
+            </Button>
+          </CardContent>
+        </Card>
+
         {/* Referral Form */}
         <Card>
           <CardHeader className="pb-3"><CardTitle className="text-base">Referral Details</CardTitle></CardHeader>
@@ -124,7 +231,7 @@ MatriCare Alert System`;
             <div>
               <Label>Urgency</Label>
               <div className="mt-1">
-                <RiskBadge level={urgency === 'URGENT' ? 'HIGH' : 'LOW'} size="md" className={urgency === 'URGENT' ? '' : ''} />
+                <RiskBadge level={urgency === 'URGENT' ? 'HIGH' : 'LOW'} size="md" />
               </div>
             </div>
 

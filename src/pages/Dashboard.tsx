@@ -4,9 +4,10 @@ import { getPatients, getAlerts, initStorage } from '@/lib/storage';
 import { Patient, Alert, RiskLevel } from '@/lib/types';
 import { OfflineIndicator } from '@/components/OfflineIndicator';
 import { RiskBadge } from '@/components/RiskBadge';
+import { getOverdueStatus } from '@/lib/visit-utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, AlertTriangle, Plus, ChevronRight, Activity, PieChart, Bell, Clock, Moon, Sun } from 'lucide-react';
+import { Users, AlertTriangle, Plus, ChevronRight, Activity, PieChart, Bell, Clock, Moon, Sun, CalendarClock } from 'lucide-react';
 import { PieChart as RePieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/hooks/use-theme';
@@ -39,19 +40,21 @@ const Dashboard = () => {
     { name: 'High Risk', value: riskCounts.HIGH, color: 'hsl(354, 70%, 54%)' },
   ].filter(d => d.value > 0);
 
-  const dueForVisitCount = useMemo(() => {
-    const fourWeeksAgo = Date.now() - 28 * 24 * 60 * 60 * 1000;
-    return patients.filter(p => {
-      const last = p.visits[p.visits.length - 1];
-      if (!last) return true;
-      return new Date(last.date).getTime() < fourWeeksAgo;
-    }).length;
+  const overdueCounts = useMemo(() => {
+    let followup = 0;
+    let urgent = 0;
+    patients.forEach(p => {
+      const status = getOverdueStatus(p);
+      if (status === 'followup-overdue') followup++;
+      if (status === 'urgent-overdue') urgent++;
+    });
+    return { followup, urgent, total: followup + urgent };
   }, [patients]);
 
   const stats = [
     { label: 'Active Pregnancies', value: patients.length, icon: Users, color: 'text-primary', gradient: 'card-gradient-primary' },
     { label: 'High Risk Cases', value: riskCounts.HIGH, icon: AlertTriangle, color: 'text-danger', gradient: 'card-gradient-danger' },
-    { label: 'Due for Visit', value: dueForVisitCount, icon: Clock, color: 'text-warning', gradient: 'card-gradient-warning' },
+    { label: 'Overdue Visits', value: overdueCounts.total, icon: CalendarClock, color: 'text-warning', gradient: 'card-gradient-warning' },
   ];
 
   return (
