@@ -5,9 +5,12 @@ import { Patient, Visit, PostpartumVisit } from '@/lib/types';
 import { RiskBadge } from '@/components/RiskBadge';
 import { CompareVisits } from '@/components/CompareVisits';
 import { ReferralTracker } from '@/components/ReferralTracker';
+import { ImageCapture } from '@/components/ImageCapture';
+import { ImageGallery } from '@/components/ImageGallery';
+import { SyncStatusBar } from '@/components/SyncStatus';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User, Brain, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User, Brain, ShieldAlert, CheckCircle2, Camera } from 'lucide-react';
 import { XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Area, ComposedChart, Tooltip, Line } from 'recharts';
 import { motion } from 'framer-motion';
 
