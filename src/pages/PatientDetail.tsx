@@ -78,6 +78,17 @@ const PatientDetail = () => {
       <g>
         <circle cx={cx} cy={cy} r={8} fill={color} opacity={0.2} />
         <circle cx={cx} cy={cy} r={5} fill={color} stroke="white" strokeWidth={2} />
+        {payload.escalation && (
+          <>
+            <polygon
+              points={`${cx},${cy - 22} ${cx - 6},${cy - 14} ${cx + 6},${cy - 14}`}
+              fill="hsl(354, 70%, 54%)"
+              stroke="white"
+              strokeWidth={1}
+            />
+            <line x1={cx} y1={cy - 14} x2={cx} y2={cy - 10} stroke="hsl(354, 70%, 54%)" strokeWidth={2} />
+          </>
+        )}
       </g>
     );
   };
