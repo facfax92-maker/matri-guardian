@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getPatient, initStorage } from '@/lib/storage';
-import { Patient, Visit } from '@/lib/types';
+import { getPatient, initStorage, getPostpartumVisits } from '@/lib/storage';
+import { Patient, Visit, PostpartumVisit } from '@/lib/types';
 import { RiskBadge } from '@/components/RiskBadge';
 import { CompareVisits } from '@/components/CompareVisits';
+import { ReferralTracker } from '@/components/ReferralTracker';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User } from 'lucide-react';
+import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User, Brain, ShieldAlert, CheckCircle2 } from 'lucide-react';
 import { XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Area, ComposedChart, Tooltip, Line } from 'recharts';
 import { motion } from 'framer-motion';
 
