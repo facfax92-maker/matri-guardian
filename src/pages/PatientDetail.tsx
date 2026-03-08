@@ -19,6 +19,7 @@ const PatientDetail = () => {
   const navigate = useNavigate();
   const [patient, setPatient] = useState<Patient | null>(null);
   const [ppVisits, setPpVisits] = useState<PostpartumVisit[]>([]);
+  const [showImageCapture, setShowImageCapture] = useState(false);
 
   useEffect(() => {
     initStorage();
