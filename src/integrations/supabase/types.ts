@@ -14,7 +14,117 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      patient_images: {
+        Row: {
+          annotations: Json | null
+          category: string
+          consent_given: boolean
+          consent_timestamp: string | null
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          expires_at: string
+          face_blurred: boolean
+          file_name: string
+          file_path: string
+          file_size: number | null
+          id: string
+          mime_type: string | null
+          notes: string | null
+          patient_id: string
+          sync_status: string
+          updated_at: string
+          visit_id: string | null
+        }
+        Insert: {
+          annotations?: Json | null
+          category: string
+          consent_given?: boolean
+          consent_timestamp?: string | null
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          expires_at?: string
+          face_blurred?: boolean
+          file_name: string
+          file_path: string
+          file_size?: number | null
+          id?: string
+          mime_type?: string | null
+          notes?: string | null
+          patient_id: string
+          sync_status?: string
+          updated_at?: string
+          visit_id?: string | null
+        }
+        Update: {
+          annotations?: Json | null
+          category?: string
+          consent_given?: boolean
+          consent_timestamp?: string | null
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          expires_at?: string
+          face_blurred?: boolean
+          file_name?: string
+          file_path?: string
+          file_size?: number | null
+          id?: string
+          mime_type?: string | null
+          notes?: string | null
+          patient_id?: string
+          sync_status?: string
+          updated_at?: string
+          visit_id?: string | null
+        }
+        Relationships: []
+      }
+      sync_queue: {
+        Row: {
+          action: string
+          created_at: string
+          created_by: string | null
+          data: Json
+          entity_id: string
+          entity_type: string
+          error_message: string | null
+          id: string
+          priority: string
+          retry_count: number
+          status: string
+          synced_at: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          created_by?: string | null
+          data: Json
+          entity_id: string
+          entity_type: string
+          error_message?: string | null
+          id?: string
+          priority?: string
+          retry_count?: number
+          status?: string
+          synced_at?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          created_by?: string | null
+          data?: Json
+          entity_id?: string
+          entity_type?: string
+          error_message?: string | null
+          id?: string
+          priority?: string
+          retry_count?: number
+          status?: string
+          synced_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
