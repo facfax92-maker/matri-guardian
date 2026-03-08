@@ -130,8 +130,13 @@ const PatientDetail = () => {
 
         {/* Visit Timeline */}
         {patient.visits.length > 0 && (
-          <Card>
-            <CardHeader className="pb-2"><CardTitle className="text-base">Visit Timeline</CardTitle></CardHeader>
+          <Card className="card-gradient border-0 shadow-sm">
+            <CardHeader className="pb-2">
+              <div className="flex items-center gap-2">
+                <CalendarDays className="h-4 w-4 text-primary" />
+                <CardTitle className="text-base">Visit Timeline</CardTitle>
+              </div>
+            </CardHeader>
             <CardContent className="p-4 pt-0">
               <div className="overflow-x-auto">
                 <div className="flex items-center gap-0 min-w-max py-3">
