@@ -129,6 +129,125 @@ const PatientDetail = () => {
           </motion.div>
         )}
 
+        {/* HERO: Risk & BP Trend Chart */}
+        {chartData.length > 1 && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+            <Card className="card-gradient-primary border-2 border-primary/20 shadow-lg overflow-hidden">
+              <CardHeader className="pb-1">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <Activity className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg">Risk & BP Trends</CardTitle>
+                      <p className="text-xs text-muted-foreground">
+                        {chartData.length} visits · {patient.visits[0].date} → {lastVisit.date}
+                      </p>
+                    </div>
+                  </div>
+                  {lastVisit && <RiskBadge level={lastVisit.riskLevel} score={lastVisit.riskScore} size="md" showIcon />}
+                </div>
+              </CardHeader>
+              <CardContent className="px-2 pb-4 pt-0">
+                {/* Risk score summary bar */}
+                <div className="flex items-center justify-between mb-3 py-2 px-3 mx-2 bg-muted/60 rounded-xl">
+                  <div className="text-center">
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">First</p>
+                    <RiskBadge level={patient.visits[0].riskLevel} score={patient.visits[0].riskScore} size="sm" />
+                  </div>
+                  <div className="flex-1 mx-3 h-2 rounded-full overflow-hidden bg-border">
+                    <div
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{
+                        width: `${lastVisit.riskScore}%`,
+                        background: 'linear-gradient(90deg, hsl(134, 61%, 41%), hsl(45, 100%, 51%), hsl(354, 70%, 54%))',
+                      }}
+                    />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Latest</p>
+                    <RiskBadge level={lastVisit.riskLevel} score={lastVisit.riskScore} size="sm" />
+                  </div>
+                </div>
+
+                {/* Main chart — tall hero */}
+                <div className="h-80">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <ComposedChart data={chartData} margin={{ top: 15, right: 10, bottom: 5, left: -10 }}>
+                      <defs>
+                        <linearGradient id="riskGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="hsl(354, 70%, 54%)" stopOpacity={0.25} />
+                          <stop offset="40%" stopColor="hsl(45, 100%, 51%)" stopOpacity={0.12} />
+                          <stop offset="100%" stopColor="hsl(134, 61%, 41%)" stopOpacity={0.03} />
+                        </linearGradient>
+                        <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
+                          <stop offset="0%" stopColor="hsl(134, 61%, 41%)" />
+                          <stop offset="50%" stopColor="hsl(45, 100%, 51%)" />
+                          <stop offset="100%" stopColor="hsl(354, 70%, 54%)" />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} className="opacity-20" />
+                      <XAxis dataKey="name" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                      <YAxis yAxisId="risk" domain={[0, 100]} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                      <YAxis yAxisId="bp" orientation="right" domain={[80, 200]} tick={{ fontSize: 10 }} axisLine={false} tickLine={false} hide />
+                      <Tooltip content={<CustomTooltip />} />
+
+                      {/* Zone thresholds */}
+                      <ReferenceLine yAxisId="risk" y={70} stroke="hsl(354, 70%, 54%)" strokeDasharray="6 3" strokeWidth={1.5}
+                        label={{ value: 'HIGH', position: 'insideTopRight', fontSize: 9, fill: 'hsl(354, 70%, 54%)', fontWeight: 700 }}
+                      />
+                      <ReferenceLine yAxisId="risk" y={40} stroke="hsl(45, 100%, 51%)" strokeDasharray="6 3" strokeWidth={1.5}
+                        label={{ value: 'MODERATE', position: 'insideTopRight', fontSize: 9, fill: 'hsl(45, 100%, 51%)', fontWeight: 700 }}
+                      />
+
+                      {/* Risk score area + line */}
+                      <Area
+                        yAxisId="risk"
+                        type="monotone"
+                        dataKey="score"
+                        fill="url(#riskGradient)"
+                        stroke="none"
+                      />
+                      <Area
+                        yAxisId="risk"
+                        type="monotone"
+                        dataKey="score"
+                        fill="none"
+                        stroke="url(#lineGradient)"
+                        strokeWidth={3}
+                        dot={<CustomDot />}
+                        activeDot={{ r: 10, fill: 'hsl(231, 80%, 66%)', stroke: 'white', strokeWidth: 3 }}
+                      />
+
+                      {/* BP Systolic secondary line */}
+                      <Line
+                        yAxisId="bp"
+                        type="monotone"
+                        dataKey="systolic"
+                        stroke="hsl(231, 80%, 66%)"
+                        strokeWidth={2}
+                        strokeDasharray="5 3"
+                        dot={{ r: 3, fill: 'hsl(231, 80%, 66%)', stroke: 'white', strokeWidth: 1 }}
+                        activeDot={{ r: 6 }}
+                      />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </div>
+
+                {/* Legend */}
+                <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 mt-3 text-xs text-muted-foreground px-2">
+                  <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-success" />Low (0-39)</span>
+                  <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-warning" />Moderate (40-69)</span>
+                  <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-danger" />High (70+)</span>
+                  <span className="flex items-center gap-1"><span className="h-2.5 w-4 border-t-2 border-dashed" style={{ borderColor: 'hsl(231, 80%, 66%)' }} />BP Systolic</span>
+                  <span className="flex items-center gap-1"><span className="text-danger">▲</span>Escalation</span>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
         {/* Patient Info */}
         <Card className="card-gradient border-0 shadow-sm">
           <CardHeader className="pb-2">
@@ -206,103 +325,6 @@ const PatientDetail = () => {
               </div>
             </CardContent>
           </Card>
-        )}
-
-        {/* Risk Trend Chart — Hero */}
-        {chartData.length > 1 && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <Card className="card-gradient-primary border-2 border-primary/20 shadow-md">
-              <CardHeader className="pb-2">
-                <div className="flex items-center gap-2">
-                  <Activity className="h-5 w-5 text-primary" />
-                  <CardTitle className="text-base">Risk Trend Analysis</CardTitle>
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Tracking risk progression across {chartData.length} visits
-                </p>
-              </CardHeader>
-              <CardContent className="p-4 pt-0">
-                {/* Risk score summary bar */}
-                <div className="flex items-center justify-between mb-4 py-2 px-3 bg-muted rounded-lg">
-                  <div className="text-center">
-                    <p className="text-xs text-muted-foreground">First Visit</p>
-                    <RiskBadge level={patient.visits[0].riskLevel} score={patient.visits[0].riskScore} size="sm" />
-                  </div>
-                  <div className="flex-1 mx-3 h-1.5 rounded-full overflow-hidden bg-border">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{
-                        width: `${lastVisit.riskScore}%`,
-                        background: lastVisit.riskLevel === 'HIGH'
-                          ? 'linear-gradient(90deg, hsl(134, 61%, 41%), hsl(45, 100%, 51%), hsl(354, 70%, 54%))'
-                          : lastVisit.riskLevel === 'MODERATE'
-                          ? 'linear-gradient(90deg, hsl(134, 61%, 41%), hsl(45, 100%, 51%))'
-                          : 'hsl(134, 61%, 41%)',
-                      }}
-                    />
-                  </div>
-                  <div className="text-center">
-                    <p className="text-xs text-muted-foreground">Latest</p>
-                    <RiskBadge level={lastVisit.riskLevel} score={lastVisit.riskScore} size="sm" />
-                  </div>
-                </div>
-
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={chartData} margin={{ top: 10, right: 10, bottom: 5, left: -15 }}>
-                      <defs>
-                        <linearGradient id="riskGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="hsl(354, 70%, 54%)" stopOpacity={0.3} />
-                          <stop offset="40%" stopColor="hsl(45, 100%, 51%)" stopOpacity={0.15} />
-                          <stop offset="100%" stopColor="hsl(134, 61%, 41%)" stopOpacity={0.05} />
-                        </linearGradient>
-                        <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
-                          <stop offset="0%" stopColor="hsl(134, 61%, 41%)" />
-                          <stop offset="50%" stopColor="hsl(45, 100%, 51%)" />
-                          <stop offset="100%" stopColor="hsl(354, 70%, 54%)" />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} className="opacity-20" />
-                      <XAxis dataKey="name" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
-                      <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
-                      <Tooltip content={<CustomTooltip />} />
-
-                      {/* Zone backgrounds */}
-                      <ReferenceLine y={70} stroke="hsl(354, 70%, 54%)" strokeDasharray="6 3" strokeWidth={1.5}
-                        label={{ value: 'HIGH RISK', position: 'insideTopRight', fontSize: 9, fill: 'hsl(354, 70%, 54%)', fontWeight: 600 }}
-                      />
-                      <ReferenceLine y={40} stroke="hsl(45, 100%, 51%)" strokeDasharray="6 3" strokeWidth={1.5}
-                        label={{ value: 'MODERATE', position: 'insideTopRight', fontSize: 9, fill: 'hsl(45, 100%, 51%)', fontWeight: 600 }}
-                      />
-
-                      <Area
-                        type="monotone"
-                        dataKey="score"
-                        fill="url(#riskGradient)"
-                        stroke="none"
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="score"
-                        fill="none"
-                        stroke="url(#lineGradient)"
-                        strokeWidth={3}
-                        dot={<CustomDot />}
-                        activeDot={{ r: 10, fill: 'hsl(231, 80%, 66%)', stroke: 'white', strokeWidth: 3 }}
-                      />
-                    </ComposedChart>
-                  </ResponsiveContainer>
-                </div>
-
-                {/* Legend */}
-                <div className="flex items-center justify-center gap-4 mt-3 text-xs text-muted-foreground">
-                  <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-success" />Low (0-39)</span>
-                  <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-warning" />Moderate (40-69)</span>
-                  <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-danger" />High (70+)</span>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
         )}
 
         {/* Symptom Trends Table */}
