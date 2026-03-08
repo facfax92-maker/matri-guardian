@@ -6,9 +6,10 @@ import { SyncStatusBar, SyncStatusIndicator } from '@/components/SyncStatus';
 import { RiskBadge } from '@/components/RiskBadge';
 import { migrateFromLocalStorage } from '@/lib/indexed-db';
 import { getOverdueStatus } from '@/lib/visit-utils';
+import { FCHVNotifications } from '@/components/FCHVNotifications';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, AlertTriangle, Plus, ChevronRight, Activity, PieChart, Bell, Clock, Moon, Sun, CalendarClock, LogOut } from 'lucide-react';
+import { Users, AlertTriangle, Plus, ChevronRight, Activity, PieChart, Bell, Clock, Moon, Sun, CalendarClock, LogOut, Stethoscope } from 'lucide-react';
 import { PieChart as RePieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/hooks/use-theme';
@@ -188,13 +189,13 @@ const Dashboard = () => {
         )}
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className={`grid gap-3 ${roles.includes('doctor') || roles.includes('admin') ? 'grid-cols-3' : 'grid-cols-2'}`}>
           <Button
             className="h-12 gradient-primary text-primary-foreground border-0 rounded-xl"
             onClick={() => navigate('/patients')}
           >
             <Users className="h-4 w-4 mr-2" />
-            View Patients
+            Patients
           </Button>
           <Button
             variant="secondary"
@@ -202,9 +203,22 @@ const Dashboard = () => {
             onClick={() => navigate('/patients/new')}
           >
             <Plus className="h-4 w-4 mr-2" />
-            Register New
+            Register
           </Button>
+          {(roles.includes('doctor') || roles.includes('admin')) && (
+            <Button
+              variant="outline"
+              className="h-12 rounded-xl"
+              onClick={() => navigate('/hospital-portal')}
+            >
+              <Stethoscope className="h-4 w-4 mr-2" />
+              Portal
+            </Button>
+          )}
         </div>
+
+        {/* FCHV Notifications from Doctors */}
+        {roles.includes('fchv') && <FCHVNotifications />}
 
         {/* Recent Alerts */}
         <div>
