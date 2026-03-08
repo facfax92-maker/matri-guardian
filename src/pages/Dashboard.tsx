@@ -6,6 +6,7 @@ import { SyncStatusBar, SyncStatusIndicator } from '@/components/SyncStatus';
 import { RiskBadge } from '@/components/RiskBadge';
 import { migrateFromLocalStorage } from '@/lib/indexed-db';
 import { getOverdueStatus } from '@/lib/visit-utils';
+import { FCHVNotifications } from '@/components/FCHVNotifications';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Users, AlertTriangle, Plus, ChevronRight, Activity, PieChart, Bell, Clock, Moon, Sun, CalendarClock, LogOut } from 'lucide-react';
