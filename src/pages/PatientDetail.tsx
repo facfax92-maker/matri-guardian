@@ -5,9 +5,12 @@ import { Patient, Visit, PostpartumVisit } from '@/lib/types';
 import { RiskBadge } from '@/components/RiskBadge';
 import { CompareVisits } from '@/components/CompareVisits';
 import { ReferralTracker } from '@/components/ReferralTracker';
+import { ImageCapture } from '@/components/ImageCapture';
+import { ImageGallery } from '@/components/ImageGallery';
+import { SyncStatusBar } from '@/components/SyncStatus';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User, Brain, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User, Brain, ShieldAlert, CheckCircle2, Camera } from 'lucide-react';
 import { XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Area, ComposedChart, Tooltip, Line } from 'recharts';
 import { motion } from 'framer-motion';
 
@@ -16,6 +19,7 @@ const PatientDetail = () => {
   const navigate = useNavigate();
   const [patient, setPatient] = useState<Patient | null>(null);
   const [ppVisits, setPpVisits] = useState<PostpartumVisit[]>([]);
+  const [showImageCapture, setShowImageCapture] = useState(false);
 
   useEffect(() => {
     initStorage();
@@ -100,6 +104,7 @@ const PatientDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SyncStatusBar />
       <header className="gradient-primary px-4 py-4 text-primary-foreground" style={{ borderRadius: '0 0 1.5rem 1.5rem' }}>
         <div className="container max-w-lg mx-auto flex items-center gap-3">
           <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20" onClick={() => navigate('/patients')}>
@@ -449,11 +454,32 @@ const PatientDetail = () => {
           </Card>
         )}
 
+        {/* Image Capture */}
+        {showImageCapture && (
+          <ImageCapture
+            patientId={patient.id}
+            patientName={patient.name}
+            onCapture={() => setShowImageCapture(false)}
+            onClose={() => setShowImageCapture(false)}
+          />
+        )}
+
+        {/* Image Gallery */}
+        <ImageGallery patientId={patient.id} />
+
         {/* Actions */}
         <div className="flex flex-col gap-3 pb-6">
           <Button className="gradient-primary text-primary-foreground border-0 h-12" onClick={() => navigate(`/patients/${patient.id}/visits/new`)}>
             <Plus className="h-4 w-4 mr-2" />
             Add New Visit
+          </Button>
+          <Button
+            variant="outline"
+            className="h-12 rounded-xl"
+            onClick={() => setShowImageCapture(true)}
+          >
+            <Camera className="h-4 w-4 mr-2" />
+            Capture Clinical Image
           </Button>
           <Button
             className="bg-gradient-to-r from-[hsl(280,60%,50%)] to-[hsl(320,60%,50%)] text-primary-foreground border-0 h-12"

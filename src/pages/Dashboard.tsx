@@ -2,8 +2,9 @@ import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getPatients, getAlerts, initStorage } from '@/lib/storage';
 import { Patient, Alert, RiskLevel } from '@/lib/types';
-import { OfflineIndicator } from '@/components/OfflineIndicator';
+import { SyncStatusBar, SyncStatusIndicator } from '@/components/SyncStatus';
 import { RiskBadge } from '@/components/RiskBadge';
+import { migrateFromLocalStorage } from '@/lib/indexed-db';
 import { getOverdueStatus } from '@/lib/visit-utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     initStorage();
+    migrateFromLocalStorage().catch(() => {});
     setPatients(getPatients());
     setAlerts(getAlerts());
   }, []);
@@ -59,7 +61,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <OfflineIndicator />
+      <SyncStatusBar />
 
       {/* Header */}
       <header className="gradient-primary px-4 py-6 text-primary-foreground" style={{ borderRadius: '0 0 1.5rem 1.5rem' }}>
