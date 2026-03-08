@@ -192,7 +192,7 @@ const PatientDetail = () => {
         {/* Risk Trend Chart — Hero */}
         {chartData.length > 1 && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <Card className="border-2 border-primary/20 shadow-md">
+            <Card className="card-gradient-primary border-2 border-primary/20 shadow-md">
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-2">
                   <Activity className="h-5 w-5 text-primary" />
