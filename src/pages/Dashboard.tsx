@@ -6,9 +6,10 @@ import { OfflineIndicator } from '@/components/OfflineIndicator';
 import { RiskBadge } from '@/components/RiskBadge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, AlertTriangle, CalendarCheck, Plus, ChevronRight, Activity, PieChart, Bell, Clock } from 'lucide-react';
+import { Users, AlertTriangle, Plus, ChevronRight, Activity, PieChart, Bell, Clock, Moon, Sun } from 'lucide-react';
 import { PieChart as RePieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '@/hooks/use-theme';
 
 const Dashboard = () => {
   const navigate = useNavigate();
