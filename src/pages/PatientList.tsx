@@ -205,7 +205,7 @@ const PatientList = () => {
                 description="Try adjusting your search or filters"
               />
             )}
-          </div>
+          </div>}
         </main>
 
         {/* FAB */}
