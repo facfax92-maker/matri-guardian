@@ -87,7 +87,7 @@ const ResetPassword = () => {
             </form>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
     </div>
   );
 };

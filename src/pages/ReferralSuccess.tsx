@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle2, Download, User, Home, Printer } from 'lucide-react';
 import { Patient, Referral } from '@/lib/types';
 import { RiskBadge } from '@/components/RiskBadge';
-import { motion } from 'framer-motion';
+
 import { useRef } from 'react';
 
 const ReferralSuccess = () => {

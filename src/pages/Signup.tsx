@@ -68,7 +68,7 @@ const Signup = () => {
   if (success) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-4">
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md text-center">
+        <div className="w-full max-w-md text-center">
           <Card className="border-0 shadow-lg">
             <CardContent className="pt-8 pb-8 space-y-4">
               <CheckCircle className="h-16 w-16 text-success mx-auto" />

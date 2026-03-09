@@ -197,7 +197,7 @@ MatriCare Alert System`;
                           </a>
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </div>

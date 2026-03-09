@@ -232,7 +232,7 @@ const PostpartumForm = () => {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         )}
 
         <Card>
