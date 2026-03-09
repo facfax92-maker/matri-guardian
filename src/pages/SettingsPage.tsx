@@ -37,7 +37,7 @@ const SettingsPage = () => {
 
       <main className="container max-w-lg mx-auto px-4 py-6 space-y-4">
         {/* Preferences */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+        <div>
           <Card className="border-0 shadow-sm card-gradient">
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2">
