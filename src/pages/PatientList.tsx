@@ -9,7 +9,6 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Plus, Search, Filter, ArrowUpDown, Clock, Users, AlertTriangle } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 type SortOption = 'name' | 'ga-desc' | 'ga-asc' | 'last-visit';
 type FilterOption = 'ALL' | RiskLevel | 'OVERDUE';
