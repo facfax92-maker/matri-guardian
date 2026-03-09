@@ -106,7 +106,50 @@ MatriCare Alert System`;
   }));
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background">;
+
+function SmsPreviewCard({ text }: { text: string }) {
+  const [displayLength, setDisplayLength] = useState(0);
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    // Start after a short delay when the card scrolls into view
+    const timer = setTimeout(() => setStarted(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!started || displayLength >= text.length) return;
+    const speed = text[displayLength] === '\n' ? 40 : 12;
+    const id = setTimeout(() => setDisplayLength(prev => prev + 1), speed);
+    return () => clearTimeout(id);
+  }, [started, displayLength, text]);
+
+  // Reset when text changes
+  useEffect(() => {
+    setDisplayLength(0);
+    setStarted(false);
+    const timer = setTimeout(() => setStarted(true), 300);
+    return () => clearTimeout(timer);
+  }, [text]);
+
+  const displayed = text.slice(0, displayLength);
+  const showCursor = displayLength < text.length;
+
+  return (
+    <Card>
+      <CardHeader className="pb-2"><CardTitle className="text-base">SMS Preview</CardTitle></CardHeader>
+      <CardContent>
+        <pre className="bg-muted p-3 rounded-lg text-xs whitespace-pre-wrap font-mono min-h-[120px]">
+          {displayed}
+          {showCursor && <span className="inline-block w-[2px] h-[1em] bg-primary align-middle animate-pulse" />}
+        </pre>
+      </CardContent>
+    </Card>
+  );
+}
+
+const ReferralFormContent = ({ patient, lastVisit, urgency, smsPreview, facility, setFacility, diagnosis, setDiagnosis, notes, setNotes, transportArranged, setTransportArranged, handleSubmit, handleSmsMultiple, groupedContacts, navigate }: any) => (
       <header className="gradient-danger px-4 py-4 text-primary-foreground" style={{ borderRadius: '0 0 1.5rem 1.5rem' }}>
         <div className="container max-w-lg mx-auto flex items-center gap-3">
           <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20" onClick={() => navigate(-1)}>
