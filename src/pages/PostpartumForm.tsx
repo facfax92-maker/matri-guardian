@@ -107,7 +107,7 @@ const PostpartumForm = () => {
               <RiskIcon className="h-4 w-4" />
               {riskInfo.label}
             </div>
-          </motion.div>
+          </div>
 
           {risk === 'high' && (
             <Card className="border-2 border-danger/30 bg-danger-bg">
