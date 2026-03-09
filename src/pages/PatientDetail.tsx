@@ -143,7 +143,7 @@ const PatientDetail = () => {
 
         {/* HERO: Risk & BP Trend Chart */}
         {chartData.length > 1 && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <div>
             <Card className="card-gradient-primary border-2 border-primary/20 shadow-lg overflow-hidden">
               <CardHeader className="pb-1">
                 <div className="flex items-center justify-between">
