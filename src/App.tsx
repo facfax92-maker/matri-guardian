@@ -31,42 +31,40 @@ const App = () => {
   const handleSplashComplete = useCallback(() => setShowSplash(false), []);
 
   return (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            {/* Main app routes — no auth gate */}
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/patients" element={<PatientList />} />
-            <Route path="/patients/new" element={<PatientRegistration />} />
-            <Route path="/patients/:id" element={<PatientDetail />} />
-            <Route path="/patients/:id/visits/new" element={<NewVisitForm />} />
-            <Route path="/patients/:id/visits/:visitId" element={<VisitDetail />} />
-            <Route path="/patients/:id/referral" element={<ReferralForm />} />
-            <Route path="/patients/:id/referral-success" element={<ReferralSuccess />} />
-            <Route path="/patients/:id/postpartum" element={<PostpartumForm />} />
-            <Route path="/hospital-portal" element={<HospitalPortal />} />
-
-            {/* Profile & settings */}
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/edit-profile" element={<EditProfile />} />
-
-            {/* Auth routes (for Switch Account) */}
-            <Route path="/switch-account" element={<Login />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+    <>
+      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <AuthProvider>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/patients" element={<PatientList />} />
+                <Route path="/patients/new" element={<PatientRegistration />} />
+                <Route path="/patients/:id" element={<PatientDetail />} />
+                <Route path="/patients/:id/visits/new" element={<NewVisitForm />} />
+                <Route path="/patients/:id/visits/:visitId" element={<VisitDetail />} />
+                <Route path="/patients/:id/referral" element={<ReferralForm />} />
+                <Route path="/patients/:id/referral-success" element={<ReferralSuccess />} />
+                <Route path="/patients/:id/postpartum" element={<PostpartumForm />} />
+                <Route path="/hospital-portal" element={<HospitalPortal />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/edit-profile" element={<EditProfile />} />
+                <Route path="/switch-account" element={<Login />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AuthProvider>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </>
+  );
+};
 
 export default App;
