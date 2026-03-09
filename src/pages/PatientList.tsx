@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Plus, Search, Filter, ArrowUpDown, Clock, Users, AlertTriangle } from 'lucide-react';
+import { PatientListSkeleton } from '@/components/PatientListSkeleton';
 
 type SortOption = 'name' | 'ga-desc' | 'ga-asc' | 'last-visit';
 type FilterOption = 'ALL' | RiskLevel | 'OVERDUE';
@@ -22,10 +23,15 @@ const PatientList = () => {
   const [search, setSearch] = useState('');
   const [riskFilter, setRiskFilter] = useState<FilterOption>('ALL');
   const [sortBy, setSortBy] = useState<SortOption>('name');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     initStorage();
-    setPatients(getPatients());
+    const timer = setTimeout(() => {
+      setPatients(getPatients());
+      setIsLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
   }, []);
 
   const processed = useMemo(() => {
