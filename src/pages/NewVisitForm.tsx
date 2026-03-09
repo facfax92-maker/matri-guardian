@@ -111,17 +111,18 @@ const NewVisitForm = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="gradient-primary px-4 py-4 text-primary-foreground">
-        <div className="container max-w-lg mx-auto flex items-center gap-3">
-          <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20" onClick={() => navigate(-1)}>
+      <Navbar />
+      <div className="container max-w-lg mx-auto px-4 py-3">
+        <div className="flex items-center gap-2 mb-4">
+          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
             <h1 className="text-lg font-bold">New Visit</h1>
-            <p className="text-sm opacity-90">{patient.name}</p>
+            <p className="text-sm text-muted-foreground">{patient.name}</p>
           </div>
         </div>
-      </header>
+      </div>
 
       <main className="container max-w-lg mx-auto px-4 py-4">
         <form onSubmit={handleSubmit} className="space-y-4">
