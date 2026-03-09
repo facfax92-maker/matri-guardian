@@ -138,7 +138,7 @@ const PatientDetail = () => {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         )}
 
         {/* HERO: Risk & BP Trend Chart */}
