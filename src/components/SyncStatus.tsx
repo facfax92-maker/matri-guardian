@@ -2,7 +2,7 @@ import { useSyncStatus, SyncState } from '@/hooks/use-sync-status';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Wifi, WifiOff, RefreshCw, Check, AlertTriangle, Clock, Loader2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+
 
 const stateConfig: Record<SyncState, { label: string; color: string; bg: string; icon: typeof Check }> = {
   synced: { label: 'All synced', color: 'text-success', bg: 'bg-success/10', icon: Check },
