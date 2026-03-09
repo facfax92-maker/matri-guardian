@@ -7,7 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, Globe, Palette, Bell, Wifi, HardDrive, RefreshCw, Info, HelpCircle, Shield, FileText } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Navbar } from '@/components/Navbar';
 import { useTheme } from '@/hooks/use-theme';
 import { toast } from 'sonner';
 
