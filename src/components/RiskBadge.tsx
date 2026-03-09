@@ -18,6 +18,7 @@ const riskConfig = {
     border: 'border-success',
     dot: 'bg-success',
     Icon: ShieldCheck,
+    animClass: '',
   },
   MODERATE: {
     bg: 'bg-warning-bg',
@@ -25,6 +26,7 @@ const riskConfig = {
     border: 'border-warning',
     dot: 'bg-warning',
     Icon: Shield,
+    animClass: 'risk-badge-moderate',
   },
   HIGH: {
     bg: 'bg-danger-bg',
@@ -32,10 +34,11 @@ const riskConfig = {
     border: 'border-danger',
     dot: 'bg-danger',
     Icon: ShieldAlert,
+    animClass: 'risk-badge-high',
   },
 };
 
-export function RiskBadge({ level, score, size = 'md', className, showIcon = false }: RiskBadgeProps) {
+export function RiskBadge({ level, score, size = 'md', className, animate = true, showIcon = false }: RiskBadgeProps) {
   const sizeClasses = {
     sm: 'px-2.5 py-0.5 text-xs',
     md: 'px-3.5 py-1.5 text-sm',
@@ -57,6 +60,7 @@ export function RiskBadge({ level, score, size = 'md', className, showIcon = fal
         config.bg,
         config.text,
         config.border,
+        animate && config.animClass,
         className
       )}
     >
