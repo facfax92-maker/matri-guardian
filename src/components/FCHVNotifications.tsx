@@ -73,49 +73,48 @@ export function FCHVNotifications() {
     <div>
       <Button
         variant="outline"
-        className="relative w-full justify-start gap-2"
+        className="relative w-full justify-start gap-2 btn-press"
         onClick={() => setExpanded(!expanded)}
       >
-        <Bell className="h-4 w-4" />
+        <Bell className={`h-4 w-4 ${unreadCount > 0 ? 'bell-swing' : ''}`} />
         <span>Doctor Feedback</span>
         {unreadCount > 0 && (
-          <Badge variant="destructive" className="ml-auto text-xs h-5 w-5 p-0 flex items-center justify-center rounded-full">
+          <Badge variant="destructive" className="ml-auto text-xs h-5 w-5 p-0 flex items-center justify-center rounded-full badge-bounce">
             {unreadCount}
           </Badge>
         )}
       </Button>
 
-      <>
-        {expanded && (
-          <div className="mt-2 space-y-2">
-            {feedbacks.slice(0, 5).map(fb => {
-              const config = typeConfig[fb.feedback_type] || typeConfig.general;
-              const FbIcon = config.icon;
-              return (
-                <Card
-                  key={fb.id}
-                  className={`cursor-pointer transition-all hover:shadow-md border-0 shadow-sm ${!fb.is_read ? 'card-gradient-primary' : 'card-gradient'}`}
-                  onClick={() => markAsRead(fb)}
-                >
-                  <CardContent className="p-3 flex items-start gap-3">
-                    <FbIcon className={`h-4 w-4 mt-0.5 shrink-0 ${config.color}`} />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <Badge variant="secondary" className="text-[10px] h-4">{config.label}</Badge>
-                        {!fb.is_read && <span className="h-2 w-2 rounded-full bg-primary" />}
-                      </div>
-                      <p className="text-xs mt-1 line-clamp-2">{fb.message}</p>
-                      <p className="text-[10px] text-muted-foreground mt-1">
-                        {new Date(fb.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                      </p>
+      {expanded && (
+        <div className="mt-2 space-y-2">
+          {feedbacks.slice(0, 5).map((fb, i) => {
+            const config = typeConfig[fb.feedback_type] || typeConfig.general;
+            const FbIcon = config.icon;
+            return (
+              <Card
+                key={fb.id}
+                className={`cursor-pointer card-hover border-0 shadow-sm list-item-in ${!fb.is_read ? 'card-gradient-primary' : 'card-gradient'}`}
+                style={{ animationDelay: `${i * 50}ms` }}
+                onClick={() => markAsRead(fb)}
+              >
+                <CardContent className="p-3 flex items-start gap-3">
+                  <FbIcon className={`h-4 w-4 mt-0.5 shrink-0 ${config.color}`} />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary" className="text-[10px] h-4">{config.label}</Badge>
+                      {!fb.is_read && <span className="h-2 w-2 rounded-full bg-primary badge-bounce" />}
                     </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        )}
-      </>
+                    <p className="text-xs mt-1 line-clamp-2">{fb.message}</p>
+                    <p className="text-[10px] text-muted-foreground mt-1">
+                      {new Date(fb.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
 
       <Dialog open={!!selectedFeedback} onOpenChange={() => setSelectedFeedback(null)}>
         <DialogContent className="max-w-sm">

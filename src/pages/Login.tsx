@@ -6,9 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Activity, Mail, Loader2, ArrowLeft, Users, Stethoscope, Briefcase } from 'lucide-react';
+import { Heart, Activity, Mail, Loader2, ArrowLeft, Users, Stethoscope, Briefcase } from 'lucide-react';
 import { toast } from 'sonner';
-
 
 const DEMO_ACCOUNTS = [
   { label: 'FCHV — Radha Thapa', icon: Users, role: 'fchv' },
@@ -41,23 +40,24 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md page-enter">
         {/* Back button */}
         <div className="mb-4">
-          <Button variant="ghost" size="sm" onClick={() => navigate('/')} className="gap-2 text-muted-foreground">
+          <Button variant="ghost" size="sm" onClick={() => navigate('/')} className="gap-2 text-muted-foreground btn-press">
             <ArrowLeft className="h-4 w-4" /> Back to Dashboard
           </Button>
         </div>
 
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 gradient-primary text-primary-foreground px-4 py-2 rounded-2xl mb-4">
-            <Activity className="h-6 w-6" />
+          <div className="inline-flex items-center gap-2 gradient-primary text-primary-foreground px-4 py-2 rounded-2xl mb-4 list-item-in" style={{ animationDelay: '0ms' }}>
+            <Heart className="h-5 w-5" />
+            <Activity className="h-4 w-4 opacity-80" />
             <span className="text-xl font-bold tracking-tight">MatriCare</span>
           </div>
-          <p className="text-muted-foreground">Sign in to continue</p>
+          <p className="text-muted-foreground list-item-in" style={{ animationDelay: '100ms' }}>Sign in to continue</p>
         </div>
 
-        <Card className="border-0 shadow-lg">
+        <Card className="border-0 shadow-lg list-item-in" style={{ animationDelay: '150ms' }}>
           <CardHeader className="pb-4">
             <CardTitle className="text-center text-lg">Welcome Back</CardTitle>
           </CardHeader>
@@ -65,14 +65,16 @@ const Login = () => {
             <form onSubmit={handleEmailLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email or Phone</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  required
-                />
+                <div className="input-focus-glow rounded-md">
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    required
+                  />
+                </div>
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
@@ -81,16 +83,18 @@ const Login = () => {
                     Forgot password?
                   </Link>
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                />
+                <div className="input-focus-glow rounded-md">
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                  />
+                </div>
               </div>
-              <Button type="submit" className="w-full gradient-primary text-primary-foreground" disabled={loading}>
+              <Button type="submit" className="w-full gradient-primary text-primary-foreground btn-press" disabled={loading}>
                 {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Mail className="h-4 w-4 mr-2" />}
                 Sign In
               </Button>
@@ -111,11 +115,12 @@ const Login = () => {
             {/* Demo accounts */}
             <div className="space-y-2">
               <p className="text-sm font-medium text-center">Try Demo Account:</p>
-              {DEMO_ACCOUNTS.map(acc => (
+              {DEMO_ACCOUNTS.map((acc, i) => (
                 <Button
                   key={acc.role}
                   variant="outline"
-                  className="w-full justify-start gap-3 h-11"
+                  className="w-full justify-start gap-3 h-11 btn-press list-item-in"
+                  style={{ animationDelay: `${300 + i * 60}ms` }}
                   onClick={() => handleDemoLogin(acc.role)}
                 >
                   <acc.icon className="h-4 w-4 text-primary" />
