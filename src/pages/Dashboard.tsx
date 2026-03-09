@@ -7,15 +7,13 @@ import { RiskBadge } from '@/components/RiskBadge';
 import { migrateFromLocalStorage } from '@/lib/indexed-db';
 import { getOverdueStatus } from '@/lib/visit-utils';
 import { FCHVNotifications } from '@/components/FCHVNotifications';
+import { Navbar } from '@/components/Navbar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, AlertTriangle, Plus, ChevronRight, Activity, PieChart, Bell, Moon, Sun, CalendarClock, Stethoscope } from 'lucide-react';
+import { Users, AlertTriangle, Plus, ChevronRight, PieChart, Bell, CalendarClock, Stethoscope } from 'lucide-react';
 import { PieChart as RePieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from '@/hooks/use-theme';
-import { useAuth } from '@/hooks/use-auth';
+import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
-import { ProfileMenu } from '@/components/ProfileMenu';
 
 const Dashboard = () => {
   const { isDark, toggle } = useTheme();
