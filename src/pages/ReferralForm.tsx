@@ -159,11 +159,8 @@ MatriCare Alert System`;
                 </div>
                 <div className="space-y-2">
                   {contacts.map((contact, i) => (
-                    <motion.div
+                    <div
                       key={contact.id}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.05 }}
                       className={`rounded-xl p-3 ${bg} border ${border}`}
                     >
                       <div className="flex items-start justify-between gap-2">
