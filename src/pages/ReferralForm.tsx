@@ -263,13 +263,8 @@ MatriCare Alert System`;
           </CardContent>
         </Card>
 
-        {/* SMS Preview */}
-        <Card>
-          <CardHeader className="pb-2"><CardTitle className="text-base">SMS Preview</CardTitle></CardHeader>
-          <CardContent>
-            <pre className="bg-muted p-3 rounded-lg text-xs whitespace-pre-wrap font-mono">{smsPreview}</pre>
-          </CardContent>
-        </Card>
+        {/* SMS Preview with typewriter effect */}
+        <SmsPreviewCard text={smsPreview} />
 
         <div className="flex flex-col gap-3 pb-6">
           <Button className="gradient-danger text-primary-foreground border-0 h-12" onClick={() => handleSubmit('sent')}>
