@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPatient, saveReferral, initStorage } from '@/lib/storage';
 import { Patient, Referral, Urgency } from '@/lib/types';
