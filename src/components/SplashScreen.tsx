@@ -31,8 +31,8 @@ export function SplashScreen({ onComplete }: { onComplete: () => void }) {
       }}
     >
       {/* Logo icon */}
-      <div className="splash-logo splash-logo-beat relative mb-6">
-        <div className="w-20 h-20 rounded-2xl gradient-primary flex items-center justify-center shadow-lg">
+      <div className="splash-logo-wrapper relative mb-6">
+        <div className="splash-logo-icon w-20 h-20 rounded-2xl gradient-primary flex items-center justify-center shadow-lg">
           <Heart className="h-8 w-8 text-primary-foreground" strokeWidth={2.5} />
           <Activity className="h-5 w-5 text-primary-foreground absolute bottom-2 right-2 opacity-80" />
         </div>
