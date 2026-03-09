@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPatient, saveReferral, initStorage } from '@/lib/storage';
 import { Patient, Referral, Urgency } from '@/lib/types';
@@ -14,6 +14,29 @@ import { ArrowLeft, Send, Save, Phone, MessageSquare, Ambulance, Users, Building
 import { RiskBadge } from '@/components/RiskBadge';
 import { useToast } from '@/hooks/use-toast';
 
+function TypewriterText({ text }: { text: string }) {
+  const [len, setLen] = useState(0);
+
+  useEffect(() => {
+    setLen(0);
+  }, [text]);
+
+  useEffect(() => {
+    if (len >= text.length) return;
+    const speed = text[len] === '\n' ? 40 : 12;
+    const id = setTimeout(() => setLen(l => l + 1), speed);
+    return () => clearTimeout(id);
+  }, [len, text]);
+
+  return (
+    <pre className="bg-muted p-3 rounded-lg text-xs whitespace-pre-wrap font-mono min-h-[120px]">
+      {text.slice(0, len)}
+      {len < text.length && (
+        <span className="inline-block w-[2px] h-[1em] bg-primary align-middle animate-pulse" />
+      )}
+    </pre>
+  );
+}
 
 const contactTypeConfig = {
   ambulance: { icon: Ambulance, label: 'Ambulance Services', color: 'text-danger', bg: 'bg-danger-bg', border: 'border-danger/30' },
@@ -93,7 +116,6 @@ MatriCare Alert System`;
     const message = encodeURIComponent(
       `EMERGENCY: ${patient.name}, ${patient.gestationalAge}wk, ${diagnosis}. BP: ${lastVisit?.systolic}/${lastVisit?.diastolic}. Need immediate transport. FCHV: ${patient.fchvAssigned}`
     );
-    // Open SMS with multiple recipients
     const numbers = [facilityContact?.phone, ambulanceContact?.phone].filter(Boolean).join(',');
     window.open(`sms:${numbers}?body=${message}`, '_self');
     toast({ title: 'Opening SMS app', description: 'Sending alert to facility & transport' });
@@ -106,50 +128,7 @@ MatriCare Alert System`;
   }));
 
   return (
-    <div className="min-h-screen bg-background">;
-
-function SmsPreviewCard({ text }: { text: string }) {
-  const [displayLength, setDisplayLength] = useState(0);
-  const [started, setStarted] = useState(false);
-
-  useEffect(() => {
-    // Start after a short delay when the card scrolls into view
-    const timer = setTimeout(() => setStarted(true), 300);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (!started || displayLength >= text.length) return;
-    const speed = text[displayLength] === '\n' ? 40 : 12;
-    const id = setTimeout(() => setDisplayLength(prev => prev + 1), speed);
-    return () => clearTimeout(id);
-  }, [started, displayLength, text]);
-
-  // Reset when text changes
-  useEffect(() => {
-    setDisplayLength(0);
-    setStarted(false);
-    const timer = setTimeout(() => setStarted(true), 300);
-    return () => clearTimeout(timer);
-  }, [text]);
-
-  const displayed = text.slice(0, displayLength);
-  const showCursor = displayLength < text.length;
-
-  return (
-    <Card>
-      <CardHeader className="pb-2"><CardTitle className="text-base">SMS Preview</CardTitle></CardHeader>
-      <CardContent>
-        <pre className="bg-muted p-3 rounded-lg text-xs whitespace-pre-wrap font-mono min-h-[120px]">
-          {displayed}
-          {showCursor && <span className="inline-block w-[2px] h-[1em] bg-primary align-middle animate-pulse" />}
-        </pre>
-      </CardContent>
-    </Card>
-  );
-}
-
-const ReferralFormContent = ({ patient, lastVisit, urgency, smsPreview, facility, setFacility, diagnosis, setDiagnosis, notes, setNotes, transportArranged, setTransportArranged, handleSubmit, handleSmsMultiple, groupedContacts, navigate }: any) => (
+    <div className="min-h-screen bg-background">
       <header className="gradient-danger px-4 py-4 text-primary-foreground" style={{ borderRadius: '0 0 1.5rem 1.5rem' }}>
         <div className="container max-w-lg mx-auto flex items-center gap-3">
           <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20" onClick={() => navigate(-1)}>
@@ -201,7 +180,7 @@ const ReferralFormContent = ({ patient, lastVisit, urgency, smsPreview, facility
                   <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
                 </div>
                 <div className="space-y-2">
-                  {contacts.map((contact, i) => (
+                  {contacts.map((contact) => (
                     <div
                       key={contact.id}
                       className={`rounded-xl p-3 ${bg} border ${border}`}
@@ -246,7 +225,6 @@ const ReferralFormContent = ({ patient, lastVisit, urgency, smsPreview, facility
               </div>
             ))}
 
-            {/* SMS Multiple Button */}
             <Button
               className="w-full h-11 bg-danger/10 text-danger hover:bg-danger/20 border border-danger/30"
               variant="ghost"
@@ -307,7 +285,12 @@ const ReferralFormContent = ({ patient, lastVisit, urgency, smsPreview, facility
         </Card>
 
         {/* SMS Preview with typewriter effect */}
-        <SmsPreviewCard text={smsPreview} />
+        <Card>
+          <CardHeader className="pb-2"><CardTitle className="text-base">SMS Preview</CardTitle></CardHeader>
+          <CardContent>
+            <TypewriterText text={smsPreview} />
+          </CardContent>
+        </Card>
 
         <div className="flex flex-col gap-3 pb-6">
           <Button className="gradient-danger text-primary-foreground border-0 h-12" onClick={() => handleSubmit('sent')}>
