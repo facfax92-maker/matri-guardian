@@ -140,12 +140,7 @@ const ReferralSuccess = () => {
     <div className="min-h-screen bg-background">
       <main className="container max-w-lg mx-auto px-4 py-8 space-y-6">
         {/* Success Icon */}
-        <motion.div
-          className="text-center"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-        >
+        <div className="text-center">
           <div className="inline-flex items-center justify-center h-20 w-20 rounded-full bg-success-bg mb-4">
             <CheckCircle2 className="h-10 w-10 text-success" />
           </div>
