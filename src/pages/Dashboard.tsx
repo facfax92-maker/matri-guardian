@@ -16,6 +16,9 @@ import { Users, AlertTriangle, Plus, ChevronRight, PieChart, Bell, CalendarClock
 import { PieChart as RePieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { Badge } from '@/components/ui/badge';
 import { DashboardSkeleton } from '@/components/DashboardSkeleton';
+import { PWAInstallBanner } from '@/components/PWAInstallBanner';
+import { OnboardingWalkthrough } from '@/components/OnboardingWalkthrough';
+import { EmptyState } from '@/components/EmptyState';
 
 const Dashboard = () => {
   const navigate = useNavigate();
