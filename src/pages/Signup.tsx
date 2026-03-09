@@ -82,7 +82,7 @@ const Signup = () => {
               </Link>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
     );
   }
