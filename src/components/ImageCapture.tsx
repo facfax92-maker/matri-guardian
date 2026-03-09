@@ -202,7 +202,7 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
 
           {/* Step 3: Review */}
           {step === 'review' && preview && (
-            <motion.div key="review" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
+            <div className="space-y-4">
               <div className="relative rounded-xl overflow-hidden border">
                 <img src={preview} alt="Captured" className="w-full max-h-64 object-contain bg-muted" />
                 <Button
