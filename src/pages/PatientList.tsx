@@ -150,7 +150,7 @@ const PatientList = () => {
                 transition={{ delay: i * 0.05 }}
               >
                 <Card
-                  className={`cursor-pointer hover:shadow-md transition-all card-gradient border-0 shadow-sm ${
+                  className={`card-interactive card-gradient border-0 shadow-sm ${
                     overdueStatus === 'urgent-overdue' ? 'ring-2 ring-danger/50' : ''
                   }`}
                   onClick={() => navigate(`/patients/${patient.id}`)}
