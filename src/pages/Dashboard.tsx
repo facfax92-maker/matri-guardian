@@ -20,7 +20,6 @@ import { ProfileMenu } from '@/components/ProfileMenu';
 const Dashboard = () => {
   const { isDark, toggle } = useTheme();
   const navigate = useNavigate();
-  const navigate = useNavigate();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
 
