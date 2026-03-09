@@ -17,7 +17,6 @@ import { Badge } from '@/components/ui/badge';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const navigate = useNavigate();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
 
