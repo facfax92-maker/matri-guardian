@@ -222,7 +222,7 @@ const PostpartumForm = () => {
 
         {/* Live score preview */}
         {allAnswered && (
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
+          <div>
             <Card className={`border-2 ${riskInfo.border}`}>
               <CardContent className="p-4 flex items-center gap-3">
                 <RiskIcon className={`h-6 w-6 ${riskInfo.color}`} />
