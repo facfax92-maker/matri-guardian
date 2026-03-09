@@ -14,6 +14,29 @@ import { ArrowLeft, Send, Save, Phone, MessageSquare, Ambulance, Users, Building
 import { RiskBadge } from '@/components/RiskBadge';
 import { useToast } from '@/hooks/use-toast';
 
+function TypewriterText({ text }: { text: string }) {
+  const [len, setLen] = useState(0);
+
+  useEffect(() => {
+    setLen(0);
+  }, [text]);
+
+  useEffect(() => {
+    if (len >= text.length) return;
+    const speed = text[len] === '\n' ? 40 : 12;
+    const id = setTimeout(() => setLen(l => l + 1), speed);
+    return () => clearTimeout(id);
+  }, [len, text]);
+
+  return (
+    <pre className="bg-muted p-3 rounded-lg text-xs whitespace-pre-wrap font-mono min-h-[120px]">
+      {text.slice(0, len)}
+      {len < text.length && (
+        <span className="inline-block w-[2px] h-[1em] bg-primary align-middle animate-pulse" />
+      )}
+    </pre>
+  );
+}
 
 const contactTypeConfig = {
   ambulance: { icon: Ambulance, label: 'Ambulance Services', color: 'text-danger', bg: 'bg-danger-bg', border: 'border-danger/30' },
@@ -93,7 +116,6 @@ MatriCare Alert System`;
     const message = encodeURIComponent(
       `EMERGENCY: ${patient.name}, ${patient.gestationalAge}wk, ${diagnosis}. BP: ${lastVisit?.systolic}/${lastVisit?.diastolic}. Need immediate transport. FCHV: ${patient.fchvAssigned}`
     );
-    // Open SMS with multiple recipients
     const numbers = [facilityContact?.phone, ambulanceContact?.phone].filter(Boolean).join(',');
     window.open(`sms:${numbers}?body=${message}`, '_self');
     toast({ title: 'Opening SMS app', description: 'Sending alert to facility & transport' });
@@ -158,7 +180,7 @@ MatriCare Alert System`;
                   <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
                 </div>
                 <div className="space-y-2">
-                  {contacts.map((contact, i) => (
+                  {contacts.map((contact) => (
                     <div
                       key={contact.id}
                       className={`rounded-xl p-3 ${bg} border ${border}`}
@@ -203,7 +225,6 @@ MatriCare Alert System`;
               </div>
             ))}
 
-            {/* SMS Multiple Button */}
             <Button
               className="w-full h-11 bg-danger/10 text-danger hover:bg-danger/20 border border-danger/30"
               variant="ghost"
@@ -263,11 +284,11 @@ MatriCare Alert System`;
           </CardContent>
         </Card>
 
-        {/* SMS Preview */}
+        {/* SMS Preview with typewriter effect */}
         <Card>
           <CardHeader className="pb-2"><CardTitle className="text-base">SMS Preview</CardTitle></CardHeader>
           <CardContent>
-            <pre className="bg-muted p-3 rounded-lg text-xs whitespace-pre-wrap font-mono">{smsPreview}</pre>
+            <TypewriterText text={smsPreview} />
           </CardContent>
         </Card>
 
