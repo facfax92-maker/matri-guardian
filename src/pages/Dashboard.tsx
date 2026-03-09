@@ -175,29 +175,23 @@ const Dashboard = () => {
             <h2 className="text-lg font-semibold">Recent Alerts</h2>
           </div>
           <div className="space-y-2">
-            {alerts.slice(0, 3).map((alert, i) => (
-              <motion.div
+            {alerts.slice(0, 3).map((alert) => (
+              <Card
                 key={alert.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 + i * 0.1 }}
+                className="cursor-pointer hover:bg-accent/50 transition-colors duration-150 card-gradient border-0 shadow-sm"
+                onClick={() => navigate(`/patients/${alert.patientId}`)}
               >
-                <Card
-                  className="cursor-pointer card-interactive card-gradient border-0 shadow-sm"
-                  onClick={() => navigate(`/patients/${alert.patientId}`)}
-                >
-                  <CardContent className="p-3 flex items-center gap-3">
-                    <div className={`h-2.5 w-2.5 rounded-full shrink-0 ${
-                      alert.type === 'escalation' ? 'bg-danger' : 'bg-warning'
-                    }`} />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{alert.patientName}</p>
-                      <p className="text-xs text-muted-foreground truncate">{alert.message}</p>
-                    </div>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
-                  </CardContent>
-                </Card>
-              </motion.div>
+                <CardContent className="p-3 flex items-center gap-3">
+                  <div className={`h-2.5 w-2.5 rounded-full shrink-0 ${
+                    alert.type === 'escalation' ? 'bg-danger' : 'bg-warning'
+                  }`} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium">{alert.patientName}</p>
+                    <p className="text-xs text-muted-foreground truncate">{alert.message}</p>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
