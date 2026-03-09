@@ -142,7 +142,7 @@ const PatientList = () => {
           </div>
 
           {/* Patient Cards */}
-          <div className="space-y-3">
+          {isLoading ? <PatientListSkeleton /> : <div className="space-y-3">
             {processed.map((patient, i) => {
               const lastVisit = patient.visits[patient.visits.length - 1];
               const overdueStatus = getOverdueStatus(patient);
