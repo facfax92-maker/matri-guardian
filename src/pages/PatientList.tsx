@@ -199,10 +199,12 @@ const PatientList = () => {
               );
             })}
             {processed.length === 0 && (
-              <AnimatedEmptyState
-                icon={<Users className="h-10 w-10 mx-auto" />}
+              <EmptyState
+                illustration="patients"
                 title="No patients found"
-                description="Try adjusting your search or filters"
+                description={search || riskFilter !== 'ALL' ? "Try adjusting your search or filters" : "Register your first patient to get started"}
+                actionLabel={!search && riskFilter === 'ALL' ? "Register Patient" : undefined}
+                onAction={!search && riskFilter === 'ALL' ? () => navigate('/patients/new') : undefined}
               />
             )}
           </div>}
