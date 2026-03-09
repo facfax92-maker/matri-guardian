@@ -3,11 +3,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/use-auth";
 import { SplashScreen } from "@/components/SplashScreen";
-import { PageTransition } from "@/components/PageTransition";
-import { AnimatePresence } from "framer-motion";
 import Dashboard from "./pages/Dashboard";
 import PatientList from "./pages/PatientList";
 import PatientRegistration from "./pages/PatientRegistration";
@@ -28,34 +26,6 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-function AnimatedRoutes() {
-  const location = useLocation();
-  return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<PageTransition><Dashboard /></PageTransition>} />
-        <Route path="/patients" element={<PageTransition><PatientList /></PageTransition>} />
-        <Route path="/patients/new" element={<PageTransition><PatientRegistration /></PageTransition>} />
-        <Route path="/patients/:id" element={<PageTransition><PatientDetail /></PageTransition>} />
-        <Route path="/patients/:id/visits/new" element={<PageTransition><NewVisitForm /></PageTransition>} />
-        <Route path="/patients/:id/visits/:visitId" element={<PageTransition><VisitDetail /></PageTransition>} />
-        <Route path="/patients/:id/referral" element={<PageTransition><ReferralForm /></PageTransition>} />
-        <Route path="/patients/:id/referral-success" element={<PageTransition><ReferralSuccess /></PageTransition>} />
-        <Route path="/patients/:id/postpartum" element={<PageTransition><PostpartumForm /></PageTransition>} />
-        <Route path="/hospital-portal" element={<PageTransition><HospitalPortal /></PageTransition>} />
-        <Route path="/settings" element={<PageTransition><SettingsPage /></PageTransition>} />
-        <Route path="/edit-profile" element={<PageTransition><EditProfile /></PageTransition>} />
-        <Route path="/switch-account" element={<PageTransition><Login /></PageTransition>} />
-        <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
-        <Route path="/signup" element={<PageTransition><Signup /></PageTransition>} />
-        <Route path="/forgot-password" element={<PageTransition><ForgotPassword /></PageTransition>} />
-        <Route path="/reset-password" element={<PageTransition><ResetPassword /></PageTransition>} />
-        <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
-      </Routes>
-    </AnimatePresence>
-  );
-}
-
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
   const handleSplashComplete = useCallback(() => setShowSplash(false), []);
@@ -69,7 +39,26 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
             <AuthProvider>
-              <AnimatedRoutes />
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/patients" element={<PatientList />} />
+                <Route path="/patients/new" element={<PatientRegistration />} />
+                <Route path="/patients/:id" element={<PatientDetail />} />
+                <Route path="/patients/:id/visits/new" element={<NewVisitForm />} />
+                <Route path="/patients/:id/visits/:visitId" element={<VisitDetail />} />
+                <Route path="/patients/:id/referral" element={<ReferralForm />} />
+                <Route path="/patients/:id/referral-success" element={<ReferralSuccess />} />
+                <Route path="/patients/:id/postpartum" element={<PostpartumForm />} />
+                <Route path="/hospital-portal" element={<HospitalPortal />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/edit-profile" element={<EditProfile />} />
+                <Route path="/switch-account" element={<Login />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
             </AuthProvider>
           </BrowserRouter>
         </TooltipProvider>
