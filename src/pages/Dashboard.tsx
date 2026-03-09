@@ -79,7 +79,7 @@ const Dashboard = () => {
               <Card className={`text-center ${stat.gradient} border-0 shadow-sm`}>
                 <CardContent className="p-4">
                   <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
-                  <p className="text-2xl font-bold">{stat.value}</p>
+                  <AnimatedCounter value={stat.value} className="text-2xl font-bold" />
                   <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
                 </CardContent>
               </Card>
