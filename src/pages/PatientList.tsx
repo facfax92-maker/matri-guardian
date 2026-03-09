@@ -4,6 +4,7 @@ import { getPatients, initStorage } from '@/lib/storage';
 import { Patient, RiskLevel } from '@/lib/types';
 import { RiskBadge } from '@/components/RiskBadge';
 import { getOverdueStatus, getDaysSinceLastVisit } from '@/lib/visit-utils';
+import { Navbar } from '@/components/Navbar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
