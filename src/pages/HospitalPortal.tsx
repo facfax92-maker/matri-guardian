@@ -347,7 +347,7 @@ const HospitalPortal = () => {
                   <p className="text-xs text-muted-foreground">{stat.label}</p>
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
           ))}
         </div>
 
