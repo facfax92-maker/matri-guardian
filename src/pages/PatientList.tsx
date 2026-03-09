@@ -71,18 +71,14 @@ const PatientList = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="gradient-primary px-4 py-4 text-primary-foreground" style={{ borderRadius: '0 0 1.5rem 1.5rem' }}>
-        <div className="container max-w-lg mx-auto flex items-center gap-3">
-          <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20" onClick={() => navigate('/')}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div className="flex-1">
-            <h1 className="text-lg font-bold">All Patients</h1>
-            <p className="text-sm opacity-80">{patients.length} registered</p>
-          </div>
-          <Users className="h-5 w-5 opacity-80" />
+      <Navbar />
+      <div className="container max-w-lg mx-auto px-4 py-3">
+        <div className="flex items-center gap-2 mb-4">
+          <Users className="h-5 w-5 text-primary" />
+          <h1 className="text-lg font-bold">All Patients</h1>
+          <span className="text-sm text-muted-foreground">({patients.length})</span>
         </div>
-      </header>
+      </div>
 
       <main className="container max-w-lg mx-auto px-4 py-4 space-y-4">
         {/* Search */}

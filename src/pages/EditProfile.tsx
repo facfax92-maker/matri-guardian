@@ -29,14 +29,15 @@ const EditProfile = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="gradient-primary px-4 py-4 text-primary-foreground" style={{ borderRadius: '0 0 1.5rem 1.5rem' }}>
-        <div className="container max-w-lg mx-auto flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors">
+      <Navbar />
+      <div className="container max-w-lg mx-auto px-4 py-3">
+        <div className="flex items-center gap-2 mb-4">
+          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
             <ArrowLeft className="h-5 w-5" />
-          </button>
+          </Button>
           <h1 className="text-lg font-bold">Edit Profile</h1>
         </div>
-      </header>
+      </div>
 
       <main className="container max-w-lg mx-auto px-4 py-6">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
