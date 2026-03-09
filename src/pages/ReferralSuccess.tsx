@@ -138,14 +138,14 @@ const ReferralSuccess = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="container max-w-lg mx-auto px-4 py-8 space-y-6">
+      <main className="container max-w-lg mx-auto px-4 py-8 space-y-6 page-enter">
         {/* Success Icon */}
         <div className="text-center">
-          <div className="inline-flex items-center justify-center h-20 w-20 rounded-full bg-success-bg mb-4">
+          <div className="inline-flex items-center justify-center h-20 w-20 rounded-full bg-success-bg mb-4 success-check">
             <CheckCircle2 className="h-10 w-10 text-success" />
           </div>
-          <h1 className="text-2xl font-bold">Referral Generated Successfully</h1>
-          <p className="text-muted-foreground mt-2">{new Date().toLocaleString()}</p>
+          <h1 className="text-2xl font-bold list-item-in" style={{ animationDelay: '200ms' }}>Referral Generated Successfully</h1>
+          <p className="text-muted-foreground mt-2 list-item-in" style={{ animationDelay: '300ms' }}>{new Date().toLocaleString()}</p>
         </div>
 
         {/* Referral Summary */}
