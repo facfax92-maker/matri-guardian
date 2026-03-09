@@ -295,12 +295,14 @@ const PatientDetail = () => {
                       key={visit.id}
                       className="flex items-center"
                     >
+                      {/* Animated dot */}
                       <div
-                        className="flex flex-col items-center cursor-pointer group"
+                        className="flex flex-col items-center cursor-pointer group timeline-dot-appear"
+                        style={{ animationDelay: `${i * 200 + 300}ms` }}
                         onClick={() => navigate(`/patients/${patient.id}/visits/${visit.id}`)}
                       >
                         <div
-                          className={`h-10 w-10 rounded-full border-2 flex items-center justify-center text-xs font-bold ${
+                          className={`h-10 w-10 rounded-full border-2 flex items-center justify-center text-xs font-bold transition-shadow duration-200 group-hover:shadow-md ${
                             visit.riskLevel === 'LOW' ? 'border-success bg-success-bg text-success-foreground' :
                             visit.riskLevel === 'MODERATE' ? 'border-warning bg-warning-bg text-warning-foreground' :
                             'border-danger bg-danger-bg text-danger-foreground'
@@ -312,15 +314,21 @@ const PatientDetail = () => {
                         <p className="text-xs text-muted-foreground">{visit.gestationalAge}wk</p>
                         <RiskBadge level={visit.riskLevel} size="sm" className="mt-1" />
                       </div>
+                      {/* Animated connecting line */}
                       {i < patient.visits.length - 1 && (
-                        <div
-                          className={`w-12 h-0.5 mx-1 relative ${
-                            patient.visits[i + 1].riskScore > visit.riskScore ? 'bg-danger/40' : 'bg-success/40'
-                          }`}
-                        >
-                          <ChevronRight className={`h-3 w-3 absolute -right-1 -top-[5px] ${
-                            patient.visits[i + 1].riskScore > visit.riskScore ? 'text-danger' : 'text-success'
-                          }`} />
+                        <div className="relative mx-1">
+                          <div
+                            className={`h-0.5 timeline-line-draw ${
+                              patient.visits[i + 1].riskScore > visit.riskScore ? 'bg-danger/40' : 'bg-success/40'
+                            }`}
+                            style={{ animationDelay: `${i * 200 + 500}ms` }}
+                          />
+                          <ChevronRight
+                            className={`h-3 w-3 absolute -right-1 -top-[5px] timeline-dot-appear ${
+                              patient.visits[i + 1].riskScore > visit.riskScore ? 'text-danger' : 'text-success'
+                            }`}
+                            style={{ animationDelay: `${(i + 1) * 200 + 300}ms` }}
+                          />
                         </div>
                       )}
                     </div>
