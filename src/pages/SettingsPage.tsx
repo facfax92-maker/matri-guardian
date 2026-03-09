@@ -7,7 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, Globe, Palette, Bell, Wifi, HardDrive, RefreshCw, Info, HelpCircle, Shield, FileText } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Navbar } from '@/components/Navbar';
 import { useTheme } from '@/hooks/use-theme';
 import { toast } from 'sonner';
 
@@ -25,18 +25,19 @@ const SettingsPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="gradient-primary px-4 py-4 text-primary-foreground" style={{ borderRadius: '0 0 1.5rem 1.5rem' }}>
-        <div className="container max-w-lg mx-auto flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors">
+      <Navbar />
+      <div className="container max-w-lg mx-auto px-4 py-3">
+        <div className="flex items-center gap-2 mb-4">
+          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
             <ArrowLeft className="h-5 w-5" />
-          </button>
+          </Button>
           <h1 className="text-lg font-bold">Settings</h1>
         </div>
-      </header>
+      </div>
 
       <main className="container max-w-lg mx-auto px-4 py-6 space-y-4">
         {/* Preferences */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+        <div>
           <Card className="border-0 shadow-sm card-gradient">
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2">
@@ -88,10 +89,10 @@ const SettingsPage = () => {
               ))}
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
         {/* Data & Sync */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+        <div>
           <Card className="border-0 shadow-sm card-gradient">
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2">
@@ -131,10 +132,10 @@ const SettingsPage = () => {
               </Button>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
         {/* About */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+        <div>
           <Card className="border-0 shadow-sm card-gradient">
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2">
@@ -157,7 +158,7 @@ const SettingsPage = () => {
               ))}
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </main>
     </div>
   );

@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Navbar } from '@/components/Navbar';
 import {
   ArrowLeft, Clock, CheckCircle2, Stethoscope, FileText,
   Send, MessageSquare, Activity, AlertTriangle, User,
@@ -314,29 +315,21 @@ const HospitalPortal = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="gradient-primary px-4 py-6 text-primary-foreground" style={{ borderRadius: '0 0 1.5rem 1.5rem' }}>
-        <div className="container max-w-2xl mx-auto">
-          <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20" onClick={() => navigate('/')}>
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-              <Stethoscope className="h-6 w-6" />
-              <h1 className="text-xl font-bold tracking-tight">Hospital Portal</h1>
-            </div>
-            <div className="flex items-center gap-2">
-              <button onClick={toggle} className="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors">
-                {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-              </button>
-              <button onClick={signOut} className="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors">
-                <LogOut className="h-5 w-5" />
-              </button>
-            </div>
+      <Navbar />
+      <div className="container max-w-2xl mx-auto px-4 py-3">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Stethoscope className="h-5 w-5 text-primary" />
+            <h1 className="text-lg font-bold">Hospital Portal</h1>
           </div>
-          <p className="text-sm opacity-90 ml-12">Dr. {profile?.full_name || 'Doctor'}</p>
+          <div className="flex items-center gap-2">
+            <button onClick={signOut} className="p-2 rounded-full bg-muted hover:bg-accent transition-colors duration-150">
+              <LogOut className="h-4 w-4 text-foreground" />
+            </button>
+          </div>
         </div>
-      </header>
+        <p className="text-sm text-muted-foreground mb-4">Dr. {profile?.full_name || 'Doctor'}</p>
+      </div>
 
       <main className="container max-w-2xl mx-auto px-4 py-6 space-y-6">
         {/* Stats */}
