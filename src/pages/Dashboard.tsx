@@ -90,21 +90,17 @@ const Dashboard = () => {
                   </motion.div>
                 </AnimatePresence>
               </button>
-              <button onClick={signOut} className="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors">
-                <LogOut className="h-5 w-5" />
-              </button>
+              <ProfileMenu />
             </div>
           </div>
           <div className="flex items-center gap-2 mt-1">
-            <p className="text-sm opacity-90">{roles[0]?.toUpperCase() || 'FCHV'} Dashboard</p>
-            {roles.map(r => (
-              <Badge key={r} variant="secondary" className="bg-white/20 text-primary-foreground border-0 text-xs">
-                {r.toUpperCase()}
-              </Badge>
-            ))}
+            <p className="text-sm opacity-90">FCHV Dashboard</p>
+            <Badge variant="secondary" className="bg-white/20 text-primary-foreground border-0 text-xs">
+              FCHV
+            </Badge>
           </div>
           <p className="text-lg font-semibold mt-2">
-            Welcome, {profile?.full_name || 'User'}
+            Welcome, Radha Thapa
           </p>
         </div>
       </header>
