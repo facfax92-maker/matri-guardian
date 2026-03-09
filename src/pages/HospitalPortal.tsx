@@ -309,7 +309,7 @@ const HospitalPortal = () => {
             )}
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
     );
   };
 
