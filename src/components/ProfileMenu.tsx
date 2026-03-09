@@ -70,13 +70,9 @@ export function ProfileMenu() {
         <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
 
-      <AnimatePresence>
+      <>
         {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -8, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.96 }}
-            transition={{ duration: 0.18 }}
+          <div
             className="absolute right-0 top-full mt-2 w-[320px] max-w-[calc(100vw-2rem)] bg-card rounded-xl shadow-xl border border-border z-50 overflow-hidden"
           >
             {/* Header */}
