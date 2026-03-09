@@ -89,7 +89,7 @@ const SettingsPage = () => {
               ))}
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
         {/* Data & Sync */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
