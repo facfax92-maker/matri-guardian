@@ -183,11 +183,8 @@ const PostpartumForm = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             {edinburghQuestions.map((q, idx) => (
-              <motion.div
+              <div
                 key={q.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.08 }}
                 className="space-y-2"
               >
                 <p className="text-sm font-medium">
