@@ -103,6 +103,7 @@ const Dashboard = () => {
                           paddingAngle={4}
                           dataKey="value"
                           strokeWidth={0}
+                          isAnimationActive={false}
                         >
                           {pieData.map((entry, idx) => (
                             <Cell key={idx} fill={entry.color} />
