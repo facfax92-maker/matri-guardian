@@ -67,7 +67,7 @@ export function ProfileMenu() {
         <span className="text-sm font-medium text-foreground hidden sm:inline">
           {DEMO_PROFILE.name.split(' ')[0]} T.
         </span>
-        <ChevronDown className={`h-3.5 w-3.5 text-primary-foreground/80 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
 
       <AnimatePresence>
