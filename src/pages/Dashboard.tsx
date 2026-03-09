@@ -191,7 +191,7 @@ const Dashboard = () => {
                 transition={{ delay: 0.4 + i * 0.1 }}
               >
                 <Card
-                  className="cursor-pointer hover:shadow-md transition-all card-gradient border-0 shadow-sm"
+                  className="cursor-pointer card-interactive card-gradient border-0 shadow-sm"
                   onClick={() => navigate(`/patients/${alert.patientId}`)}
                 >
                   <CardContent className="p-3 flex items-center gap-3">
