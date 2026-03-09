@@ -15,17 +15,24 @@ import { Button } from '@/components/ui/button';
 import { Users, AlertTriangle, Plus, ChevronRight, PieChart, Bell, CalendarClock, Stethoscope } from 'lucide-react';
 import { PieChart as RePieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { Badge } from '@/components/ui/badge';
+import { DashboardSkeleton } from '@/components/DashboardSkeleton';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     initStorage();
     migrateFromLocalStorage().catch(() => {});
-    setPatients(getPatients());
-    setAlerts(getAlerts());
+    // Simulate async data loading for skeleton visibility
+    const timer = setTimeout(() => {
+      setPatients(getPatients());
+      setAlerts(getAlerts());
+      setIsLoading(false);
+    }, 600);
+    return () => clearTimeout(timer);
   }, []);
 
   const riskCounts = useMemo(() => {
@@ -68,6 +75,7 @@ const Dashboard = () => {
 
       <PageTransition>
         <main className="container max-w-lg mx-auto px-4 py-6 space-y-6">
+          {isLoading ? <DashboardSkeleton /> : <>
           {/* Stats */}
           <div className="grid grid-cols-3 gap-3">
             {stats.map((stat, i) => (
@@ -205,6 +213,7 @@ const Dashboard = () => {
               ))}
             </div>
           </div>
+          </>}
         </main>
       </PageTransition>
     </div>

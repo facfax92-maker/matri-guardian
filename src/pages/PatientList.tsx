@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Plus, Search, Filter, ArrowUpDown, Clock, Users, AlertTriangle } from 'lucide-react';
+import { PatientListSkeleton } from '@/components/PatientListSkeleton';
 
 type SortOption = 'name' | 'ga-desc' | 'ga-asc' | 'last-visit';
 type FilterOption = 'ALL' | RiskLevel | 'OVERDUE';
@@ -22,10 +23,15 @@ const PatientList = () => {
   const [search, setSearch] = useState('');
   const [riskFilter, setRiskFilter] = useState<FilterOption>('ALL');
   const [sortBy, setSortBy] = useState<SortOption>('name');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     initStorage();
-    setPatients(getPatients());
+    const timer = setTimeout(() => {
+      setPatients(getPatients());
+      setIsLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
   }, []);
 
   const processed = useMemo(() => {
@@ -136,7 +142,7 @@ const PatientList = () => {
           </div>
 
           {/* Patient Cards */}
-          <div className="space-y-3">
+          {isLoading ? <PatientListSkeleton /> : <div className="space-y-3">
             {processed.map((patient, i) => {
               const lastVisit = patient.visits[patient.visits.length - 1];
               const overdueStatus = getOverdueStatus(patient);
@@ -199,7 +205,7 @@ const PatientList = () => {
                 description="Try adjusting your search or filters"
               />
             )}
-          </div>
+          </div>}
         </main>
 
         {/* FAB */}
