@@ -18,8 +18,8 @@ import { Badge } from '@/components/ui/badge';
 import { ProfileMenu } from '@/components/ProfileMenu';
 
 const Dashboard = () => {
-  const { profile, roles, signOut } = useAuth();
   const { isDark, toggle } = useTheme();
+  const navigate = useNavigate();
   const navigate = useNavigate();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
