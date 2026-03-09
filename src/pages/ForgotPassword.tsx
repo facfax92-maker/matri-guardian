@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Activity, Loader2, CheckCircle, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
-import { motion } from 'framer-motion';
+
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
