@@ -313,13 +313,10 @@ const PatientDetail = () => {
                         <RiskBadge level={visit.riskLevel} size="sm" className="mt-1" />
                       </div>
                       {i < patient.visits.length - 1 && (
-                        <motion.div
+                        <div
                           className={`w-12 h-0.5 mx-1 relative ${
                             patient.visits[i + 1].riskScore > visit.riskScore ? 'bg-danger/40' : 'bg-success/40'
                           }`}
-                          initial={{ scaleX: 0 }}
-                          animate={{ scaleX: 1 }}
-                          transition={{ delay: i * 0.15 + 0.1 }}
                         >
                           <ChevronRight className={`h-3 w-3 absolute -right-1 -top-[5px] ${
                             patient.visits[i + 1].riskScore > visit.riskScore ? 'text-danger' : 'text-success'
