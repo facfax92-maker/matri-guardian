@@ -98,7 +98,7 @@ const EditProfile = () => {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </main>
     </div>
   );

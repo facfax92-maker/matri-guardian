@@ -158,7 +158,7 @@ const SettingsPage = () => {
               ))}
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </main>
     </div>
   );
