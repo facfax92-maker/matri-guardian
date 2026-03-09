@@ -9,15 +9,15 @@ import { getOverdueStatus } from '@/lib/visit-utils';
 import { FCHVNotifications } from '@/components/FCHVNotifications';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, AlertTriangle, Plus, ChevronRight, Activity, PieChart, Bell, Clock, Moon, Sun, CalendarClock, LogOut, Stethoscope } from 'lucide-react';
+import { Users, AlertTriangle, Plus, ChevronRight, Activity, PieChart, Bell, Moon, Sun, CalendarClock, Stethoscope } from 'lucide-react';
 import { PieChart as RePieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/hooks/use-theme';
 import { useAuth } from '@/hooks/use-auth';
 import { Badge } from '@/components/ui/badge';
+import { ProfileMenu } from '@/components/ProfileMenu';
 
 const Dashboard = () => {
-  const { profile, roles, signOut } = useAuth();
   const { isDark, toggle } = useTheme();
   const navigate = useNavigate();
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -89,21 +89,17 @@ const Dashboard = () => {
                   </motion.div>
                 </AnimatePresence>
               </button>
-              <button onClick={signOut} className="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors">
-                <LogOut className="h-5 w-5" />
-              </button>
+              <ProfileMenu />
             </div>
           </div>
           <div className="flex items-center gap-2 mt-1">
-            <p className="text-sm opacity-90">{roles[0]?.toUpperCase() || 'FCHV'} Dashboard</p>
-            {roles.map(r => (
-              <Badge key={r} variant="secondary" className="bg-white/20 text-primary-foreground border-0 text-xs">
-                {r.toUpperCase()}
-              </Badge>
-            ))}
+            <p className="text-sm opacity-90">FCHV Dashboard</p>
+            <Badge variant="secondary" className="bg-white/20 text-primary-foreground border-0 text-xs">
+              FCHV
+            </Badge>
           </div>
           <p className="text-lg font-semibold mt-2">
-            Welcome, {profile?.full_name || 'User'}
+            Welcome, Radha Thapa
           </p>
         </div>
       </header>
@@ -189,7 +185,7 @@ const Dashboard = () => {
         )}
 
         {/* Quick Actions */}
-        <div className={`grid gap-3 ${roles.includes('doctor') || roles.includes('admin') ? 'grid-cols-3' : 'grid-cols-2'}`}>
+        <div className="grid gap-3 grid-cols-3">
           <Button
             className="h-12 gradient-primary text-primary-foreground border-0 rounded-xl"
             onClick={() => navigate('/patients')}
@@ -205,20 +201,18 @@ const Dashboard = () => {
             <Plus className="h-4 w-4 mr-2" />
             Register
           </Button>
-          {(roles.includes('doctor') || roles.includes('admin')) && (
-            <Button
-              variant="outline"
-              className="h-12 rounded-xl"
-              onClick={() => navigate('/hospital-portal')}
-            >
-              <Stethoscope className="h-4 w-4 mr-2" />
-              Portal
-            </Button>
-          )}
+          <Button
+            variant="outline"
+            className="h-12 rounded-xl"
+            onClick={() => navigate('/hospital-portal')}
+          >
+            <Stethoscope className="h-4 w-4 mr-2" />
+            Portal
+          </Button>
         </div>
 
         {/* FCHV Notifications from Doctors */}
-        {roles.includes('fchv') && <FCHVNotifications />}
+        <FCHVNotifications />
 
         {/* Recent Alerts */}
         <div>
