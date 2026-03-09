@@ -122,12 +122,9 @@ export function ImageGallery({ patientId, filterCategory }: ImageGalleryProps) {
               const catInfo = getCategoryInfo(img.category);
               const isSelected = compareIndices && (compareIndices[0] === i || compareIndices[1] === i);
               return (
-                <motion.div
+                <div
                   key={img.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.05 }}
-                  className={`relative rounded-xl overflow-hidden border-2 cursor-pointer transition-all ${
+                  className={`relative rounded-xl overflow-hidden border-2 cursor-pointer transition-colors duration-150 ${
                     isSelected ? 'border-primary ring-2 ring-primary/30' : 'border-transparent hover:border-border'
                   }`}
                   onClick={() => compareMode ? handleCompareSelect(i) : setSelectedIndex(i)}
