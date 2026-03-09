@@ -105,10 +105,9 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <AnimatePresence mode="wait">
-          {/* Step 1: Consent */}
+        <>
           {step === 'consent' && (
-            <motion.div key="consent" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
+            <div className="space-y-4">
               <div className="p-4 rounded-xl bg-warning-bg border border-warning/30">
                 <div className="flex items-start gap-3">
                   <Shield className="h-5 w-5 text-warning-foreground shrink-0 mt-0.5" />
