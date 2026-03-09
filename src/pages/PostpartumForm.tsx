@@ -215,7 +215,7 @@ const PostpartumForm = () => {
                     );
                   })}
                 </div>
-              </motion.div>
+              </div>
             ))}
           </CardContent>
         </Card>
