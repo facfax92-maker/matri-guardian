@@ -9,7 +9,6 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Plus, Search, Filter, ArrowUpDown, Clock, Users, AlertTriangle } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 type SortOption = 'name' | 'ga-desc' | 'ga-asc' | 'last-visit';
 type FilterOption = 'ALL' | RiskLevel | 'OVERDUE';
@@ -92,7 +91,7 @@ const PatientList = () => {
             placeholder="Search patients or village..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-10 rounded-xl input-animated"
+            className="pl-10 rounded-xl"
           />
         </div>
 
@@ -138,64 +137,58 @@ const PatientList = () => {
 
         {/* Patient Cards */}
         <div className="space-y-3">
-          {processed.map((patient, i) => {
+          {processed.map((patient) => {
             const lastVisit = patient.visits[patient.visits.length - 1];
             const overdueStatus = getOverdueStatus(patient);
             const daysSince = getDaysSinceLastVisit(patient);
             return (
-              <motion.div
+              <Card
                 key={patient.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
+                className={`cursor-pointer hover:bg-accent/50 transition-colors duration-150 card-gradient border-0 shadow-sm ${
+                  overdueStatus === 'urgent-overdue' ? 'ring-2 ring-danger/50' : ''
+                }`}
+                onClick={() => navigate(`/patients/${patient.id}`)}
               >
-                <Card
-                  className={`card-interactive card-gradient border-0 shadow-sm ${
-                    overdueStatus === 'urgent-overdue' ? 'ring-2 ring-danger/50' : ''
-                  }`}
-                  onClick={() => navigate(`/patients/${patient.id}`)}
-                >
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="font-semibold">{patient.name}</h3>
-                          {overdueStatus === 'urgent-overdue' && (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-danger-bg text-danger-foreground text-[10px] font-bold border border-danger animate-pulse">
-                              <AlertTriangle className="h-2.5 w-2.5" />
-                              URGENT: High Risk + Overdue
-                            </span>
-                          )}
-                          {overdueStatus === 'followup-overdue' && (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-warning-bg text-warning-foreground text-[10px] font-semibold border border-warning">
-                              <Clock className="h-2.5 w-2.5" />
-                              Follow-up Overdue
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-0.5">
-                          {patient.age}y · {patient.gestationalAge} weeks GA
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">{patient.village}</p>
-                        {lastVisit && (
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Last visit: {lastVisit.date}
-                            {overdueStatus !== 'none' && (
-                              <span className="font-medium text-warning-foreground"> ({daysSince}d ago)</span>
-                            )}
-                          </p>
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-semibold">{patient.name}</h3>
+                        {overdueStatus === 'urgent-overdue' && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-danger-bg text-danger-foreground text-[10px] font-bold border border-danger">
+                            <AlertTriangle className="h-2.5 w-2.5" />
+                            URGENT: High Risk + Overdue
+                          </span>
+                        )}
+                        {overdueStatus === 'followup-overdue' && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-warning-bg text-warning-foreground text-[10px] font-semibold border border-warning">
+                            <Clock className="h-2.5 w-2.5" />
+                            Follow-up Overdue
+                          </span>
                         )}
                       </div>
-                      <div className="flex flex-col items-end gap-2 shrink-0 ml-3">
-                        {lastVisit && <RiskBadge level={lastVisit.riskLevel} size="md" showIcon />}
-                        <span className="text-xs text-muted-foreground">
-                          {patient.visits.length} visit{patient.visits.length !== 1 ? 's' : ''}
-                        </span>
-                      </div>
+                      <p className="text-sm text-muted-foreground mt-0.5">
+                        {patient.age}y · {patient.gestationalAge} weeks GA
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">{patient.village}</p>
+                      {lastVisit && (
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Last visit: {lastVisit.date}
+                          {overdueStatus !== 'none' && (
+                            <span className="font-medium text-warning-foreground"> ({daysSince}d ago)</span>
+                          )}
+                        </p>
+                      )}
                     </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+                    <div className="flex flex-col items-end gap-2 shrink-0 ml-3">
+                      {lastVisit && <RiskBadge level={lastVisit.riskLevel} size="md" showIcon animate={false} />}
+                      <span className="text-xs text-muted-foreground">
+                        {patient.visits.length} visit{patient.visits.length !== 1 ? 's' : ''}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             );
           })}
           {processed.length === 0 && (
@@ -210,7 +203,7 @@ const PatientList = () => {
 
       {/* FAB */}
       <Button
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg gradient-primary text-primary-foreground border-0 fab-animated"
+        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg gradient-primary text-primary-foreground border-0"
         onClick={() => navigate('/patients/new')}
       >
         <Plus className="h-6 w-6" />

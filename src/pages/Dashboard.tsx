@@ -13,7 +13,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Users, AlertTriangle, Plus, ChevronRight, PieChart, Bell, CalendarClock, Stethoscope } from 'lucide-react';
 import { PieChart as RePieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 
 const Dashboard = () => {
@@ -69,27 +68,20 @@ const Dashboard = () => {
       <main className="container max-w-lg mx-auto px-4 py-6 space-y-6">
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3">
-          {stats.map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <Card className={`text-center ${stat.gradient} border-0 shadow-sm`}>
-                <CardContent className="p-4">
-                  <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
-                  <AnimatedCounter value={stat.value} className="text-2xl font-bold" />
-                  <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
-                </CardContent>
-              </Card>
-            </motion.div>
+          {stats.map((stat) => (
+            <Card key={stat.label} className={`text-center ${stat.gradient} border-0 shadow-sm`}>
+              <CardContent className="p-4">
+                <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
+                <AnimatedCounter value={stat.value} className="text-2xl font-bold" />
+                <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
+              </CardContent>
+            </Card>
           ))}
         </div>
 
         {/* Risk Distribution Chart */}
         {pieData.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+          <div>
             <Card className="card-gradient border-0 shadow-sm">
               <CardHeader className="pb-0">
                 <div className="flex items-center gap-2">
@@ -143,13 +135,13 @@ const Dashboard = () => {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         )}
 
         {/* Quick Actions */}
         <div className="grid gap-3 grid-cols-3">
           <Button
-            className="h-12 gradient-primary text-primary-foreground border-0 rounded-xl btn-interactive"
+            className="h-12 gradient-primary text-primary-foreground border-0 rounded-xl"
             onClick={() => navigate('/patients')}
           >
             <Users className="h-4 w-4 mr-2" />
@@ -157,7 +149,7 @@ const Dashboard = () => {
           </Button>
           <Button
             variant="secondary"
-            className="h-12 rounded-xl btn-interactive"
+            className="h-12 rounded-xl"
             onClick={() => navigate('/patients/new')}
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -165,7 +157,7 @@ const Dashboard = () => {
           </Button>
           <Button
             variant="outline"
-            className="h-12 rounded-xl btn-interactive"
+            className="h-12 rounded-xl"
             onClick={() => navigate('/hospital-portal')}
           >
             <Stethoscope className="h-4 w-4 mr-2" />
@@ -183,29 +175,23 @@ const Dashboard = () => {
             <h2 className="text-lg font-semibold">Recent Alerts</h2>
           </div>
           <div className="space-y-2">
-            {alerts.slice(0, 3).map((alert, i) => (
-              <motion.div
+            {alerts.slice(0, 3).map((alert) => (
+              <Card
                 key={alert.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 + i * 0.1 }}
+                className="cursor-pointer hover:bg-accent/50 transition-colors duration-150 card-gradient border-0 shadow-sm"
+                onClick={() => navigate(`/patients/${alert.patientId}`)}
               >
-                <Card
-                  className="cursor-pointer card-interactive card-gradient border-0 shadow-sm"
-                  onClick={() => navigate(`/patients/${alert.patientId}`)}
-                >
-                  <CardContent className="p-3 flex items-center gap-3">
-                    <div className={`h-2.5 w-2.5 rounded-full shrink-0 ${
-                      alert.type === 'escalation' ? 'bg-danger' : 'bg-warning'
-                    }`} />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{alert.patientName}</p>
-                      <p className="text-xs text-muted-foreground truncate">{alert.message}</p>
-                    </div>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
-                  </CardContent>
-                </Card>
-              </motion.div>
+                <CardContent className="p-3 flex items-center gap-3">
+                  <div className={`h-2.5 w-2.5 rounded-full shrink-0 ${
+                    alert.type === 'escalation' ? 'bg-danger' : 'bg-warning'
+                  }`} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium">{alert.patientName}</p>
+                    <p className="text-xs text-muted-foreground truncate">{alert.message}</p>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
