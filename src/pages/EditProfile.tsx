@@ -40,7 +40,7 @@ const EditProfile = () => {
       </div>
 
       <main className="container max-w-lg mx-auto px-4 py-6">
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+        <div>
           <Card className="border-0 shadow-sm card-gradient">
             <CardContent className="p-6 space-y-6">
               {/* Avatar */}
