@@ -229,7 +229,7 @@ const HospitalPortal = () => {
     const hoursAgo = Math.round((Date.now() - new Date(referral.created_at).getTime()) / 3600000);
 
     return (
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+      <div>
         <Card className="card-gradient border-0 shadow-sm overflow-hidden">
           <CardContent className="p-4 space-y-3">
             {/* Header */}
