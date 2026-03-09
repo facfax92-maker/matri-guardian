@@ -11,7 +11,7 @@ import {
   ChevronDown, X, Users, AlertTriangle, 
   CheckCircle, ClipboardList
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+
 
 const DEMO_PROFILE = {
   name: 'Radha Thapa',
