@@ -75,6 +75,7 @@ const Dashboard = () => {
 
       <PageTransition>
         <main className="container max-w-lg mx-auto px-4 py-6 space-y-6">
+          {isLoading ? <DashboardSkeleton /> : <>
           {/* Stats */}
           <div className="grid grid-cols-3 gap-3">
             {stats.map((stat, i) => (
