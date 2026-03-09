@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, Clock, Truck, Stethoscope, Home, AlertTriangle, MessageSquare } from 'lucide-react';
-import { motion } from 'framer-motion';
+
 
 const statusConfig: Record<ReferralStatus, { label: string; icon: typeof Clock; color: string; bg: string }> = {
   'pending': { label: 'Pending', icon: Clock, color: 'text-warning-foreground', bg: 'bg-warning-bg' },
