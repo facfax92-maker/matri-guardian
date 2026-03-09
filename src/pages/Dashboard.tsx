@@ -185,7 +185,7 @@ const Dashboard = () => {
         )}
 
         {/* Quick Actions */}
-        <div className={`grid gap-3 ${roles.includes('doctor') || roles.includes('admin') ? 'grid-cols-3' : 'grid-cols-2'}`}>
+        <div className="grid gap-3 grid-cols-3">
           <Button
             className="h-12 gradient-primary text-primary-foreground border-0 rounded-xl"
             onClick={() => navigate('/patients')}
@@ -201,20 +201,18 @@ const Dashboard = () => {
             <Plus className="h-4 w-4 mr-2" />
             Register
           </Button>
-          {(roles.includes('doctor') || roles.includes('admin')) && (
-            <Button
-              variant="outline"
-              className="h-12 rounded-xl"
-              onClick={() => navigate('/hospital-portal')}
-            >
-              <Stethoscope className="h-4 w-4 mr-2" />
-              Portal
-            </Button>
-          )}
+          <Button
+            variant="outline"
+            className="h-12 rounded-xl"
+            onClick={() => navigate('/hospital-portal')}
+          >
+            <Stethoscope className="h-4 w-4 mr-2" />
+            Portal
+          </Button>
         </div>
 
         {/* FCHV Notifications from Doctors */}
-        {roles.includes('fchv') && <FCHVNotifications />}
+        <FCHVNotifications />
 
         {/* Recent Alerts */}
         <div>
