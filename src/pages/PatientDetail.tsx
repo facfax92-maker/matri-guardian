@@ -307,7 +307,7 @@ const PatientDetail = () => {
                           }`}
                         >
                           V{visit.visitNumber}
-                        </motion.div>
+                        </div>
                         <p className="text-xs text-muted-foreground mt-1">{visit.date.slice(5)}</p>
                         <p className="text-xs text-muted-foreground">{visit.gestationalAge}wk</p>
                         <RiskBadge level={visit.riskLevel} size="sm" className="mt-1" />
