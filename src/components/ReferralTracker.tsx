@@ -115,10 +115,8 @@ export function ReferralTracker({ patientId }: ReferralTrackerProps) {
                         isCompleted ? 'bg-success border-success' : 'bg-background border-border'
                       } ${isCurrent ? 'ring-2 ring-success/30' : ''}`} />
 
-                      <motion.div
+                      <div
                         className={`pb-4 ${isCompleted ? 'opacity-100' : 'opacity-40'}`}
-                        initial={isCurrent ? { opacity: 0, x: -5 } : {}}
-                        animate={{ opacity: isCompleted ? 1 : 0.4, x: 0 }}
                       >
                         <div className="flex items-center gap-1.5">
                           <Icon className={`h-3 w-3 ${isCompleted ? config.color : 'text-muted-foreground'}`} />
