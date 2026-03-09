@@ -4,7 +4,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/use-auth";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import PatientList from "./pages/PatientList";
 import PatientRegistration from "./pages/PatientRegistration";
@@ -19,6 +18,8 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import SettingsPage from "./pages/SettingsPage";
+import EditProfile from "./pages/EditProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,51 +32,28 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            {/* Public routes */}
+            {/* Main app routes — no auth gate */}
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/patients" element={<PatientList />} />
+            <Route path="/patients/new" element={<PatientRegistration />} />
+            <Route path="/patients/:id" element={<PatientDetail />} />
+            <Route path="/patients/:id/visits/new" element={<NewVisitForm />} />
+            <Route path="/patients/:id/visits/:visitId" element={<VisitDetail />} />
+            <Route path="/patients/:id/referral" element={<ReferralForm />} />
+            <Route path="/patients/:id/referral-success" element={<ReferralSuccess />} />
+            <Route path="/patients/:id/postpartum" element={<PostpartumForm />} />
+            <Route path="/hospital-portal" element={<HospitalPortal />} />
+
+            {/* Profile & settings */}
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/edit-profile" element={<EditProfile />} />
+
+            {/* Auth routes (for Switch Account) */}
+            <Route path="/switch-account" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-
-            {/* Protected routes - all authenticated users */}
-            <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/patients" element={<ProtectedRoute><PatientList /></ProtectedRoute>} />
-            <Route path="/patients/:id" element={<ProtectedRoute><PatientDetail /></ProtectedRoute>} />
-            <Route path="/patients/:id/visits/:visitId" element={<ProtectedRoute><VisitDetail /></ProtectedRoute>} />
-
-            {/* FCHV + Supervisor + Doctor + Admin */}
-            <Route path="/patients/new" element={
-              <ProtectedRoute allowedRoles={['fchv', 'supervisor', 'admin']}>
-                <PatientRegistration />
-              </ProtectedRoute>
-            } />
-            <Route path="/patients/:id/visits/new" element={
-              <ProtectedRoute allowedRoles={['fchv', 'supervisor', 'admin']}>
-                <NewVisitForm />
-              </ProtectedRoute>
-            } />
-            <Route path="/patients/:id/referral" element={
-              <ProtectedRoute allowedRoles={['fchv', 'supervisor', 'doctor', 'admin']}>
-                <ReferralForm />
-              </ProtectedRoute>
-            } />
-            <Route path="/patients/:id/referral-success" element={
-              <ProtectedRoute allowedRoles={['fchv', 'supervisor', 'doctor', 'admin']}>
-                <ReferralSuccess />
-              </ProtectedRoute>
-            } />
-            <Route path="/patients/:id/postpartum" element={
-              <ProtectedRoute allowedRoles={['fchv', 'supervisor', 'doctor', 'admin']}>
-                <PostpartumForm />
-              </ProtectedRoute>
-            } />
-
-            {/* Doctor-only routes */}
-            <Route path="/hospital-portal" element={
-              <ProtectedRoute allowedRoles={['doctor', 'admin']}>
-                <HospitalPortal />
-              </ProtectedRoute>
-            } />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

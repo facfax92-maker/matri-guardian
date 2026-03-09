@@ -15,6 +15,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/hooks/use-theme';
 import { useAuth } from '@/hooks/use-auth';
 import { Badge } from '@/components/ui/badge';
+import { ProfileMenu } from '@/components/ProfileMenu';
 
 const Dashboard = () => {
   const { profile, roles, signOut } = useAuth();
