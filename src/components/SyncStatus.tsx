@@ -18,14 +18,9 @@ export function SyncStatusBar() {
   const Icon = config.icon;
 
   return (
-    <AnimatePresence>
+    <>
       {(syncState !== 'synced' || !isOnline) && (
-        <motion.div
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: 'auto', opacity: 1 }}
-          exit={{ height: 0, opacity: 0 }}
-          className="overflow-hidden"
-        >
+        <div className="overflow-hidden">
           <div className={`${config.bg} border-b px-4 py-2`}>
             <div className="container max-w-lg mx-auto flex items-center justify-between">
               <div className="flex items-center gap-2">
