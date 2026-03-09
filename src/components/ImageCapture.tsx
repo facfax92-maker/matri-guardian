@@ -137,7 +137,7 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
                 <Check className="h-4 w-4 mr-2" />
                 Continue to Capture
               </Button>
-            </motion.div>
+            </div>
           )}
 
           {/* Step 2: Capture */}
