@@ -68,21 +68,14 @@ const Dashboard = () => {
       <main className="container max-w-lg mx-auto px-4 py-6 space-y-6">
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3">
-          {stats.map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <Card className={`text-center ${stat.gradient} border-0 shadow-sm`}>
-                <CardContent className="p-4">
-                  <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
-                  <AnimatedCounter value={stat.value} className="text-2xl font-bold" />
-                  <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
-                </CardContent>
-              </Card>
-            </motion.div>
+          {stats.map((stat) => (
+            <Card key={stat.label} className={`text-center ${stat.gradient} border-0 shadow-sm`}>
+              <CardContent className="p-4">
+                <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
+                <AnimatedCounter value={stat.value} className="text-2xl font-bold" />
+                <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
+              </CardContent>
+            </Card>
           ))}
         </div>
 
