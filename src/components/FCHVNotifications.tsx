@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Bell, MessageSquare, CheckCircle2, AlertTriangle, ThumbsUp, Stethoscope } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 interface Feedback {
