@@ -92,7 +92,7 @@ const PatientList = () => {
             placeholder="Search patients or village..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-10 rounded-xl"
+            className="pl-10 rounded-xl input-animated"
           />
         </div>
 
