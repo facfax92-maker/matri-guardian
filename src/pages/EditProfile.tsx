@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ArrowLeft, Camera } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Navbar } from '@/components/Navbar';
 import { toast } from 'sonner';
 
 const EditProfile = () => {
