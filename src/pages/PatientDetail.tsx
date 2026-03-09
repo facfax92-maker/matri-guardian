@@ -299,14 +299,12 @@ const PatientDetail = () => {
                         className="flex flex-col items-center cursor-pointer group"
                         onClick={() => navigate(`/patients/${patient.id}/visits/${visit.id}`)}
                       >
-                        <motion.div
-                          className={`h-10 w-10 rounded-full border-2 flex items-center justify-center text-xs font-bold transition-transform group-hover:scale-110 ${
+                        <div
+                          className={`h-10 w-10 rounded-full border-2 flex items-center justify-center text-xs font-bold ${
                             visit.riskLevel === 'LOW' ? 'border-success bg-success-bg text-success-foreground' :
                             visit.riskLevel === 'MODERATE' ? 'border-warning bg-warning-bg text-warning-foreground' :
                             'border-danger bg-danger-bg text-danger-foreground'
                           }`}
-                          whileHover={{ scale: 1.15 }}
-                          whileTap={{ scale: 0.95 }}
                         >
                           V{visit.visitNumber}
                         </motion.div>
