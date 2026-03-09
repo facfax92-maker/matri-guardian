@@ -142,7 +142,7 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
 
           {/* Step 2: Capture */}
           {step === 'capture' && (
-            <motion.div key="capture" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
+            <div className="space-y-4">
               <div>
                 <Label>Image Category</Label>
                 <Select value={category} onValueChange={setCategory}>
