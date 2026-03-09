@@ -138,7 +138,7 @@ export function ImageGallery({ patientId, filterCategory }: ImageGalleryProps) {
                       <div className="h-2 w-2 rounded-full bg-warning animate-pulse" />
                     </div>
                   )}
-                </motion.div>
+                </div>
               );
             })}
           </div>

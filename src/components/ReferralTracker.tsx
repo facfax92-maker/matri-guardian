@@ -132,7 +132,7 @@ export function ReferralTracker({ patientId }: ReferralTrackerProps) {
                             <p className="text-xs text-muted-foreground mt-0.5">{update.message}</p>
                           </div>
                         )}
-                      </motion.div>
+                      </div>
                     </div>
                   );
                 })}

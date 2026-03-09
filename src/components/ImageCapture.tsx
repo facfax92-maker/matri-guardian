@@ -239,9 +239,9 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
                   {saving ? 'Saving...' : 'Save Image'}
                 </Button>
               </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
+        </>
       </CardContent>
     </Card>
   );

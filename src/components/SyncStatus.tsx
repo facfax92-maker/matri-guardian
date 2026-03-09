@@ -57,9 +57,9 @@ export function SyncStatusBar() {
               </div>
             </div>
           )}
-        </motion.div>
+        </div>
       )}
-    </AnimatePresence>
+    </>
   );
 }
 

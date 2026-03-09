@@ -168,9 +168,9 @@ export function ProfileMenu() {
                 <LogOut className="h-4 w-4" /> Logout
               </Button>
             </div>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
+      </>
     </div>
   );
 }

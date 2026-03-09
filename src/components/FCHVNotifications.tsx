@@ -113,9 +113,9 @@ export function FCHVNotifications() {
                 </Card>
               );
             })}
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
+      </>
 
       <Dialog open={!!selectedFeedback} onOpenChange={() => setSelectedFeedback(null)}>
         <DialogContent className="max-w-sm">
