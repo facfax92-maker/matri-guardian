@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Images, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Columns2, X, Clock, Shield } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+
 
 interface ImageGalleryProps {
   patientId: string;
