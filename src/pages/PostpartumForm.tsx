@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, Brain, AlertTriangle, CheckCircle2, ShieldAlert } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { motion } from 'framer-motion';
+
 import { useEffect } from 'react';
 
 const edinburghQuestions = [
