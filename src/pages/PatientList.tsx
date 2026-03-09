@@ -6,7 +6,7 @@ import { RiskBadge } from '@/components/RiskBadge';
 import { getOverdueStatus, getDaysSinceLastVisit } from '@/lib/visit-utils';
 import { Navbar } from '@/components/Navbar';
 import { PageTransition } from '@/components/PageTransition';
-import { AnimatedEmptyState } from '@/components/AnimatedList';
+import { EmptyState } from '@/components/EmptyState';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
