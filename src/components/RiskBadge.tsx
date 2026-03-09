@@ -1,6 +1,5 @@
 import { RiskLevel } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
 import { ShieldAlert, ShieldCheck, Shield } from 'lucide-react';
 
 interface RiskBadgeProps {
@@ -18,7 +17,6 @@ const riskConfig = {
     text: 'text-success-foreground',
     border: 'border-success',
     dot: 'bg-success',
-    glow: '0 0 12px hsl(134, 61%, 41%, 0.4)',
     Icon: ShieldCheck,
   },
   MODERATE: {
@@ -26,7 +24,6 @@ const riskConfig = {
     text: 'text-warning-foreground',
     border: 'border-warning',
     dot: 'bg-warning',
-    glow: '0 0 14px hsl(45, 100%, 51%, 0.4)',
     Icon: Shield,
   },
   HIGH: {
@@ -34,12 +31,11 @@ const riskConfig = {
     text: 'text-danger-foreground',
     border: 'border-danger',
     dot: 'bg-danger',
-    glow: '0 0 20px hsl(354, 70%, 54%, 0.5)',
     Icon: ShieldAlert,
   },
 };
 
-export function RiskBadge({ level, score, size = 'md', className, animate = true, showIcon = false }: RiskBadgeProps) {
+export function RiskBadge({ level, score, size = 'md', className, showIcon = false }: RiskBadgeProps) {
   const sizeClasses = {
     sm: 'px-2.5 py-0.5 text-xs',
     md: 'px-3.5 py-1.5 text-sm',
@@ -53,7 +49,7 @@ export function RiskBadge({ level, score, size = 'md', className, animate = true
   const config = riskConfig[level];
   const IconComp = config.Icon;
 
-  const content = (
+  return (
     <span
       className={cn(
         'inline-flex items-center gap-1.5 rounded-full border-2 font-semibold',
@@ -61,11 +57,8 @@ export function RiskBadge({ level, score, size = 'md', className, animate = true
         config.bg,
         config.text,
         config.border,
-        level === 'HIGH' && 'animate-pulse-risk risk-high-pulse',
-        level === 'MODERATE' && 'risk-moderate-pulse',
         className
       )}
-      style={(level === 'HIGH' && (size === 'lg' || size === 'xl')) ? { boxShadow: config.glow } : undefined}
     >
       {showIcon ? (
         <IconComp className={iconSizes[size]} />
@@ -75,18 +68,5 @@ export function RiskBadge({ level, score, size = 'md', className, animate = true
       {level}
       {score !== undefined && ` (${score})`}
     </span>
-  );
-
-  if (!animate) return content;
-
-  return (
-    <motion.span
-      initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-      key={level}
-    >
-      {content}
-    </motion.span>
   );
 }
