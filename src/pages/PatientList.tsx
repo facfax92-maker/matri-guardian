@@ -210,7 +210,7 @@ const PatientList = () => {
 
       {/* FAB */}
       <Button
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg gradient-primary text-primary-foreground border-0"
+        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg gradient-primary text-primary-foreground border-0 fab-animated"
         onClick={() => navigate('/patients/new')}
       >
         <Plus className="h-6 w-6" />

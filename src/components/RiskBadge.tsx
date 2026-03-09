@@ -61,7 +61,8 @@ export function RiskBadge({ level, score, size = 'md', className, animate = true
         config.bg,
         config.text,
         config.border,
-        level === 'HIGH' && 'animate-pulse-risk',
+        level === 'HIGH' && 'animate-pulse-risk risk-high-pulse',
+        level === 'MODERATE' && 'risk-moderate-pulse',
         className
       )}
       style={(level === 'HIGH' && (size === 'lg' || size === 'xl')) ? { boxShadow: config.glow } : undefined}
