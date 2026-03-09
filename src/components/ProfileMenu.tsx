@@ -64,7 +64,7 @@ export function ProfileMenu() {
             {DEMO_PROFILE.initials}
           </AvatarFallback>
         </Avatar>
-        <span className="text-sm font-medium text-primary-foreground hidden sm:inline">
+        <span className="text-sm font-medium text-foreground hidden sm:inline">
           {DEMO_PROFILE.name.split(' ')[0]} T.
         </span>
         <ChevronDown className={`h-3.5 w-3.5 text-primary-foreground/80 transition-transform ${open ? 'rotate-180' : ''}`} />
