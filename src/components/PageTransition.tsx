@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
 
 export function PageTransition({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+  return <div className="page-enter">{children}</div>;
 }
