@@ -8,6 +8,7 @@ import { ReferralTracker } from '@/components/ReferralTracker';
 import { ImageCapture } from '@/components/ImageCapture';
 import { ImageGallery } from '@/components/ImageGallery';
 import { SyncStatusBar } from '@/components/SyncStatus';
+import { Navbar } from '@/components/Navbar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User, Brain, ShieldAlert, CheckCircle2, Camera } from 'lucide-react';
