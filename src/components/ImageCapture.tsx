@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Camera, Upload, X, Check, Shield, AlertTriangle } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+
 import { useToast } from '@/hooks/use-toast';
 
 interface ImageCaptureProps {
