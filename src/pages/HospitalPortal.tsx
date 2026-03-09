@@ -230,7 +230,7 @@ const HospitalPortal = () => {
 
     return (
       <div>
-        <Card className="card-gradient border-0 shadow-sm overflow-hidden">
+        <Card className="card-gradient border-0 shadow-sm overflow-hidden card-hover">
           <CardContent className="p-4 space-y-3">
             {/* Header */}
             <div className="flex items-start justify-between">

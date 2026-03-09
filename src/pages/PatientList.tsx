@@ -141,7 +141,7 @@ const PatientList = () => {
             return (
               <Card
                 key={patient.id}
-                className={`cursor-pointer hover:bg-accent/50 transition-colors duration-150 card-gradient border-0 shadow-sm ${
+                className={`cursor-pointer card-hover card-gradient border-0 shadow-sm ${
                   overdueStatus === 'urgent-overdue' ? 'ring-2 ring-danger/50' : ''
                 }`}
                 onClick={() => navigate(`/patients/${patient.id}`)}

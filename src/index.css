@@ -170,6 +170,25 @@
   }
 }
 
+@layer components {
+  /* Subtle card hover — background tint only */
+  .card-hover {
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .card-hover:hover {
+    background-color: hsl(var(--accent) / 0.55);
+    box-shadow: 0 2px 12px hsl(var(--primary) / 0.06);
+  }
+
+  /* Subtle interactive row / list-item hover */
+  .row-hover {
+    transition: background-color 0.15s ease;
+  }
+  .row-hover:hover {
+    background-color: hsl(var(--muted) / 0.6);
+  }
+}
+
 @layer utilities {
   .gradient-primary {
     background: linear-gradient(135deg, hsl(231, 80%, 66%), hsl(250, 70%, 60%));

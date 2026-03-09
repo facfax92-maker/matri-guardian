@@ -69,7 +69,7 @@ const Dashboard = () => {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3">
           {stats.map((stat) => (
-            <Card key={stat.label} className={`text-center ${stat.gradient} border-0 shadow-sm`}>
+            <Card key={stat.label} className={`text-center ${stat.gradient} border-0 shadow-sm card-hover`}>
               <CardContent className="p-4">
                 <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
                 <AnimatedCounter value={stat.value} className="text-2xl font-bold" />
@@ -179,7 +179,7 @@ const Dashboard = () => {
             {alerts.slice(0, 3).map((alert) => (
               <Card
                 key={alert.id}
-                className="cursor-pointer hover:bg-accent/50 transition-colors duration-150 card-gradient border-0 shadow-sm"
+                className="cursor-pointer card-hover card-gradient border-0 shadow-sm"
                 onClick={() => navigate(`/patients/${alert.patientId}`)}
               >
                 <CardContent className="p-3 flex items-center gap-3">
