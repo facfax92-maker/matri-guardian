@@ -197,7 +197,7 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
               <Button variant="ghost" className="w-full" onClick={() => setStep('consent')}>
                 Back
               </Button>
-            </motion.div>
+            </div>
           )}
 
           {/* Step 3: Review */}
