@@ -16,6 +16,9 @@ import { Users, AlertTriangle, Plus, ChevronRight, PieChart, Bell, CalendarClock
 import { PieChart as RePieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { Badge } from '@/components/ui/badge';
 import { DashboardSkeleton } from '@/components/DashboardSkeleton';
+import { PWAInstallBanner } from '@/components/PWAInstallBanner';
+import { OnboardingWalkthrough } from '@/components/OnboardingWalkthrough';
+import { EmptyState } from '@/components/EmptyState';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -192,30 +195,40 @@ const Dashboard = () => {
               <h2 className="text-lg font-semibold">Recent Alerts</h2>
             </div>
             <div className="space-y-2">
-              {alerts.slice(0, 3).map((alert, i) => (
-                <Card
-                  key={alert.id}
-                  className="cursor-pointer card-hover card-gradient border-0 shadow-sm list-item-in"
-                  style={{ animationDelay: `${500 + i * 60}ms` }}
-                  onClick={() => navigate(`/patients/${alert.patientId}`)}
-                >
-                  <CardContent className="p-3 flex items-center gap-3">
-                    <div className={`h-2.5 w-2.5 rounded-full shrink-0 ${
-                      alert.type === 'escalation' ? 'bg-danger' : 'bg-warning'
-                    }`} />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{alert.patientName}</p>
-                      <p className="text-xs text-muted-foreground truncate">{alert.message}</p>
-                    </div>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
-                  </CardContent>
-                </Card>
-              ))}
+              {alerts.length === 0 ? (
+                <EmptyState
+                  illustration="alerts"
+                  title="All Clear!"
+                  description="No alerts right now. Keep up the great work monitoring your patients."
+                />
+              ) : (
+                alerts.slice(0, 3).map((alert, i) => (
+                  <Card
+                    key={alert.id}
+                    className="cursor-pointer card-hover card-gradient border-0 shadow-sm list-item-in"
+                    style={{ animationDelay: `${500 + i * 60}ms` }}
+                    onClick={() => navigate(`/patients/${alert.patientId}`)}
+                  >
+                    <CardContent className="p-3 flex items-center gap-3">
+                      <div className={`h-2.5 w-2.5 rounded-full shrink-0 ${
+                        alert.type === 'escalation' ? 'bg-danger' : 'bg-warning'
+                      }`} />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium">{alert.patientName}</p>
+                        <p className="text-xs text-muted-foreground truncate">{alert.message}</p>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+                    </CardContent>
+                  </Card>
+                ))
+              )}
             </div>
           </div>
           </>}
         </main>
       </PageTransition>
+      <PWAInstallBanner />
+      <OnboardingWalkthrough />
     </div>
   );
 };

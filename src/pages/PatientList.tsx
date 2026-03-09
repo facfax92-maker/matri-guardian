@@ -6,7 +6,7 @@ import { RiskBadge } from '@/components/RiskBadge';
 import { getOverdueStatus, getDaysSinceLastVisit } from '@/lib/visit-utils';
 import { Navbar } from '@/components/Navbar';
 import { PageTransition } from '@/components/PageTransition';
-import { AnimatedEmptyState } from '@/components/AnimatedList';
+import { EmptyState } from '@/components/EmptyState';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -199,10 +199,12 @@ const PatientList = () => {
               );
             })}
             {processed.length === 0 && (
-              <AnimatedEmptyState
-                icon={<Users className="h-10 w-10 mx-auto" />}
+              <EmptyState
+                illustration="patients"
                 title="No patients found"
-                description="Try adjusting your search or filters"
+                description={search || riskFilter !== 'ALL' ? "Try adjusting your search or filters" : "Register your first patient to get started"}
+                actionLabel={!search && riskFilter === 'ALL' ? "Register Patient" : undefined}
+                onAction={!search && riskFilter === 'ALL' ? () => navigate('/patients/new') : undefined}
               />
             )}
           </div>}
