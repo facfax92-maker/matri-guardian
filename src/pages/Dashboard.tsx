@@ -8,6 +8,7 @@ import { migrateFromLocalStorage } from '@/lib/indexed-db';
 import { getOverdueStatus } from '@/lib/visit-utils';
 import { FCHVNotifications } from '@/components/FCHVNotifications';
 import { Navbar } from '@/components/Navbar';
+import { AnimatedCounter } from '@/components/AnimatedCounter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Users, AlertTriangle, Plus, ChevronRight, PieChart, Bell, CalendarClock, Stethoscope } from 'lucide-react';
