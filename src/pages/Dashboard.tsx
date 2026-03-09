@@ -69,7 +69,7 @@ const Dashboard = () => {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3">
           {stats.map((stat) => (
-            <Card key={stat.label} className={`text-center ${stat.gradient} border-0 shadow-sm`}>
+            <Card key={stat.label} className={`text-center ${stat.gradient} border-0 shadow-sm card-hover`}>
               <CardContent className="p-4">
                 <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
                 <AnimatedCounter value={stat.value} className="text-2xl font-bold" />
