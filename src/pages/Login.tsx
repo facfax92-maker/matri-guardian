@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Activity, Mail, Loader2, ArrowLeft, Users, Stethoscope, Briefcase } from 'lucide-react';
 import { toast } from 'sonner';
-import { motion } from 'framer-motion';
+
 
 const DEMO_ACCOUNTS = [
   { label: 'FCHV — Radha Thapa', icon: Users, role: 'fchv' },
