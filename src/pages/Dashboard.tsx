@@ -16,7 +16,7 @@ import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 
 const Dashboard = () => {
-  const { isDark, toggle } = useTheme();
+  const navigate = useNavigate();
   const navigate = useNavigate();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
