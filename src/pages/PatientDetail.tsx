@@ -125,7 +125,7 @@ const PatientDetail = () => {
       <main className="container max-w-lg mx-auto px-4 py-4 space-y-4">
         {/* Risk Escalation Alert */}
         {hasEscalation && isHighRisk && (
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
+          <div>
             <Card className="border-danger bg-danger-bg border-2">
               <CardContent className="p-4 flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-danger shrink-0 mt-0.5" />
