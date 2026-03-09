@@ -291,12 +291,9 @@ const PatientDetail = () => {
               <div className="overflow-x-auto">
                 <div className="flex items-center gap-0 min-w-max py-3">
                   {patient.visits.map((visit, i) => (
-                    <motion.div
+                    <div
                       key={visit.id}
                       className="flex items-center"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.15 }}
                     >
                       <div
                         className="flex flex-col items-center cursor-pointer group"
