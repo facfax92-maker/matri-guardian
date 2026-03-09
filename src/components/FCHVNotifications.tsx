@@ -85,14 +85,9 @@ export function FCHVNotifications() {
         )}
       </Button>
 
-      <AnimatePresence>
+      <>
         {expanded && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="mt-2 space-y-2 overflow-hidden"
-          >
+          <div className="mt-2 space-y-2">
             {feedbacks.slice(0, 5).map(fb => {
               const config = typeConfig[fb.feedback_type] || typeConfig.general;
               const FbIcon = config.icon;
