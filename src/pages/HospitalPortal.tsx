@@ -339,7 +339,7 @@ const HospitalPortal = () => {
             { label: 'Urgent', value: urgentReferrals.length, icon: AlertTriangle, gradient: 'card-gradient-danger' },
             { label: 'Discharged', value: dischargedReferrals.length, icon: CheckCircle2, gradient: 'card-gradient-success' },
           ].map((stat, i) => (
-            <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
+            <div key={stat.label}>
               <Card className={`text-center ${stat.gradient} border-0 shadow-sm`}>
                 <CardContent className="p-4">
                   <stat.icon className="h-5 w-5 mx-auto mb-1 text-muted-foreground" />
