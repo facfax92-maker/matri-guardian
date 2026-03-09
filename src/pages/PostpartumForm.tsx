@@ -97,7 +97,7 @@ const PostpartumForm = () => {
     return (
       <div className="min-h-screen bg-background">
         <main className="container max-w-lg mx-auto px-4 py-8 space-y-6">
-          <motion.div className="text-center" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, damping: 15 }}>
+          <div className="text-center">
             <div className={`inline-flex items-center justify-center h-20 w-20 rounded-full ${riskInfo.bg} mb-4`}>
               <RiskIcon className={`h-10 w-10 ${riskInfo.color}`} />
             </div>
