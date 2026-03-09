@@ -257,7 +257,7 @@ const PatientDetail = () => {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         )}
 
         {/* Patient Info */}
