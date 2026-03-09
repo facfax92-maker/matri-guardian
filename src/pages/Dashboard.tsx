@@ -141,7 +141,7 @@ const Dashboard = () => {
         {/* Quick Actions */}
         <div className="grid gap-3 grid-cols-3">
           <Button
-            className="h-12 gradient-primary text-primary-foreground border-0 rounded-xl btn-interactive"
+            className="h-12 gradient-primary text-primary-foreground border-0 rounded-xl"
             onClick={() => navigate('/patients')}
           >
             <Users className="h-4 w-4 mr-2" />
@@ -149,7 +149,7 @@ const Dashboard = () => {
           </Button>
           <Button
             variant="secondary"
-            className="h-12 rounded-xl btn-interactive"
+            className="h-12 rounded-xl"
             onClick={() => navigate('/patients/new')}
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -157,7 +157,7 @@ const Dashboard = () => {
           </Button>
           <Button
             variant="outline"
-            className="h-12 rounded-xl btn-interactive"
+            className="h-12 rounded-xl"
             onClick={() => navigate('/hospital-portal')}
           >
             <Stethoscope className="h-4 w-4 mr-2" />
