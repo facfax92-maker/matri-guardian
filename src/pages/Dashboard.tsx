@@ -213,6 +213,7 @@ const Dashboard = () => {
               ))}
             </div>
           </div>
+          </>}
         </main>
       </PageTransition>
     </div>
