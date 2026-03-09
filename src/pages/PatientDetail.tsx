@@ -323,7 +323,7 @@ const PatientDetail = () => {
                           }`} />
                         </div>
                       )}
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </div>
