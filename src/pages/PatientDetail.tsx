@@ -321,7 +321,7 @@ const PatientDetail = () => {
                           <ChevronRight className={`h-3 w-3 absolute -right-1 -top-[5px] ${
                             patient.visits[i + 1].riskScore > visit.riskScore ? 'text-danger' : 'text-success'
                           }`} />
-                        </motion.div>
+                        </div>
                       )}
                     </motion.div>
                   ))}
