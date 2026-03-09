@@ -57,17 +57,17 @@ export function ProfileMenu() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 p-1.5 rounded-xl bg-white/20 hover:bg-white/30 transition-colors"
+        className="flex items-center gap-2 p-1.5 rounded-full bg-muted hover:bg-accent transition-colors"
       >
-        <Avatar className="h-8 w-8 border-2 border-white/40">
-          <AvatarFallback className="bg-white/30 text-primary-foreground text-xs font-bold">
+        <Avatar className="h-8 w-8 border-2 border-primary/30">
+          <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
             {DEMO_PROFILE.initials}
           </AvatarFallback>
         </Avatar>
-        <span className="text-sm font-medium text-primary-foreground hidden sm:inline">
+        <span className="text-sm font-medium text-foreground hidden sm:inline">
           {DEMO_PROFILE.name.split(' ')[0]} T.
         </span>
-        <ChevronDown className={`h-3.5 w-3.5 text-primary-foreground/80 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
 
       <AnimatePresence>

@@ -7,18 +7,15 @@ import { RiskBadge } from '@/components/RiskBadge';
 import { migrateFromLocalStorage } from '@/lib/indexed-db';
 import { getOverdueStatus } from '@/lib/visit-utils';
 import { FCHVNotifications } from '@/components/FCHVNotifications';
+import { Navbar } from '@/components/Navbar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, AlertTriangle, Plus, ChevronRight, Activity, PieChart, Bell, Moon, Sun, CalendarClock, Stethoscope } from 'lucide-react';
+import { Users, AlertTriangle, Plus, ChevronRight, PieChart, Bell, CalendarClock, Stethoscope } from 'lucide-react';
 import { PieChart as RePieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from '@/hooks/use-theme';
-import { useAuth } from '@/hooks/use-auth';
+import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
-import { ProfileMenu } from '@/components/ProfileMenu';
 
 const Dashboard = () => {
-  const { isDark, toggle } = useTheme();
   const navigate = useNavigate();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
@@ -65,44 +62,8 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Navbar />
       <SyncStatusBar />
-
-      {/* Header */}
-      <header className="gradient-primary px-4 py-6 text-primary-foreground" style={{ borderRadius: '0 0 1.5rem 1.5rem' }}>
-        <div className="container max-w-lg mx-auto">
-          <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-2">
-              <Activity className="h-6 w-6" />
-              <h1 className="text-xl font-bold tracking-tight">MatriCare</h1>
-            </div>
-            <div className="flex items-center gap-2">
-              <button onClick={toggle} className="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={isDark ? 'dark' : 'light'}
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-                  </motion.div>
-                </AnimatePresence>
-              </button>
-              <ProfileMenu />
-            </div>
-          </div>
-          <div className="flex items-center gap-2 mt-1">
-            <p className="text-sm opacity-90">FCHV Dashboard</p>
-            <Badge variant="secondary" className="bg-white/20 text-primary-foreground border-0 text-xs">
-              FCHV
-            </Badge>
-          </div>
-          <p className="text-lg font-semibold mt-2">
-            Welcome, Radha Thapa
-          </p>
-        </div>
-      </header>
 
       <main className="container max-w-lg mx-auto px-4 py-6 space-y-6">
         {/* Stats */}
