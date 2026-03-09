@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
-import { motion, AnimatePresence } from 'framer-motion';
+
 import { Navbar } from '@/components/Navbar';
 import {
   ArrowLeft, Clock, CheckCircle2, Stethoscope, FileText,
@@ -229,7 +229,7 @@ const HospitalPortal = () => {
     const hoursAgo = Math.round((Date.now() - new Date(referral.created_at).getTime()) / 3600000);
 
     return (
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+      <div>
         <Card className="card-gradient border-0 shadow-sm overflow-hidden">
           <CardContent className="p-4 space-y-3">
             {/* Header */}
@@ -309,7 +309,7 @@ const HospitalPortal = () => {
             )}
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
     );
   };
 
@@ -339,7 +339,7 @@ const HospitalPortal = () => {
             { label: 'Urgent', value: urgentReferrals.length, icon: AlertTriangle, gradient: 'card-gradient-danger' },
             { label: 'Discharged', value: dischargedReferrals.length, icon: CheckCircle2, gradient: 'card-gradient-success' },
           ].map((stat, i) => (
-            <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
+            <div key={stat.label}>
               <Card className={`text-center ${stat.gradient} border-0 shadow-sm`}>
                 <CardContent className="p-4">
                   <stat.icon className="h-5 w-5 mx-auto mb-1 text-muted-foreground" />
@@ -347,7 +347,7 @@ const HospitalPortal = () => {
                   <p className="text-xs text-muted-foreground">{stat.label}</p>
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
           ))}
         </div>
 

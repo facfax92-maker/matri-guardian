@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle2, Download, User, Home, Printer } from 'lucide-react';
 import { Patient, Referral } from '@/lib/types';
 import { RiskBadge } from '@/components/RiskBadge';
-import { motion } from 'framer-motion';
+
 import { useRef } from 'react';
 
 const ReferralSuccess = () => {
@@ -140,18 +140,13 @@ const ReferralSuccess = () => {
     <div className="min-h-screen bg-background">
       <main className="container max-w-lg mx-auto px-4 py-8 space-y-6">
         {/* Success Icon */}
-        <motion.div
-          className="text-center"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-        >
+        <div className="text-center">
           <div className="inline-flex items-center justify-center h-20 w-20 rounded-full bg-success-bg mb-4">
             <CheckCircle2 className="h-10 w-10 text-success" />
           </div>
           <h1 className="text-2xl font-bold">Referral Generated Successfully</h1>
           <p className="text-muted-foreground mt-2">{new Date().toLocaleString()}</p>
-        </motion.div>
+        </div>
 
         {/* Referral Summary */}
         {referral && (

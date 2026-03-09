@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User, Brain, ShieldAlert, CheckCircle2, Camera } from 'lucide-react';
 import { XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Area, ComposedChart, Tooltip, Line } from 'recharts';
-import { motion } from 'framer-motion';
+
 
 const PatientDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -125,7 +125,7 @@ const PatientDetail = () => {
       <main className="container max-w-lg mx-auto px-4 py-4 space-y-4">
         {/* Risk Escalation Alert */}
         {hasEscalation && isHighRisk && (
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
+          <div>
             <Card className="border-danger bg-danger-bg border-2">
               <CardContent className="p-4 flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-danger shrink-0 mt-0.5" />
@@ -138,12 +138,12 @@ const PatientDetail = () => {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         )}
 
         {/* HERO: Risk & BP Trend Chart */}
         {chartData.length > 1 && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <div>
             <Card className="card-gradient-primary border-2 border-primary/20 shadow-lg overflow-hidden">
               <CardHeader className="pb-1">
                 <div className="flex items-center justify-between">
@@ -257,7 +257,7 @@ const PatientDetail = () => {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         )}
 
         {/* Patient Info */}
@@ -291,47 +291,39 @@ const PatientDetail = () => {
               <div className="overflow-x-auto">
                 <div className="flex items-center gap-0 min-w-max py-3">
                   {patient.visits.map((visit, i) => (
-                    <motion.div
+                    <div
                       key={visit.id}
                       className="flex items-center"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.15 }}
                     >
                       <div
                         className="flex flex-col items-center cursor-pointer group"
                         onClick={() => navigate(`/patients/${patient.id}/visits/${visit.id}`)}
                       >
-                        <motion.div
-                          className={`h-10 w-10 rounded-full border-2 flex items-center justify-center text-xs font-bold transition-transform group-hover:scale-110 ${
+                        <div
+                          className={`h-10 w-10 rounded-full border-2 flex items-center justify-center text-xs font-bold ${
                             visit.riskLevel === 'LOW' ? 'border-success bg-success-bg text-success-foreground' :
                             visit.riskLevel === 'MODERATE' ? 'border-warning bg-warning-bg text-warning-foreground' :
                             'border-danger bg-danger-bg text-danger-foreground'
                           }`}
-                          whileHover={{ scale: 1.15 }}
-                          whileTap={{ scale: 0.95 }}
                         >
                           V{visit.visitNumber}
-                        </motion.div>
+                        </div>
                         <p className="text-xs text-muted-foreground mt-1">{visit.date.slice(5)}</p>
                         <p className="text-xs text-muted-foreground">{visit.gestationalAge}wk</p>
                         <RiskBadge level={visit.riskLevel} size="sm" className="mt-1" />
                       </div>
                       {i < patient.visits.length - 1 && (
-                        <motion.div
+                        <div
                           className={`w-12 h-0.5 mx-1 relative ${
                             patient.visits[i + 1].riskScore > visit.riskScore ? 'bg-danger/40' : 'bg-success/40'
                           }`}
-                          initial={{ scaleX: 0 }}
-                          animate={{ scaleX: 1 }}
-                          transition={{ delay: i * 0.15 + 0.1 }}
                         >
                           <ChevronRight className={`h-3 w-3 absolute -right-1 -top-[5px] ${
                             patient.visits[i + 1].riskScore > visit.riskScore ? 'text-danger' : 'text-success'
                           }`} />
-                        </motion.div>
+                        </div>
                       )}
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </div>

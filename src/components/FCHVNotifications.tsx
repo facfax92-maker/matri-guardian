@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Bell, MessageSquare, CheckCircle2, AlertTriangle, ThumbsUp, Stethoscope } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 interface Feedback {
@@ -85,14 +85,9 @@ export function FCHVNotifications() {
         )}
       </Button>
 
-      <AnimatePresence>
+      <>
         {expanded && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="mt-2 space-y-2 overflow-hidden"
-          >
+          <div className="mt-2 space-y-2">
             {feedbacks.slice(0, 5).map(fb => {
               const config = typeConfig[fb.feedback_type] || typeConfig.general;
               const FbIcon = config.icon;
@@ -118,9 +113,9 @@ export function FCHVNotifications() {
                 </Card>
               );
             })}
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
+      </>
 
       <Dialog open={!!selectedFeedback} onOpenChange={() => setSelectedFeedback(null)}>
         <DialogContent className="max-w-sm">

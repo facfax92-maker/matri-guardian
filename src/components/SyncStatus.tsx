@@ -2,7 +2,7 @@ import { useSyncStatus, SyncState } from '@/hooks/use-sync-status';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Wifi, WifiOff, RefreshCw, Check, AlertTriangle, Clock, Loader2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+
 
 const stateConfig: Record<SyncState, { label: string; color: string; bg: string; icon: typeof Check }> = {
   synced: { label: 'All synced', color: 'text-success', bg: 'bg-success/10', icon: Check },
@@ -18,14 +18,9 @@ export function SyncStatusBar() {
   const Icon = config.icon;
 
   return (
-    <AnimatePresence>
+    <>
       {(syncState !== 'synced' || !isOnline) && (
-        <motion.div
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: 'auto', opacity: 1 }}
-          exit={{ height: 0, opacity: 0 }}
-          className="overflow-hidden"
-        >
+        <div className="overflow-hidden">
           <div className={`${config.bg} border-b px-4 py-2`}>
             <div className="container max-w-lg mx-auto flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -62,9 +57,9 @@ export function SyncStatusBar() {
               </div>
             </div>
           )}
-        </motion.div>
+        </div>
       )}
-    </AnimatePresence>
+    </>
   );
 }
 

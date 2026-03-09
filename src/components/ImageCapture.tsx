@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Camera, Upload, X, Check, Shield, AlertTriangle } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+
 import { useToast } from '@/hooks/use-toast';
 
 interface ImageCaptureProps {
@@ -105,10 +105,9 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <AnimatePresence mode="wait">
-          {/* Step 1: Consent */}
+        <>
           {step === 'consent' && (
-            <motion.div key="consent" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
+            <div className="space-y-4">
               <div className="p-4 rounded-xl bg-warning-bg border border-warning/30">
                 <div className="flex items-start gap-3">
                   <Shield className="h-5 w-5 text-warning-foreground shrink-0 mt-0.5" />
@@ -138,12 +137,12 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
                 <Check className="h-4 w-4 mr-2" />
                 Continue to Capture
               </Button>
-            </motion.div>
+            </div>
           )}
 
           {/* Step 2: Capture */}
           {step === 'capture' && (
-            <motion.div key="capture" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
+            <div className="space-y-4">
               <div>
                 <Label>Image Category</Label>
                 <Select value={category} onValueChange={setCategory}>
@@ -198,12 +197,12 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
               <Button variant="ghost" className="w-full" onClick={() => setStep('consent')}>
                 Back
               </Button>
-            </motion.div>
+            </div>
           )}
 
           {/* Step 3: Review */}
           {step === 'review' && preview && (
-            <motion.div key="review" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
+            <div className="space-y-4">
               <div className="relative rounded-xl overflow-hidden border">
                 <img src={preview} alt="Captured" className="w-full max-h-64 object-contain bg-muted" />
                 <Button
@@ -240,9 +239,9 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
                   {saving ? 'Saving...' : 'Save Image'}
                 </Button>
               </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
+        </>
       </CardContent>
     </Card>
   );

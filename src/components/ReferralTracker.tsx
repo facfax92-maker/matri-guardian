@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, Clock, Truck, Stethoscope, Home, AlertTriangle, MessageSquare } from 'lucide-react';
-import { motion } from 'framer-motion';
+
 
 const statusConfig: Record<ReferralStatus, { label: string; icon: typeof Clock; color: string; bg: string }> = {
   'pending': { label: 'Pending', icon: Clock, color: 'text-warning-foreground', bg: 'bg-warning-bg' },
@@ -115,10 +115,8 @@ export function ReferralTracker({ patientId }: ReferralTrackerProps) {
                         isCompleted ? 'bg-success border-success' : 'bg-background border-border'
                       } ${isCurrent ? 'ring-2 ring-success/30' : ''}`} />
 
-                      <motion.div
+                      <div
                         className={`pb-4 ${isCompleted ? 'opacity-100' : 'opacity-40'}`}
-                        initial={isCurrent ? { opacity: 0, x: -5 } : {}}
-                        animate={{ opacity: isCompleted ? 1 : 0.4, x: 0 }}
                       >
                         <div className="flex items-center gap-1.5">
                           <Icon className={`h-3 w-3 ${isCompleted ? config.color : 'text-muted-foreground'}`} />
@@ -134,7 +132,7 @@ export function ReferralTracker({ patientId }: ReferralTrackerProps) {
                             <p className="text-xs text-muted-foreground mt-0.5">{update.message}</p>
                           </div>
                         )}
-                      </motion.div>
+                      </div>
                     </div>
                   );
                 })}

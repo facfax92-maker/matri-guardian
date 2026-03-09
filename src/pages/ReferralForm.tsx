@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ArrowLeft, Send, Save, Phone, MessageSquare, Ambulance, Users, Building2, MapPin, Clock, AlertTriangle } from 'lucide-react';
 import { RiskBadge } from '@/components/RiskBadge';
 import { useToast } from '@/hooks/use-toast';
-import { motion } from 'framer-motion';
+
 
 const contactTypeConfig = {
   ambulance: { icon: Ambulance, label: 'Ambulance Services', color: 'text-danger', bg: 'bg-danger-bg', border: 'border-danger/30' },
@@ -159,11 +159,8 @@ MatriCare Alert System`;
                 </div>
                 <div className="space-y-2">
                   {contacts.map((contact, i) => (
-                    <motion.div
+                    <div
                       key={contact.id}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.05 }}
                       className={`rounded-xl p-3 ${bg} border ${border}`}
                     >
                       <div className="flex items-start justify-between gap-2">
@@ -200,7 +197,7 @@ MatriCare Alert System`;
                           </a>
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </div>

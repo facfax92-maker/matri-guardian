@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Activity, Loader2, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { motion } from 'framer-motion';
+
 
 const DISTRICTS = [
   'Bhaktapur', 'Kathmandu', 'Lalitpur', 'Kavrepalanchok', 'Sindhupalchok',
@@ -68,7 +68,7 @@ const Signup = () => {
   if (success) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-4">
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md text-center">
+        <div className="w-full max-w-md text-center">
           <Card className="border-0 shadow-lg">
             <CardContent className="pt-8 pb-8 space-y-4">
               <CheckCircle className="h-16 w-16 text-success mx-auto" />
@@ -82,14 +82,14 @@ const Signup = () => {
               </Link>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 py-8">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
+      <div className="w-full max-w-md">
         <div className="text-center mb-6">
           <div className="inline-flex items-center gap-2 gradient-primary text-primary-foreground px-4 py-2 rounded-2xl mb-4">
             <Activity className="h-6 w-6" />
@@ -167,7 +167,7 @@ const Signup = () => {
             </div>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
     </div>
   );
 };

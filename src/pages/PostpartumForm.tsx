@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, Brain, AlertTriangle, CheckCircle2, ShieldAlert } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { motion } from 'framer-motion';
+
 import { useEffect } from 'react';
 
 const edinburghQuestions = [
@@ -97,7 +97,7 @@ const PostpartumForm = () => {
     return (
       <div className="min-h-screen bg-background">
         <main className="container max-w-lg mx-auto px-4 py-8 space-y-6">
-          <motion.div className="text-center" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, damping: 15 }}>
+          <div className="text-center">
             <div className={`inline-flex items-center justify-center h-20 w-20 rounded-full ${riskInfo.bg} mb-4`}>
               <RiskIcon className={`h-10 w-10 ${riskInfo.color}`} />
             </div>
@@ -107,7 +107,7 @@ const PostpartumForm = () => {
               <RiskIcon className="h-4 w-4" />
               {riskInfo.label}
             </div>
-          </motion.div>
+          </div>
 
           {risk === 'high' && (
             <Card className="border-2 border-danger/30 bg-danger-bg">
@@ -183,11 +183,8 @@ const PostpartumForm = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             {edinburghQuestions.map((q, idx) => (
-              <motion.div
+              <div
                 key={q.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.08 }}
                 className="space-y-2"
               >
                 <p className="text-sm font-medium">
@@ -218,14 +215,14 @@ const PostpartumForm = () => {
                     );
                   })}
                 </div>
-              </motion.div>
+              </div>
             ))}
           </CardContent>
         </Card>
 
         {/* Live score preview */}
         {allAnswered && (
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
+          <div>
             <Card className={`border-2 ${riskInfo.border}`}>
               <CardContent className="p-4 flex items-center gap-3">
                 <RiskIcon className={`h-6 w-6 ${riskInfo.color}`} />
@@ -235,7 +232,7 @@ const PostpartumForm = () => {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         )}
 
         <Card>
