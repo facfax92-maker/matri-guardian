@@ -170,6 +170,15 @@
   }
 }
 
+/* ═══ Reduced Motion ═══ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @layer utilities {
   .gradient-primary {
     background: linear-gradient(135deg, hsl(231, 80%, 66%), hsl(250, 70%, 60%));
@@ -192,4 +201,93 @@
   .card-gradient-danger {
     background: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--danger) / 0.08) 100%);
   }
+
+  /* ═══ Button micro-interactions ═══ */
+  .btn-interactive {
+    @apply transition-all duration-150 ease-out;
+  }
+  .btn-interactive:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 16px hsl(var(--primary) / 0.25);
+  }
+  .btn-interactive:active {
+    transform: scale(0.97);
+    transition-duration: 80ms;
+  }
+
+  /* ═══ Card hover interaction ═══ */
+  .card-interactive {
+    @apply transition-all duration-200 ease-out cursor-pointer;
+  }
+  .card-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px hsl(var(--foreground) / 0.08);
+  }
+  .card-interactive:active {
+    transform: translateY(0) scale(0.98);
+    transition-duration: 100ms;
+  }
+
+  /* ═══ Input focus animation ═══ */
+  .input-animated {
+    @apply transition-all duration-200;
+  }
+  .input-animated:focus {
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+    transform: scale(1.005);
+  }
+
+  /* ═══ FAB pulse ═══ */
+  .fab-animated {
+    @apply transition-all duration-200;
+    animation: fab-pulse 2.5s ease-in-out infinite;
+  }
+  .fab-animated:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 24px hsl(var(--primary) / 0.4);
+  }
+  .fab-animated:active {
+    transform: scale(0.95);
+  }
+
+  /* ═══ Shimmer skeleton ═══ */
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 0%,
+      hsl(var(--muted) / 0.5) 50%,
+      hsl(var(--muted)) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  /* ═══ Risk badge animations ═══ */
+  .risk-high-pulse {
+    animation: risk-glow-red 2s ease-in-out infinite;
+  }
+  .risk-moderate-pulse {
+    animation: risk-fade-yellow 3s ease-in-out infinite;
+  }
+}
+
+@keyframes fab-pulse {
+  0%, 100% { box-shadow: 0 4px 14px hsl(var(--primary) / 0.3); }
+  50% { box-shadow: 0 6px 20px hsl(var(--primary) / 0.5); }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes risk-glow-red {
+  0%, 100% { box-shadow: 0 0 0 0 hsl(354, 70%, 54%, 0); }
+  50% { box-shadow: 0 0 12px 2px hsl(354, 70%, 54%, 0.35); }
+}
+
+@keyframes risk-fade-yellow {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 1; }
 }

@@ -8,6 +8,7 @@ import { migrateFromLocalStorage } from '@/lib/indexed-db';
 import { getOverdueStatus } from '@/lib/visit-utils';
 import { FCHVNotifications } from '@/components/FCHVNotifications';
 import { Navbar } from '@/components/Navbar';
+import { AnimatedCounter } from '@/components/AnimatedCounter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Users, AlertTriangle, Plus, ChevronRight, PieChart, Bell, CalendarClock, Stethoscope } from 'lucide-react';
@@ -78,7 +79,7 @@ const Dashboard = () => {
               <Card className={`text-center ${stat.gradient} border-0 shadow-sm`}>
                 <CardContent className="p-4">
                   <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
-                  <p className="text-2xl font-bold">{stat.value}</p>
+                  <AnimatedCounter value={stat.value} className="text-2xl font-bold" />
                   <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
                 </CardContent>
               </Card>
@@ -148,7 +149,7 @@ const Dashboard = () => {
         {/* Quick Actions */}
         <div className="grid gap-3 grid-cols-3">
           <Button
-            className="h-12 gradient-primary text-primary-foreground border-0 rounded-xl"
+            className="h-12 gradient-primary text-primary-foreground border-0 rounded-xl btn-interactive"
             onClick={() => navigate('/patients')}
           >
             <Users className="h-4 w-4 mr-2" />
@@ -156,7 +157,7 @@ const Dashboard = () => {
           </Button>
           <Button
             variant="secondary"
-            className="h-12 rounded-xl"
+            className="h-12 rounded-xl btn-interactive"
             onClick={() => navigate('/patients/new')}
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -164,7 +165,7 @@ const Dashboard = () => {
           </Button>
           <Button
             variant="outline"
-            className="h-12 rounded-xl"
+            className="h-12 rounded-xl btn-interactive"
             onClick={() => navigate('/hospital-portal')}
           >
             <Stethoscope className="h-4 w-4 mr-2" />
@@ -190,7 +191,7 @@ const Dashboard = () => {
                 transition={{ delay: 0.4 + i * 0.1 }}
               >
                 <Card
-                  className="cursor-pointer hover:shadow-md transition-all card-gradient border-0 shadow-sm"
+                  className="cursor-pointer card-interactive card-gradient border-0 shadow-sm"
                   onClick={() => navigate(`/patients/${alert.patientId}`)}
                 >
                   <CardContent className="p-3 flex items-center gap-3">

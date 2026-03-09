@@ -92,7 +92,7 @@ const PatientList = () => {
             placeholder="Search patients or village..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-10 rounded-xl"
+            className="pl-10 rounded-xl input-animated"
           />
         </div>
 
@@ -150,7 +150,7 @@ const PatientList = () => {
                 transition={{ delay: i * 0.05 }}
               >
                 <Card
-                  className={`cursor-pointer hover:shadow-md transition-all card-gradient border-0 shadow-sm ${
+                  className={`card-interactive card-gradient border-0 shadow-sm ${
                     overdueStatus === 'urgent-overdue' ? 'ring-2 ring-danger/50' : ''
                   }`}
                   onClick={() => navigate(`/patients/${patient.id}`)}
@@ -210,7 +210,7 @@ const PatientList = () => {
 
       {/* FAB */}
       <Button
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg gradient-primary text-primary-foreground border-0"
+        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg gradient-primary text-primary-foreground border-0 fab-animated"
         onClick={() => navigate('/patients/new')}
       >
         <Plus className="h-6 w-6" />
