@@ -146,7 +146,7 @@ const ReferralSuccess = () => {
           </div>
           <h1 className="text-2xl font-bold">Referral Generated Successfully</h1>
           <p className="text-muted-foreground mt-2">{new Date().toLocaleString()}</p>
-        </motion.div>
+        </div>
 
         {/* Referral Summary */}
         {referral && (
