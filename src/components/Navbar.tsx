@@ -26,7 +26,7 @@ export function Navbar() {
           onClick={() => navigate('/')}
           className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
-          <img src={matricareLogo} alt="MatriCare logo" className="h-8 w-auto" />
+          <img src={matricareLogo} alt="MatriCare logo" className="h-10 w-auto" />
           <span className="text-lg font-bold text-primary tracking-tight hidden sm:inline">
             MatriCare
           </span>
