@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ArrowLeft, Send, Save, Phone, MessageSquare, Ambulance, Users, Building2, MapPin, Clock, AlertTriangle } from 'lucide-react';
 import { RiskBadge } from '@/components/RiskBadge';
 import { useToast } from '@/hooks/use-toast';
-import { motion } from 'framer-motion';
+
 
 const contactTypeConfig = {
   ambulance: { icon: Ambulance, label: 'Ambulance Services', color: 'text-danger', bg: 'bg-danger-bg', border: 'border-danger/30' },
