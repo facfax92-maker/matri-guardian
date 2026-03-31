@@ -1,65 +1,64 @@
-import { useState, useEffect } from 'react';
-import { Heart, Activity } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import matricareLogo from '@/assets/matricare-logo.png';
 
-const APP_NAME = 'MatriCare';
-
 export function SplashScreen({ onComplete }: { onComplete: () => void }) {
-  const [phase, setPhase] = useState<'enter' | 'show' | 'exit'>('enter');
+  const [phase, setPhase] = useState<'logo' | 'text' | 'exit'>('logo');
 
   useEffect(() => {
-    // After logo + text animate in, hold briefly then exit
-    const showTimer = setTimeout(() => setPhase('show'), 100);
+    const textTimer = setTimeout(() => setPhase('text'), 1200);
     const exitTimer = setTimeout(() => setPhase('exit'), 2200);
     const doneTimer = setTimeout(onComplete, 2700);
     return () => {
-      clearTimeout(showTimer);
+      clearTimeout(textTimer);
       clearTimeout(exitTimer);
       clearTimeout(doneTimer);
     };
   }, [onComplete]);
 
   return (
-    <div
-      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background ${
-        phase === 'exit' ? 'splash-fade-out' : ''
-      }`}
-      style={{ willChange: 'opacity' }}
-      onClick={() => {
-        setPhase('exit');
-        setTimeout(onComplete, 500);
-      }}
-    >
-      {/* Logo icon */}
-      <div className="splash-logo-wrapper relative mb-6">
-        <div className="splash-logo-icon w-20 h-20 rounded-2xl gradient-primary flex items-center justify-center shadow-lg">
-          <Heart className="h-8 w-8 text-primary-foreground" strokeWidth={2.5} />
-          <Activity className="h-5 w-5 text-primary-foreground absolute bottom-2 right-2 opacity-80" />
-        </div>
-      </div>
-
-      {/* App name — staggered letters */}
-      <h1 className="text-4xl font-bold tracking-tight text-foreground mb-2" aria-label={APP_NAME}>
-        {APP_NAME.split('').map((char, i) => (
-          <span
-            key={i}
-            className={`splash-letter ${i >= 5 ? 'text-primary' : ''}`}
-            style={{ animationDelay: `${0.5 + i * 0.06}s` }}
+    <AnimatePresence>
+      {phase !== 'exit' ? (
+        <motion.div
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center"
+          style={{ backgroundColor: '#FFFFFF' }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5, ease: 'easeInOut' }}
+        >
+          {/* Logo with scale-up and clip-path reveal */}
+          <motion.div
+            className="relative"
+            initial={{ scale: 0.85, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
           >
-            {char}
-          </span>
-        ))}
-      </h1>
+            <motion.img
+              src={matricareLogo}
+              alt="MatriCare Logo"
+              className="w-72 sm:w-96 h-auto"
+              style={{ clipPath: 'inset(0 100% 0 0)' }}
+              animate={{ clipPath: 'inset(0 0% 0 0)' }}
+              transition={{ duration: 1.2, ease: [0.4, 0, 0.2, 1], delay: 0.2 }}
+            />
+          </motion.div>
 
-      {/* Subtitle */}
-      <p className="splash-subtitle text-sm text-muted-foreground tracking-wide">
-        Maternal Risk Intelligence System
-      </p>
-
-      {/* Loading bar */}
-      <div className="mt-8 w-32 h-1 rounded-full bg-muted overflow-hidden">
-        <div className="h-full rounded-full gradient-primary splash-bar" />
-      </div>
-    </div>
+          {/* Text fade-in */}
+          <motion.div
+            className="mt-6 text-center"
+            initial={{ opacity: 0, y: 10 }}
+            animate={phase === 'text' ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+          >
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
+              <span style={{ color: '#1a3a4a' }}>MATRI</span>
+              <span style={{ color: '#2a9d8f' }}>CARE</span>
+            </h1>
+            <p className="mt-1 text-sm tracking-widest" style={{ color: '#2a9d8f' }}>
+              Predicting Risk. Protecting Life.
+            </p>
+          </motion.div>
+        </motion.div>
+      ) : null}
+    </AnimatePresence>
   );
 }
