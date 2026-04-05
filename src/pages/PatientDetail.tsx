@@ -357,7 +357,7 @@ const PatientDetail = () => {
                             visit.riskLevel === 'LOW' ? 'border-success bg-success-bg text-success-foreground' :
                             visit.riskLevel === 'MODERATE' ? 'border-warning bg-warning-bg text-warning-foreground' :
                             'border-danger bg-danger-bg text-danger-foreground'
-                          }`}
+                          } ${visit.riskLevel === 'HIGH' ? 'pulse-red' : ''}`}
                         >
                           V{visit.visitNumber}
                         </div>

@@ -192,8 +192,8 @@ const PatientList = () => {
                         {lastVisit && <RiskBadge level={lastVisit.riskLevel} size="sm" showIcon />}
                         <RiskSparkline visits={patient.visits} />
                         {patient.visits.length >= 2 && getDaysSinceLastVisit(patient) > 28 && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-danger-bg text-danger-foreground text-[10px] font-bold border border-danger">
-                            OVERDUE {getDaysSinceLastVisit(patient)}d
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-warning-bg text-warning-foreground text-[10px] font-bold border border-warning">
+                            <span className="pulse-yellow">OVERDUE {getDaysSinceLastVisit(patient)}d</span>
                           </span>
                         )}
                       </div>
