@@ -44,6 +44,28 @@ const PatientDetail = () => {
   const prevVisit = patient.visits.length > 1 ? patient.visits[patient.visits.length - 2] : null;
   const isHighRisk = lastVisit?.riskLevel === 'HIGH';
   const hasEscalation = prevVisit && lastVisit && lastVisit.riskScore > prevVisit.riskScore;
+  const riskChange = prevVisit && lastVisit ? lastVisit.riskScore - prevVisit.riskScore : null;
+
+  // Mock AI responses
+  const mockAIResponses: Record<string, string> = {
+    'explain g2 p0': 'Retrieved from WHO Guidelines: G2 P0 means 2 pregnancies and 0 viable births. This indicates a history of pregnancy loss and flags the patient as High Risk.',
+    'what is preeclampsia': 'Retrieved from WHO Guidelines: Preeclampsia is a pregnancy complication characterized by high blood pressure (≥140/90 mmHg) and proteinuria after 20 weeks of gestation. It can lead to eclampsia if untreated.',
+    'when to refer': 'Retrieved from WHO Guidelines: Refer immediately if systolic BP ≥160 mmHg, diastolic ≥110 mmHg, proteinuria ≥2+, severe headache, visual disturbances, or epigastric pain. Do not delay transport.',
+  };
+
+  const handleChatSend = () => {
+    if (!chatInput.trim()) return;
+    const userMsg = chatInput.trim();
+    setChatMessages(prev => [...prev, { role: 'user', text: userMsg }]);
+    setChatInput('');
+    const key = Object.keys(mockAIResponses).find(k => userMsg.toLowerCase().includes(k));
+    setTimeout(() => {
+      setChatMessages(prev => [...prev, {
+        role: 'ai',
+        text: key ? mockAIResponses[key] : `I understand your question about "${userMsg}". In offline mode, I can answer common clinical queries. Try asking: "Explain G2 P0", "What is preeclampsia", or "When to refer".`
+      }]);
+    }, 800);
+  };
 
   const chartData = patient.visits.map((v, i) => ({
     name: `Visit ${v.visitNumber}`,
