@@ -120,27 +120,36 @@ const PatientDetail = () => {
               {patient.age}y · G{patient.gravida}P{patient.para} · {patient.gestationalAge}wk
             </p>
           </div>
-          {lastVisit && <RiskBadge level={lastVisit.riskLevel} score={lastVisit.riskScore} size="lg" showIcon />}
         </div>
       </div>
 
       <main className="container max-w-lg mx-auto px-4 py-4 space-y-4">
-        {/* Risk Escalation Alert */}
+        {/* Escalation Banner - prominent at top */}
         {hasEscalation && isHighRisk && (
-          <div>
-            <Card className="border-danger bg-danger-bg border-2">
-              <CardContent className="p-4 flex items-start gap-3">
-                <AlertTriangle className="h-5 w-5 text-danger shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-bold text-danger-foreground">⚠️ RISK ESCALATION DETECTED</p>
-                  <p className="text-sm text-danger-foreground mt-1">
-                    Risk increased from {prevVisit?.riskLevel} (Visit {prevVisit?.visitNumber}) to {lastVisit.riskLevel} (Visit {lastVisit.visitNumber})
-                  </p>
-                  <p className="text-sm font-medium text-danger-foreground mt-1">Urgent referral recommended</p>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="escalation-banner rounded-xl bg-danger p-4 flex items-start gap-3 shadow-lg">
+            <AlertTriangle className="h-6 w-6 text-white shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="font-bold text-white text-sm">⚠️ RISK ESCALATION DETECTED</p>
+              <p className="text-white/90 text-xs mt-1">
+                Risk increased from {prevVisit?.riskLevel} (Visit {prevVisit?.visitNumber}) to {lastVisit.riskLevel} (Visit {lastVisit.visitNumber}). Urgent referral recommended.
+              </p>
+            </div>
+            <AlertTriangle className="h-6 w-6 text-white shrink-0 mt-0.5" />
           </div>
+        )}
+
+        {/* Animated Risk Gauge */}
+        {lastVisit && (
+          <Card className="card-gradient border-0 shadow-sm">
+            <CardContent className="p-6 flex flex-col items-center">
+              <RiskGauge score={lastVisit.riskScore} size={200} />
+              {patient.visits.length >= 2 && (
+                <div className="mt-3">
+                  <RiskSparkline visits={patient.visits} />
+                </div>
+              )}
+            </CardContent>
+          </Card>
         )}
 
         {/* HERO: Risk & BP Trend Chart */}
