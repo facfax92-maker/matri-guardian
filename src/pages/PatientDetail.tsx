@@ -13,7 +13,8 @@ import { SyncStatusBar } from '@/components/SyncStatus';
 import { Navbar } from '@/components/Navbar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User, Brain, ShieldAlert, CheckCircle2, Camera } from 'lucide-react';
+import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User, Brain, ShieldAlert, CheckCircle2, Camera, MessageCircle, Send, X, ExternalLink } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Area, ComposedChart, Tooltip, Line } from 'recharts';
 
 
@@ -23,6 +24,9 @@ const PatientDetail = () => {
   const [patient, setPatient] = useState<Patient | null>(null);
   const [ppVisits, setPpVisits] = useState<PostpartumVisit[]>([]);
   const [showImageCapture, setShowImageCapture] = useState(false);
+  const [showChat, setShowChat] = useState(false);
+  const [chatInput, setChatInput] = useState('');
+  const [chatMessages, setChatMessages] = useState<{role: 'user' | 'ai'; text: string}[]>([]);
 
   useEffect(() => {
     initStorage();
@@ -40,6 +44,28 @@ const PatientDetail = () => {
   const prevVisit = patient.visits.length > 1 ? patient.visits[patient.visits.length - 2] : null;
   const isHighRisk = lastVisit?.riskLevel === 'HIGH';
   const hasEscalation = prevVisit && lastVisit && lastVisit.riskScore > prevVisit.riskScore;
+  const riskChange = prevVisit && lastVisit ? lastVisit.riskScore - prevVisit.riskScore : null;
+
+  // Mock AI responses
+  const mockAIResponses: Record<string, string> = {
+    'explain g2 p0': 'Retrieved from WHO Guidelines: G2 P0 means 2 pregnancies and 0 viable births. This indicates a history of pregnancy loss and flags the patient as High Risk.',
+    'what is preeclampsia': 'Retrieved from WHO Guidelines: Preeclampsia is a pregnancy complication characterized by high blood pressure (≥140/90 mmHg) and proteinuria after 20 weeks of gestation. It can lead to eclampsia if untreated.',
+    'when to refer': 'Retrieved from WHO Guidelines: Refer immediately if systolic BP ≥160 mmHg, diastolic ≥110 mmHg, proteinuria ≥2+, severe headache, visual disturbances, or epigastric pain. Do not delay transport.',
+  };
+
+  const handleChatSend = () => {
+    if (!chatInput.trim()) return;
+    const userMsg = chatInput.trim();
+    setChatMessages(prev => [...prev, { role: 'user', text: userMsg }]);
+    setChatInput('');
+    const key = Object.keys(mockAIResponses).find(k => userMsg.toLowerCase().includes(k));
+    setTimeout(() => {
+      setChatMessages(prev => [...prev, {
+        role: 'ai',
+        text: key ? mockAIResponses[key] : `I understand your question about "${userMsg}". In offline mode, I can answer common clinical queries. Try asking: "Explain G2 P0", "What is preeclampsia", or "When to refer".`
+      }]);
+    }, 800);
+  };
 
   const chartData = patient.visits.map((v, i) => ({
     name: `Visit ${v.visitNumber}`,
@@ -143,11 +169,25 @@ const PatientDetail = () => {
           <Card className="card-gradient border-0 shadow-sm">
             <CardContent className="p-6 flex flex-col items-center">
               <RiskGauge score={lastVisit.riskScore} size={200} />
+              {riskChange !== null && riskChange !== 0 && prevVisit && (
+                <p className={`text-xs font-semibold mt-2 flex items-center gap-1 ${riskChange > 0 ? 'text-danger-foreground' : 'text-success-foreground'}`}>
+                  {riskChange > 0 ? '↑' : '↓'} {Math.abs(Math.round((riskChange / (prevVisit.riskScore || 1)) * 100))}% since Visit {prevVisit.visitNumber}
+                </p>
+              )}
               {patient.visits.length >= 2 && (
                 <div className="mt-3">
                   <RiskSparkline visits={patient.visits} />
                 </div>
               )}
+              <a
+                href="https://www.who.int/publications/i/item/9789241549912"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 text-[10px] text-primary hover:underline flex items-center gap-1"
+              >
+                <ExternalLink className="h-2.5 w-2.5" />
+                View Clinical Source: WHO Antenatal Guidelines
+              </a>
             </CardContent>
           </Card>
         )}
@@ -317,7 +357,7 @@ const PatientDetail = () => {
                             visit.riskLevel === 'LOW' ? 'border-success bg-success-bg text-success-foreground' :
                             visit.riskLevel === 'MODERATE' ? 'border-warning bg-warning-bg text-warning-foreground' :
                             'border-danger bg-danger-bg text-danger-foreground'
-                          }`}
+                          } ${visit.riskLevel === 'HIGH' ? 'pulse-red' : ''}`}
                         >
                           V{visit.visitNumber}
                         </div>
@@ -512,6 +552,65 @@ const PatientDetail = () => {
           )}
         </div>
       </main>
+
+      {/* Clinical Assistant FAB */}
+      <button
+        onClick={() => setShowChat(!showChat)}
+        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg gradient-primary text-primary-foreground flex items-center justify-center z-50 fab-pulse btn-press"
+      >
+        {showChat ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
+      </button>
+
+      {/* Chat Window */}
+      {showChat && (
+        <div className="fixed bottom-24 right-4 w-80 max-h-[420px] bg-card border border-border rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden animate-scale-in">
+          {/* Header */}
+          <div className="gradient-primary p-3 flex items-center gap-2">
+            <MessageCircle className="h-4 w-4 text-primary-foreground" />
+            <div className="flex-1">
+              <p className="text-xs font-bold text-primary-foreground">MatriCare Local-AI</p>
+              <p className="text-[9px] text-primary-foreground/70">Offline Mode · WHO Guidelines</p>
+            </div>
+            <span className="h-2 w-2 rounded-full bg-success animate-pulse" />
+          </div>
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-3 space-y-2 min-h-[200px] max-h-[280px]">
+            {chatMessages.length === 0 && (
+              <div className="text-center py-8">
+                <MessageCircle className="h-8 w-8 text-muted-foreground/30 mx-auto mb-2" />
+                <p className="text-xs text-muted-foreground">Ask a clinical question</p>
+                <p className="text-[10px] text-muted-foreground mt-1">Try: "Explain G2 P0"</p>
+              </div>
+            )}
+            {chatMessages.map((msg, i) => (
+              <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`max-w-[85%] rounded-xl px-3 py-2 text-xs ${
+                  msg.role === 'user'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted text-foreground'
+                }`}>
+                  {msg.text}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Input */}
+          <div className="border-t border-border p-2 flex gap-2">
+            <Input
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleChatSend()}
+              placeholder="Ask about clinical terms..."
+              className="text-xs h-8 rounded-xl"
+            />
+            <Button size="icon" className="h-8 w-8 rounded-xl shrink-0" onClick={handleChatSend}>
+              <Send className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

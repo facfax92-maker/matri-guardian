@@ -163,7 +163,7 @@ const PatientList = () => {
                         <div className="flex items-center gap-2 flex-wrap">
                           <h3 className="font-semibold">{patient.name}</h3>
                           {overdueStatus === 'urgent-overdue' && (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-danger-bg text-danger-foreground text-[10px] font-bold border border-danger">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-danger-bg text-danger-foreground text-[10px] font-bold border border-danger pulse-red">
                               <AlertTriangle className="h-2.5 w-2.5" />
                               URGENT: High Risk + Overdue
                             </span>
@@ -171,7 +171,7 @@ const PatientList = () => {
                           {overdueStatus === 'followup-overdue' && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-warning-bg text-warning-foreground text-[10px] font-semibold border border-warning">
                               <Clock className="h-2.5 w-2.5" />
-                              Follow-up Overdue
+                              <span className="pulse-yellow">Follow-up Overdue</span>
                             </span>
                           )}
                         </div>
@@ -192,8 +192,8 @@ const PatientList = () => {
                         {lastVisit && <RiskBadge level={lastVisit.riskLevel} size="sm" showIcon />}
                         <RiskSparkline visits={patient.visits} />
                         {patient.visits.length >= 2 && getDaysSinceLastVisit(patient) > 28 && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-danger-bg text-danger-foreground text-[10px] font-bold border border-danger">
-                            OVERDUE {getDaysSinceLastVisit(patient)}d
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-warning-bg text-warning-foreground text-[10px] font-bold border border-warning">
+                            <span className="pulse-yellow">OVERDUE {getDaysSinceLastVisit(patient)}d</span>
                           </span>
                         )}
                       </div>
