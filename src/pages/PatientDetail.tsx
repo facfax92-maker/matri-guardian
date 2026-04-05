@@ -13,7 +13,8 @@ import { SyncStatusBar } from '@/components/SyncStatus';
 import { Navbar } from '@/components/Navbar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User, Brain, ShieldAlert, CheckCircle2, Camera } from 'lucide-react';
+import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User, Brain, ShieldAlert, CheckCircle2, Camera, MessageCircle, Send, X, ExternalLink } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Area, ComposedChart, Tooltip, Line } from 'recharts';
 
 
