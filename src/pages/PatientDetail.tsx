@@ -169,11 +169,25 @@ const PatientDetail = () => {
           <Card className="card-gradient border-0 shadow-sm">
             <CardContent className="p-6 flex flex-col items-center">
               <RiskGauge score={lastVisit.riskScore} size={200} />
+              {riskChange !== null && riskChange !== 0 && prevVisit && (
+                <p className={`text-xs font-semibold mt-2 flex items-center gap-1 ${riskChange > 0 ? 'text-danger-foreground' : 'text-success-foreground'}`}>
+                  {riskChange > 0 ? '↑' : '↓'} {Math.abs(Math.round((riskChange / (prevVisit.riskScore || 1)) * 100))}% since Visit {prevVisit.visitNumber}
+                </p>
+              )}
               {patient.visits.length >= 2 && (
                 <div className="mt-3">
                   <RiskSparkline visits={patient.visits} />
                 </div>
               )}
+              <a
+                href="https://www.who.int/publications/i/item/9789241549912"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 text-[10px] text-primary hover:underline flex items-center gap-1"
+              >
+                <ExternalLink className="h-2.5 w-2.5" />
+                View Clinical Source: WHO Antenatal Guidelines
+              </a>
             </CardContent>
           </Card>
         )}
