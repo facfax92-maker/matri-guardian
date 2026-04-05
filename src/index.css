@@ -473,8 +473,45 @@
   from { opacity: 0; transform: translateY(-8px); }
   to { opacity: 1; transform: translateY(0); }
 }
+@keyframes escalation-border-pulse {
+  0%, 100% { border-color: hsla(354, 70%, 54%, 0.6); box-shadow: 0 0 8px hsla(354, 70%, 54%, 0.15); }
+  50% { border-color: hsla(354, 70%, 54%, 1); box-shadow: 0 0 18px hsla(354, 70%, 54%, 0.35); }
+}
 .escalation-banner {
   animation: escalation-slide 0.4s ease-out;
+  border: 2px solid hsla(354, 70%, 54%, 0.6);
+  animation: escalation-slide 0.4s ease-out, escalation-border-pulse 2s ease-in-out 0.4s infinite;
+}
+
+/* ═══════════════════════════════════════════════════ */
+/*  V3 HIGH-RISK TIMELINE PULSE                        */
+/* ═══════════════════════════════════════════════════ */
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 0 0 hsla(354, 70%, 54%, 0.4); }
+  50% { box-shadow: 0 0 12px 6px hsla(354, 70%, 54%, 0.2); }
+}
+.pulse-red {
+  animation: pulse-red 2s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════ */
+/*  OVERDUE YELLOW PULSE                               */
+/* ═══════════════════════════════════════════════════ */
+@keyframes pulse-yellow {
+  0%, 100% { color: hsl(40, 60%, 40%); text-shadow: 0 0 0 transparent; }
+  50% { color: hsl(45, 100%, 40%); text-shadow: 0 0 8px hsla(45, 100%, 51%, 0.3); }
+}
+.pulse-yellow {
+  animation: pulse-yellow 2s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════ */
+/*  DARK MODE LOGO                                     */
+/* ═══════════════════════════════════════════════════ */
+.dark .dark-logo-adapt {
+  filter: brightness(0) invert(1);
+  -webkit-filter: brightness(0) invert(1);
+  filter: brightness(0) invert(1) drop-shadow(0 0 5px rgba(255,255,255,0.2));
 }
 
 /* ═══════════════════════════════════════════════════ */

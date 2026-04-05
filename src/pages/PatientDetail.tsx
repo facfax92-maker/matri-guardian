@@ -538,6 +538,65 @@ const PatientDetail = () => {
           )}
         </div>
       </main>
+
+      {/* Clinical Assistant FAB */}
+      <button
+        onClick={() => setShowChat(!showChat)}
+        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg gradient-primary text-primary-foreground flex items-center justify-center z-50 fab-pulse btn-press"
+      >
+        {showChat ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
+      </button>
+
+      {/* Chat Window */}
+      {showChat && (
+        <div className="fixed bottom-24 right-4 w-80 max-h-[420px] bg-card border border-border rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden animate-scale-in">
+          {/* Header */}
+          <div className="gradient-primary p-3 flex items-center gap-2">
+            <MessageCircle className="h-4 w-4 text-primary-foreground" />
+            <div className="flex-1">
+              <p className="text-xs font-bold text-primary-foreground">MatriCare Local-AI</p>
+              <p className="text-[9px] text-primary-foreground/70">Offline Mode · WHO Guidelines</p>
+            </div>
+            <span className="h-2 w-2 rounded-full bg-success animate-pulse" />
+          </div>
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-3 space-y-2 min-h-[200px] max-h-[280px]">
+            {chatMessages.length === 0 && (
+              <div className="text-center py-8">
+                <MessageCircle className="h-8 w-8 text-muted-foreground/30 mx-auto mb-2" />
+                <p className="text-xs text-muted-foreground">Ask a clinical question</p>
+                <p className="text-[10px] text-muted-foreground mt-1">Try: "Explain G2 P0"</p>
+              </div>
+            )}
+            {chatMessages.map((msg, i) => (
+              <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`max-w-[85%] rounded-xl px-3 py-2 text-xs ${
+                  msg.role === 'user'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted text-foreground'
+                }`}>
+                  {msg.text}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Input */}
+          <div className="border-t border-border p-2 flex gap-2">
+            <Input
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleChatSend()}
+              placeholder="Ask about clinical terms..."
+              className="text-xs h-8 rounded-xl"
+            />
+            <Button size="icon" className="h-8 w-8 rounded-xl shrink-0" onClick={handleChatSend}>
+              <Send className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
