@@ -188,11 +188,14 @@ const PatientList = () => {
                           </p>
                         )}
                       </div>
-                      <div className="flex flex-col items-end gap-2 shrink-0 ml-3">
-                        {lastVisit && <RiskBadge level={lastVisit.riskLevel} size="md" showIcon />}
-                        <span className="text-xs text-muted-foreground">
-                          {patient.visits.length} visit{patient.visits.length !== 1 ? 's' : ''}
-                        </span>
+                      <div className="flex flex-col items-end gap-1 shrink-0 ml-3">
+                        {lastVisit && <RiskBadge level={lastVisit.riskLevel} size="sm" showIcon />}
+                        <RiskSparkline visits={patient.visits} />
+                        {patient.visits.length >= 2 && getDaysSinceLastVisit(patient) > 28 && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-danger-bg text-danger-foreground text-[10px] font-bold border border-danger">
+                            OVERDUE {getDaysSinceLastVisit(patient)}d
+                          </span>
+                        )}
                       </div>
                     </div>
                   </CardContent>
