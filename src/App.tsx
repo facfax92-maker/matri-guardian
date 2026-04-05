@@ -65,6 +65,7 @@ const App = () => {
           </BrowserRouter>
         </TooltipProvider>
       </QueryClientProvider>
+      </I18nProvider>
     </>
   );
 };
