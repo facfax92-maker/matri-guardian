@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getPatient, initStorage, getPostpartumVisits } from '@/lib/storage';
 import { Patient, Visit, PostpartumVisit } from '@/lib/types';
 import { RiskBadge } from '@/components/RiskBadge';
+import { RiskGauge } from '@/components/RiskGauge';
+import { RiskSparkline } from '@/components/RiskSparkline';
 import { CompareVisits } from '@/components/CompareVisits';
 import { ReferralTracker } from '@/components/ReferralTracker';
 import { ImageCapture } from '@/components/ImageCapture';
