@@ -5,12 +5,14 @@ import { Patient, Visit, PostpartumVisit } from '@/lib/types';
 import { RiskBadge } from '@/components/RiskBadge';
 import { RiskGauge } from '@/components/RiskGauge';
 import { RiskSparkline } from '@/components/RiskSparkline';
+import { RiskTrajectoryChart } from '@/components/RiskTrajectoryChart';
 import { CompareVisits } from '@/components/CompareVisits';
 import { ReferralTracker } from '@/components/ReferralTracker';
 import { ImageCapture } from '@/components/ImageCapture';
 import { ImageGallery } from '@/components/ImageGallery';
 import { SyncStatusBar } from '@/components/SyncStatus';
 import { Navbar } from '@/components/Navbar';
+import { useI18n } from '@/lib/i18n';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User, Brain, ShieldAlert, CheckCircle2, Camera, MessageCircle, Send, X, ExternalLink } from 'lucide-react';
@@ -21,6 +23,7 @@ import { XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Area, 
 const PatientDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [patient, setPatient] = useState<Patient | null>(null);
   const [ppVisits, setPpVisits] = useState<PostpartumVisit[]>([]);
   const [showImageCapture, setShowImageCapture] = useState(false);
@@ -46,7 +49,7 @@ const PatientDetail = () => {
   const hasEscalation = prevVisit && lastVisit && lastVisit.riskScore > prevVisit.riskScore;
   const riskChange = prevVisit && lastVisit ? lastVisit.riskScore - prevVisit.riskScore : null;
 
-  // Mock AI responses
+  // Mock AI responses (kept in English as specified)
   const mockAIResponses: Record<string, string> = {
     'explain g2 p0': 'Retrieved from WHO Guidelines: G2 P0 means 2 pregnancies and 0 viable births. This indicates a history of pregnancy loss and flags the patient as High Risk.',
     'what is preeclampsia': 'Retrieved from WHO Guidelines: Preeclampsia is a pregnancy complication characterized by high blood pressure (≥140/90 mmHg) and proteinuria after 20 weeks of gestation. It can lead to eclampsia if untreated.',
@@ -150,14 +153,14 @@ const PatientDetail = () => {
       </div>
 
       <main className="container max-w-lg mx-auto px-4 py-4 space-y-4">
-        {/* Escalation Banner - prominent at top */}
+        {/* Escalation Banner */}
         {hasEscalation && isHighRisk && (
           <div className="escalation-banner rounded-xl bg-danger p-4 flex items-start gap-3 shadow-lg">
             <AlertTriangle className="h-6 w-6 text-white shrink-0 mt-0.5" />
             <div className="flex-1">
-              <p className="font-bold text-white text-sm">⚠️ RISK ESCALATION DETECTED</p>
+              <p className="font-bold text-white text-sm">⚠️ {t('escalation.detected')}</p>
               <p className="text-white/90 text-xs mt-1">
-                Risk increased from {prevVisit?.riskLevel} (Visit {prevVisit?.visitNumber}) to {lastVisit.riskLevel} (Visit {lastVisit.visitNumber}). Urgent referral recommended.
+                Risk increased from {prevVisit?.riskLevel} (Visit {prevVisit?.visitNumber}) to {lastVisit.riskLevel} (Visit {lastVisit.visitNumber}). {t('escalation.urgentReferral')}
               </p>
             </div>
             <AlertTriangle className="h-6 w-6 text-white shrink-0 mt-0.5" />
@@ -192,6 +195,11 @@ const PatientDetail = () => {
           </Card>
         )}
 
+        {/* Risk Trajectory Chart */}
+        {lastVisit && (
+          <RiskTrajectoryChart currentScore={lastVisit.riskScore} visitNumber={lastVisit.visitNumber} />
+        )}
+
         {/* HERO: Risk & BP Trend Chart */}
         {chartData.length > 1 && (
           <div>
@@ -203,9 +211,9 @@ const PatientDetail = () => {
                       <Activity className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <CardTitle className="text-lg">Risk & BP Trends</CardTitle>
+                      <CardTitle className="text-lg">{t('patient.riskBpTrends')}</CardTitle>
                       <p className="text-xs text-muted-foreground">
-                        {chartData.length} visits · {patient.visits[0].date} → {lastVisit.date}
+                        {chartData.length} {t('common.views')} · {patient.visits[0].date} → {lastVisit.date}
                       </p>
                     </div>
                   </div>
@@ -213,7 +221,6 @@ const PatientDetail = () => {
                 </div>
               </CardHeader>
               <CardContent className="px-2 pb-4 pt-0">
-                {/* Risk score summary bar */}
                 <div className="flex items-center justify-between mb-3 py-2 px-3 mx-2 bg-muted/60 rounded-xl">
                   <div className="text-center">
                     <p className="text-[10px] text-muted-foreground uppercase tracking-wider">First</p>
@@ -234,7 +241,6 @@ const PatientDetail = () => {
                   </div>
                 </div>
 
-                {/* Main chart — tall hero */}
                 <div className="h-80">
                   <ResponsiveContainer width="100%" height="100%">
                     <ComposedChart data={chartData} margin={{ top: 15, right: 10, bottom: 5, left: -10 }}>
@@ -256,7 +262,6 @@ const PatientDetail = () => {
                       <YAxis yAxisId="bp" orientation="right" domain={[80, 200]} tick={{ fontSize: 10 }} axisLine={false} tickLine={false} hide />
                       <Tooltip content={<CustomTooltip />} />
 
-                      {/* Zone thresholds */}
                       <ReferenceLine yAxisId="risk" y={70} stroke="hsl(354, 70%, 54%)" strokeDasharray="6 3" strokeWidth={1.5}
                         label={{ value: 'HIGH', position: 'insideTopRight', fontSize: 9, fill: 'hsl(354, 70%, 54%)', fontWeight: 700 }}
                       />
@@ -264,41 +269,13 @@ const PatientDetail = () => {
                         label={{ value: 'MODERATE', position: 'insideTopRight', fontSize: 9, fill: 'hsl(45, 100%, 51%)', fontWeight: 700 }}
                       />
 
-                      {/* Risk score area + line */}
-                      <Area
-                        yAxisId="risk"
-                        type="monotone"
-                        dataKey="score"
-                        fill="url(#riskGradient)"
-                        stroke="none"
-                      />
-                      <Area
-                        yAxisId="risk"
-                        type="monotone"
-                        dataKey="score"
-                        fill="none"
-                        stroke="url(#lineGradient)"
-                        strokeWidth={3}
-                        dot={<CustomDot />}
-                        activeDot={{ r: 10, fill: 'hsl(231, 80%, 66%)', stroke: 'white', strokeWidth: 3 }}
-                      />
-
-                      {/* BP Systolic secondary line */}
-                      <Line
-                        yAxisId="bp"
-                        type="monotone"
-                        dataKey="systolic"
-                        stroke="hsl(231, 80%, 66%)"
-                        strokeWidth={2}
-                        strokeDasharray="5 3"
-                        dot={{ r: 3, fill: 'hsl(231, 80%, 66%)', stroke: 'white', strokeWidth: 1 }}
-                        activeDot={{ r: 6 }}
-                      />
+                      <Area yAxisId="risk" type="monotone" dataKey="score" fill="url(#riskGradient)" stroke="none" />
+                      <Area yAxisId="risk" type="monotone" dataKey="score" fill="none" stroke="url(#lineGradient)" strokeWidth={3} dot={<CustomDot />} activeDot={{ r: 10, fill: 'hsl(231, 80%, 66%)', stroke: 'white', strokeWidth: 3 }} />
+                      <Line yAxisId="bp" type="monotone" dataKey="systolic" stroke="hsl(231, 80%, 66%)" strokeWidth={2} strokeDasharray="5 3" dot={{ r: 3, fill: 'hsl(231, 80%, 66%)', stroke: 'white', strokeWidth: 1 }} activeDot={{ r: 6 }} />
                     </ComposedChart>
                   </ResponsiveContainer>
                 </div>
 
-                {/* Legend */}
                 <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 mt-3 text-xs text-muted-foreground px-2">
                   <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-success" />Low (0-39)</span>
                   <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-warning" />Moderate (40-69)</span>
@@ -316,15 +293,15 @@ const PatientDetail = () => {
           <CardHeader className="pb-2">
             <div className="flex items-center gap-2">
               <User className="h-4 w-4 text-primary" />
-              <CardTitle className="text-base">Patient Info</CardTitle>
+              <CardTitle className="text-base">{t('patient.info')}</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="pt-0">
             <div className="grid grid-cols-2 gap-3 text-sm">
-              <div><span className="text-muted-foreground">Village:</span> <span className="font-medium">{patient.village}</span></div>
-              <div><span className="text-muted-foreground">Phone:</span> <span className="font-medium">{patient.phone}</span></div>
-              <div><span className="text-muted-foreground">FCHV:</span> <span className="font-medium">{patient.fchvAssigned}</span></div>
-              <div><span className="text-muted-foreground">Registered:</span> <span className="font-medium">{patient.registrationDate}</span></div>
+              <div><span className="text-muted-foreground">{t('patient.village')}:</span> <span className="font-medium">{patient.village}</span></div>
+              <div><span className="text-muted-foreground">{t('patient.phone')}:</span> <span className="font-medium">{patient.phone}</span></div>
+              <div><span className="text-muted-foreground">{t('patient.fchv')}:</span> <span className="font-medium">{patient.fchvAssigned}</span></div>
+              <div><span className="text-muted-foreground">{t('patient.registered')}:</span> <span className="font-medium">{patient.registrationDate}</span></div>
             </div>
           </CardContent>
         </Card>
@@ -335,18 +312,14 @@ const PatientDetail = () => {
             <CardHeader className="pb-2">
               <div className="flex items-center gap-2">
                 <CalendarDays className="h-4 w-4 text-primary" />
-                <CardTitle className="text-base">Visit Timeline</CardTitle>
+                <CardTitle className="text-base">{t('patient.visitTimeline')}</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="p-4 pt-0">
               <div className="overflow-x-auto">
                 <div className="flex items-center gap-0 min-w-max py-3">
                   {patient.visits.map((visit, i) => (
-                    <div
-                      key={visit.id}
-                      className="flex items-center"
-                    >
-                      {/* Animated dot */}
+                    <div key={visit.id} className="flex items-center">
                       <div
                         className="flex flex-col items-center cursor-pointer group timeline-dot-appear"
                         style={{ animationDelay: `${i * 200 + 300}ms` }}
@@ -365,7 +338,6 @@ const PatientDetail = () => {
                         <p className="text-xs text-muted-foreground">{visit.gestationalAge}wk</p>
                         <RiskBadge level={visit.riskLevel} size="sm" className="mt-1" />
                       </div>
-                      {/* Animated connecting line */}
                       {i < patient.visits.length - 1 && (
                         <div className="relative mx-1">
                           <div
@@ -396,7 +368,7 @@ const PatientDetail = () => {
             <CardHeader className="pb-2">
               <div className="flex items-center gap-2">
                 <Stethoscope className="h-4 w-4 text-primary" />
-                <CardTitle className="text-base">Symptom Trends</CardTitle>
+                <CardTitle className="text-base">{t('patient.symptomTrends')}</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="p-0">
@@ -404,7 +376,7 @@ const PatientDetail = () => {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b">
-                      <th className="text-left p-3 font-medium text-muted-foreground">Symptom</th>
+                      <th className="text-left p-3 font-medium text-muted-foreground">{t('vitals.symptom')}</th>
                       {patient.visits.map(v => (
                         <th key={v.id} className="p-3 font-medium text-muted-foreground text-center">V{v.visitNumber}</th>
                       ))}
@@ -412,7 +384,7 @@ const PatientDetail = () => {
                   </thead>
                   <tbody>
                     <tr className="border-b">
-                      <td className="p-3 font-medium">Blood Pressure</td>
+                      <td className="p-3 font-medium">{t('vitals.bp')}</td>
                       {patient.visits.map((v, i) => (
                         <td key={v.id} className="p-3 text-center">
                           <div className="flex items-center justify-center gap-1">
@@ -423,7 +395,7 @@ const PatientDetail = () => {
                       ))}
                     </tr>
                     <tr className="border-b">
-                      <td className="p-3 font-medium">Proteinuria</td>
+                      <td className="p-3 font-medium">{t('vitals.proteinuria')}</td>
                       {patient.visits.map((v, i) => (
                         <td key={v.id} className="p-3 text-center text-xs">
                           <div className="flex items-center justify-center gap-1">
@@ -437,7 +409,7 @@ const PatientDetail = () => {
                       ))}
                     </tr>
                     <tr className="border-b">
-                      <td className="p-3 font-medium">Edema</td>
+                      <td className="p-3 font-medium">{t('vitals.edema')}</td>
                       {patient.visits.map((v, i) => (
                         <td key={v.id} className="p-3 text-center text-xs">
                           <div className="flex items-center justify-center gap-1">
@@ -451,7 +423,7 @@ const PatientDetail = () => {
                       ))}
                     </tr>
                     <tr>
-                      <td className="p-3 font-medium">Headache</td>
+                      <td className="p-3 font-medium">{t('vitals.headache')}</td>
                       {patient.visits.map((v, i) => (
                         <td key={v.id} className="p-3 text-center text-xs">
                           <div className="flex items-center justify-center gap-1">
@@ -480,7 +452,7 @@ const PatientDetail = () => {
             <CardHeader className="pb-2">
               <div className="flex items-center gap-2">
                 <Brain className="h-4 w-4 text-[hsl(280,60%,50%)]" />
-                <CardTitle className="text-base">Postpartum Screening</CardTitle>
+                <CardTitle className="text-base">{t('postpartum.results')}</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="space-y-2 pt-0">
@@ -524,7 +496,7 @@ const PatientDetail = () => {
         <div className="flex flex-col gap-3 pb-6">
           <Button className="gradient-primary text-primary-foreground border-0 h-12" onClick={() => navigate(`/patients/${patient.id}/visits/new`)}>
             <Plus className="h-4 w-4 mr-2" />
-            Add New Visit
+            {t('patient.addNewVisit')}
           </Button>
           <Button
             variant="outline"
@@ -532,19 +504,19 @@ const PatientDetail = () => {
             onClick={() => setShowImageCapture(true)}
           >
             <Camera className="h-4 w-4 mr-2" />
-            Capture Clinical Image
+            {t('patient.captureImage')}
           </Button>
           <Button
             className="bg-gradient-to-r from-[hsl(280,60%,50%)] to-[hsl(320,60%,50%)] text-primary-foreground border-0 h-12"
             onClick={() => navigate(`/patients/${patient.id}/postpartum`)}
           >
             <Brain className="h-4 w-4 mr-2" />
-            Postpartum Screening
+            {t('patient.postpartumScreening')}
           </Button>
           {isHighRisk && (
             <Button className="gradient-danger text-primary-foreground border-0 h-12" onClick={() => navigate(`/patients/${patient.id}/referral`)}>
               <FileText className="h-4 w-4 mr-2" />
-              Generate Referral
+              {t('patient.generateReferral')}
             </Button>
           )}
           {patient.visits.length >= 2 && (
@@ -553,18 +525,17 @@ const PatientDetail = () => {
         </div>
       </main>
 
-      {/* Clinical Assistant FAB */}
+      {/* Clinical Assistant FAB - always visible with z-[9999] */}
       <button
-        onClick={() => setShowChat(!showChat)}
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg gradient-primary text-primary-foreground flex items-center justify-center z-50 fab-pulse btn-press"
+        onClick={() => setShowChat(prev => !prev)}
+        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg gradient-primary text-primary-foreground flex items-center justify-center z-[9999] fab-pulse btn-press"
       >
         {showChat ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
       </button>
 
       {/* Chat Window */}
       {showChat && (
-        <div className="fixed bottom-24 right-4 w-80 max-h-[420px] bg-card border border-border rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden animate-scale-in">
-          {/* Header */}
+        <div className="fixed bottom-24 right-4 w-80 max-h-[420px] bg-card border border-border rounded-2xl shadow-2xl z-[9999] flex flex-col overflow-hidden animate-scale-in">
           <div className="gradient-primary p-3 flex items-center gap-2">
             <MessageCircle className="h-4 w-4 text-primary-foreground" />
             <div className="flex-1">
@@ -574,7 +545,6 @@ const PatientDetail = () => {
             <span className="h-2 w-2 rounded-full bg-success animate-pulse" />
           </div>
 
-          {/* Messages */}
           <div className="flex-1 overflow-y-auto p-3 space-y-2 min-h-[200px] max-h-[280px]">
             {chatMessages.length === 0 && (
               <div className="text-center py-8">
@@ -596,7 +566,6 @@ const PatientDetail = () => {
             ))}
           </div>
 
-          {/* Input */}
           <div className="border-t border-border p-2 flex gap-2">
             <Input
               value={chatInput}

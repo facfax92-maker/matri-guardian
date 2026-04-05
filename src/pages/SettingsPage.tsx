@@ -9,12 +9,13 @@ import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, Globe, Palette, Bell, Wifi, HardDrive, RefreshCw, Info, HelpCircle, Shield, FileText } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { useTheme } from '@/hooks/use-theme';
+import { useI18n } from '@/lib/i18n';
 import { toast } from 'sonner';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
   const { isDark, toggle } = useTheme();
-  const [language, setLanguage] = useState('en');
+  const { language, setLanguage, t } = useI18n();
   const [syncMode, setSyncMode] = useState('auto');
   const [notifications, setNotifications] = useState({
     highRisk: true,
@@ -31,7 +32,7 @@ const SettingsPage = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-lg font-bold">Settings</h1>
+          <h1 className="text-lg font-bold">{t('settings')}</h1>
         </div>
       </div>
 
@@ -41,16 +42,16 @@ const SettingsPage = () => {
           <Card className="border-0 shadow-sm card-gradient">
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2">
-                <Palette className="h-4 w-4 text-primary" /> Preferences
+                <Palette className="h-4 w-4 text-primary" /> {t('settings.preferences')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Globe className="h-4 w-4 text-muted-foreground" />
-                  <Label>Language</Label>
+                  <Label>{t('settings.language')}</Label>
                 </div>
-                <Select value={language} onValueChange={setLanguage}>
+                <Select value={language} onValueChange={(v) => setLanguage(v as 'en' | 'ne')}>
                   <SelectTrigger className="w-[140px] h-9"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="en">English</SelectItem>
@@ -62,7 +63,7 @@ const SettingsPage = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Palette className="h-4 w-4 text-muted-foreground" />
-                  <Label>Dark Mode</Label>
+                  <Label>{t('settings.darkMode')}</Label>
                 </div>
                 <Switch checked={isDark} onCheckedChange={toggle} />
               </div>
@@ -71,13 +72,13 @@ const SettingsPage = () => {
 
               <div className="flex items-center gap-2 mb-2">
                 <Bell className="h-4 w-4 text-muted-foreground" />
-                <Label className="font-medium">Notifications</Label>
+                <Label className="font-medium">{t('settings.notifications')}</Label>
               </div>
               {[
-                { key: 'highRisk', label: 'High risk alerts' },
-                { key: 'visitReminders', label: 'Visit reminders' },
-                { key: 'referralUpdates', label: 'Referral updates' },
-                { key: 'marketing', label: 'Marketing updates' },
+                { key: 'highRisk', label: t('settings.highRiskAlerts') },
+                { key: 'visitReminders', label: t('settings.visitReminders') },
+                { key: 'referralUpdates', label: t('settings.referralUpdates') },
+                { key: 'marketing', label: t('settings.marketingUpdates') },
               ].map(n => (
                 <div key={n.key} className="flex items-center justify-between pl-6">
                   <Label className="text-sm">{n.label}</Label>
@@ -96,39 +97,39 @@ const SettingsPage = () => {
           <Card className="border-0 shadow-sm card-gradient">
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2">
-                <Wifi className="h-4 w-4 text-primary" /> Data & Sync
+                <Wifi className="h-4 w-4 text-primary" /> {t('settings.dataSync')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label>Offline Mode</Label>
+                <Label>{t('settings.offlineMode')}</Label>
                 <Select value={syncMode} onValueChange={setSyncMode}>
                   <SelectTrigger className="w-[140px] h-9"><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="auto">Auto Sync</SelectItem>
-                    <SelectItem value="manual">Manual</SelectItem>
-                    <SelectItem value="wifi">WiFi Only</SelectItem>
+                    <SelectItem value="auto">{t('common.autoSync')}</SelectItem>
+                    <SelectItem value="manual">{t('common.manual')}</SelectItem>
+                    <SelectItem value="wifi">{t('common.wifiOnly')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <HardDrive className="h-3.5 w-3.5" /> Storage Used
+                  <HardDrive className="h-3.5 w-3.5" /> {t('settings.storageUsed')}
                 </div>
                 <span className="font-medium">24.5 MB</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <RefreshCw className="h-3.5 w-3.5" /> Last Synced
+                  <RefreshCw className="h-3.5 w-3.5" /> {t('settings.lastSynced')}
                 </div>
-                <span className="font-medium">2 minutes ago</span>
+                <span className="font-medium">{t('common.minutesAgo')}</span>
               </div>
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => toast.success('Sync complete')}
+                onClick={() => toast.success(t('settings.syncComplete'))}
               >
-                <RefreshCw className="h-4 w-4 mr-2" /> Sync Now
+                <RefreshCw className="h-4 w-4 mr-2" /> {t('settings.syncNow')}
               </Button>
             </CardContent>
           </Card>
@@ -139,18 +140,18 @@ const SettingsPage = () => {
           <Card className="border-0 shadow-sm card-gradient">
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2">
-                <Info className="h-4 w-4 text-primary" /> About
+                <Info className="h-4 w-4 text-primary" /> {t('settings.about')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">App Version</span>
+                <span className="text-muted-foreground">{t('settings.appVersion')}</span>
                 <span className="font-medium">1.0.0 (Demo)</span>
               </div>
               {[
-                { icon: HelpCircle, label: 'Help & Support' },
-                { icon: Shield, label: 'Privacy Policy' },
-                { icon: FileText, label: 'Terms of Service' },
+                { icon: HelpCircle, label: t('settings.helpSupport') },
+                { icon: Shield, label: t('settings.privacyPolicy') },
+                { icon: FileText, label: t('settings.termsOfService') },
               ].map(item => (
                 <button key={item.label} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors w-full text-left">
                   <item.icon className="h-3.5 w-3.5" /> {item.label}

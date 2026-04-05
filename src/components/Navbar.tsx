@@ -1,20 +1,22 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Home, Users, Stethoscope, Moon, Sun } from 'lucide-react';
 import { useTheme } from '@/hooks/use-theme';
+import { useI18n } from '@/lib/i18n';
 import { ProfileMenu } from '@/components/ProfileMenu';
 import { Button } from '@/components/ui/button';
 import matricareLogo from '@/assets/matricare-logo.png';
-
-const navItems = [
-  { path: '/', label: 'Dashboard', icon: Home },
-  { path: '/patients', label: 'Patients', icon: Users },
-  { path: '/hospital-portal', label: 'Portal', icon: Stethoscope },
-];
 
 export function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { isDark, toggle } = useTheme();
+  const { t } = useI18n();
+
+  const navItems = [
+    { path: '/', label: t('nav.dashboard'), icon: Home },
+    { path: '/patients', label: t('nav.patients'), icon: Users },
+    { path: '/hospital-portal', label: t('nav.portal'), icon: Stethoscope },
+  ];
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
@@ -25,7 +27,7 @@ export function Navbar() {
         >
           <img src={matricareLogo} alt="MatriCare logo" className="h-10 w-auto dark-logo-adapt" />
           <span className="text-lg font-bold text-primary tracking-tight hidden sm:inline">
-            MatriCare
+            {t('app.name')}
           </span>
         </button>
 

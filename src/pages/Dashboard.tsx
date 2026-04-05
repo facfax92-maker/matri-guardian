@@ -19,9 +19,11 @@ import { DashboardSkeleton } from '@/components/DashboardSkeleton';
 import { PWAInstallBanner } from '@/components/PWAInstallBanner';
 import { OnboardingWalkthrough } from '@/components/OnboardingWalkthrough';
 import { EmptyState } from '@/components/EmptyState';
+import { useI18n } from '@/lib/i18n';
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,7 +31,6 @@ const Dashboard = () => {
   useEffect(() => {
     initStorage();
     migrateFromLocalStorage().catch(() => {});
-    // Simulate async data loading for skeleton visibility
     const timer = setTimeout(() => {
       setPatients(getPatients());
       setAlerts(getAlerts());
@@ -49,9 +50,9 @@ const Dashboard = () => {
   }, [patients]);
 
   const pieData = [
-    { name: 'Low Risk', value: riskCounts.LOW, color: 'hsl(134, 61%, 41%)' },
-    { name: 'Moderate Risk', value: riskCounts.MODERATE, color: 'hsl(45, 100%, 51%)' },
-    { name: 'High Risk', value: riskCounts.HIGH, color: 'hsl(354, 70%, 54%)' },
+    { name: t('risk.normal'), value: riskCounts.LOW, color: 'hsl(134, 61%, 41%)' },
+    { name: t('risk.moderate'), value: riskCounts.MODERATE, color: 'hsl(45, 100%, 51%)' },
+    { name: t('risk.high'), value: riskCounts.HIGH, color: 'hsl(354, 70%, 54%)' },
   ].filter(d => d.value > 0);
 
   const overdueCounts = useMemo(() => {
@@ -66,9 +67,9 @@ const Dashboard = () => {
   }, [patients]);
 
   const stats = [
-    { label: 'Active Pregnancies', value: patients.length, icon: Users, color: 'text-primary', gradient: 'card-gradient-primary' },
-    { label: 'High Risk Cases', value: riskCounts.HIGH, icon: AlertTriangle, color: 'text-danger', gradient: 'card-gradient-danger' },
-    { label: 'Overdue Visits', value: overdueCounts.total, icon: CalendarClock, color: 'text-warning', gradient: 'card-gradient-warning' },
+    { label: t('dashboard.activePregnancies'), value: patients.length, icon: Users, color: 'text-primary', gradient: 'card-gradient-primary' },
+    { label: t('dashboard.highRiskCases'), value: riskCounts.HIGH, icon: AlertTriangle, color: 'text-danger', gradient: 'card-gradient-danger' },
+    { label: t('dashboard.overdueVisits'), value: overdueCounts.total, icon: CalendarClock, color: 'text-warning', gradient: 'card-gradient-warning' },
   ];
 
   return (
@@ -90,7 +91,7 @@ const Dashboard = () => {
                 <CardContent className="p-4">
                   <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
                   <AnimatedCounter value={stat.value} className="text-2xl font-bold" />
-                  <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
+                  <p className="text-xs text-muted-foreground mt-1 leading-tight">{stat.label}</p>
                 </CardContent>
               </Card>
             ))}
@@ -103,7 +104,7 @@ const Dashboard = () => {
                 <CardHeader className="pb-0">
                   <div className="flex items-center gap-2">
                     <PieChart className="h-4 w-4 text-primary" />
-                    <CardTitle className="text-base">Risk Distribution</CardTitle>
+                    <CardTitle className="text-base">{t('dashboard.riskDistribution')}</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent className="p-4">
@@ -147,7 +148,7 @@ const Dashboard = () => {
                       ))}
                       <div className="pt-1 border-t">
                         <div className="flex items-center justify-between text-sm font-semibold">
-                          <span>Total</span>
+                          <span>{t('common.total')}</span>
                           <span>{patients.length}</span>
                         </div>
                       </div>
@@ -165,7 +166,7 @@ const Dashboard = () => {
               onClick={() => navigate('/patients')}
             >
               <Users className="h-4 w-4 mr-2" />
-              Patients
+              {t('nav.patients')}
             </Button>
             <Button
               variant="secondary"
@@ -173,7 +174,7 @@ const Dashboard = () => {
               onClick={() => navigate('/patients/new')}
             >
               <Plus className="h-4 w-4 mr-2" />
-              Register
+              {t('dashboard.register')}
             </Button>
             <Button
               variant="outline"
@@ -181,7 +182,7 @@ const Dashboard = () => {
               onClick={() => navigate('/hospital-portal')}
             >
               <Stethoscope className="h-4 w-4 mr-2" />
-              Portal
+              {t('nav.portal')}
             </Button>
           </div>
 
@@ -192,14 +193,14 @@ const Dashboard = () => {
           <div className="list-item-in" style={{ animationDelay: '450ms' }}>
             <div className="flex items-center gap-2 mb-3">
               <Bell className="h-4 w-4 text-primary" />
-              <h2 className="text-lg font-semibold">Recent Alerts</h2>
+              <h2 className="text-lg font-semibold">{t('dashboard.recentAlerts')}</h2>
             </div>
             <div className="space-y-2">
               {alerts.length === 0 ? (
                 <EmptyState
                   illustration="alerts"
-                  title="All Clear!"
-                  description="No alerts right now. Keep up the great work monitoring your patients."
+                  title={t('dashboard.allClear')}
+                  description={t('dashboard.noAlerts')}
                 />
               ) : (
                 alerts.slice(0, 3).map((alert, i) => (

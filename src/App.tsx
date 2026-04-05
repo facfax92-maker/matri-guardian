@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/use-auth";
+import { I18nProvider } from "@/lib/i18n";
 import { SplashScreen } from "@/components/SplashScreen";
 import Dashboard from "./pages/Dashboard";
 import PatientList from "./pages/PatientList";
@@ -33,6 +34,7 @@ const App = () => {
   return (
     <>
       {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+      <I18nProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />
@@ -63,6 +65,7 @@ const App = () => {
           </BrowserRouter>
         </TooltipProvider>
       </QueryClientProvider>
+      </I18nProvider>
     </>
   );
 };
