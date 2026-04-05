@@ -14,12 +14,14 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Plus, Search, Filter, ArrowUpDown, Clock, Users, AlertTriangle } from 'lucide-react';
 import { PatientListSkeleton } from '@/components/PatientListSkeleton';
+import { useI18n } from '@/lib/i18n';
 
 type SortOption = 'name' | 'ga-desc' | 'ga-asc' | 'last-visit';
 type FilterOption = 'ALL' | RiskLevel | 'OVERDUE';
 
 const PatientList = () => {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [search, setSearch] = useState('');
   const [riskFilter, setRiskFilter] = useState<FilterOption>('ALL');
@@ -78,6 +80,14 @@ const PatientList = () => {
     return counts;
   }, [patients]);
 
+  const filterLabels: Record<FilterOption, string> = {
+    ALL: t('common.all'),
+    LOW: t('risk.low'),
+    MODERATE: t('risk.moderate'),
+    HIGH: t('risk.high'),
+    OVERDUE: `⏰ ${t('overdue')}`,
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -85,7 +95,7 @@ const PatientList = () => {
         <div className="container max-w-lg mx-auto px-4 py-3">
           <div className="flex items-center gap-2 mb-4">
             <Users className="h-5 w-5 text-primary" />
-            <h1 className="text-lg font-bold">All Patients</h1>
+            <h1 className="text-lg font-bold">{t('patients.all')}</h1>
             <span className="text-sm text-muted-foreground">({patients.length})</span>
           </div>
         </div>
@@ -95,7 +105,7 @@ const PatientList = () => {
           <div className="relative input-focus-glow rounded-xl">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search patients or village..."
+              placeholder={t('patients.search')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10 rounded-xl"
@@ -120,7 +130,7 @@ const PatientList = () => {
                       : 'bg-muted text-muted-foreground border-transparent'
                   }`}
                 >
-                  {level === 'ALL' ? 'All' : level === 'OVERDUE' ? '⏰ Overdue' : level} ({riskCounts[level]})
+                  {filterLabels[level]} ({riskCounts[level]})
                 </button>
               ))}
             </div>
@@ -134,10 +144,10 @@ const PatientList = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="name">Name (A-Z)</SelectItem>
-                <SelectItem value="ga-desc">GA (Highest first)</SelectItem>
-                <SelectItem value="ga-asc">GA (Lowest first)</SelectItem>
-                <SelectItem value="last-visit">Last Visit (Recent)</SelectItem>
+                <SelectItem value="name">{t('common.sortName')}</SelectItem>
+                <SelectItem value="ga-desc">{t('common.sortGAHigh')}</SelectItem>
+                <SelectItem value="ga-asc">{t('common.sortGALow')}</SelectItem>
+                <SelectItem value="last-visit">{t('common.sortLastVisit')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -165,25 +175,25 @@ const PatientList = () => {
                           {overdueStatus === 'urgent-overdue' && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-danger-bg text-danger-foreground text-[10px] font-bold border border-danger pulse-red">
                               <AlertTriangle className="h-2.5 w-2.5" />
-                              URGENT: High Risk + Overdue
+                              {t('overdue.urgentHighRisk')}
                             </span>
                           )}
                           {overdueStatus === 'followup-overdue' && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-warning-bg text-warning-foreground text-[10px] font-semibold border border-warning">
                               <Clock className="h-2.5 w-2.5" />
-                              <span className="pulse-yellow">Follow-up Overdue</span>
+                              <span className="pulse-yellow">{t('overdue.followup')}</span>
                             </span>
                           )}
                         </div>
                         <p className="text-sm text-muted-foreground mt-0.5">
-                          {patient.age}y · {patient.gestationalAge} weeks GA
+                          {patient.age}y · {patient.gestationalAge} {t('common.weeksGA')}
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">{patient.village}</p>
                         {lastVisit && (
                           <p className="text-xs text-muted-foreground mt-1">
-                            Last visit: {lastVisit.date}
+                            {t('patients.lastVisit')}: {lastVisit.date}
                             {overdueStatus !== 'none' && (
-                              <span className="font-medium text-warning-foreground"> ({daysSince}d ago)</span>
+                              <span className="font-medium text-warning-foreground"> ({daysSince}{t('common.dAgo')})</span>
                             )}
                           </p>
                         )}
@@ -193,7 +203,7 @@ const PatientList = () => {
                         <RiskSparkline visits={patient.visits} />
                         {patient.visits.length >= 2 && getDaysSinceLastVisit(patient) > 28 && (
                           <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-warning-bg text-warning-foreground text-[10px] font-bold border border-warning">
-                            <span className="pulse-yellow">OVERDUE {getDaysSinceLastVisit(patient)}d</span>
+                            <span className="pulse-yellow">{t('overdue')} {getDaysSinceLastVisit(patient)}d</span>
                           </span>
                         )}
                       </div>
@@ -205,9 +215,9 @@ const PatientList = () => {
             {processed.length === 0 && (
               <EmptyState
                 illustration="patients"
-                title="No patients found"
-                description={search || riskFilter !== 'ALL' ? "Try adjusting your search or filters" : "Register your first patient to get started"}
-                actionLabel={!search && riskFilter === 'ALL' ? "Register Patient" : undefined}
+                title={t('patients.noFound')}
+                description={search || riskFilter !== 'ALL' ? t('patients.noFound') : t('patients.registerFirst')}
+                actionLabel={!search && riskFilter === 'ALL' ? t('patients.registerPatient') : undefined}
                 onAction={!search && riskFilter === 'ALL' ? () => navigate('/patients/new') : undefined}
               />
             )}

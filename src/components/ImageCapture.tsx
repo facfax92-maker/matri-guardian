@@ -7,7 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Camera, Upload, X, Check, Shield, AlertTriangle } from 'lucide-react';
+import { Camera, Upload, X, Check, Shield, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 import { useToast } from '@/hooks/use-toast';
 
@@ -21,10 +22,11 @@ interface ImageCaptureProps {
 
 export function ImageCapture({ patientId, patientName, visitId, onCapture, onClose }: ImageCaptureProps) {
   const { toast } = useToast();
+  const { t } = useI18n();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
-  const [step, setStep] = useState<'consent' | 'capture' | 'review'>('consent');
+  const [step, setStep] = useState<'consent' | 'capture' | 'review' | 'success'>('consent');
   const [consentGiven, setConsentGiven] = useState(false);
   const [category, setCategory] = useState<string>('other');
   const [notes, setNotes] = useState('');
@@ -79,9 +81,9 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
 
       await addToSyncQueue('image', id, 'create', { patientId, category }, 'medium');
 
-      toast({ title: 'Image saved', description: 'Stored locally. Will sync when online.' });
+      toast({ title: t('image.saved'), description: t('image.storedLocally') });
+      setStep('success');
       onCapture?.(id);
-      onClose?.();
     } catch (err) {
       toast({ title: 'Error saving image', description: 'Please try again', variant: 'destructive' });
     } finally {
@@ -95,7 +97,7 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Camera className="h-4 w-4 text-primary" />
-            <CardTitle className="text-base">Capture Image</CardTitle>
+            <CardTitle className="text-base">{t('image.capture')}</CardTitle>
           </div>
           {onClose && (
             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onClose}>
@@ -112,10 +114,9 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
                 <div className="flex items-start gap-3">
                   <Shield className="h-5 w-5 text-warning-foreground shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-semibold text-warning-foreground text-sm">Patient Consent Required</p>
+                    <p className="font-semibold text-warning-foreground text-sm">{t('image.consentRequired')}</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Before capturing any images, you must obtain verbal consent from <strong>{patientName}</strong>. 
-                      Explain that images will be used for clinical documentation only, stored securely, and auto-deleted after 90 days.
+                      {t('image.consentText')} <strong>{patientName}</strong>. 
                     </p>
                   </div>
                 </div>
@@ -128,14 +129,13 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
                   onCheckedChange={(c) => setConsentGiven(!!c)}
                 />
                 <Label htmlFor="consent" className="text-sm leading-tight">
-                  I confirm that the patient has given verbal consent for clinical photography.
-                  Patient understands the purpose, storage, and deletion policy.
+                  {t('image.consentConfirm')}
                 </Label>
               </div>
 
               <Button className="w-full" disabled={!consentGiven} onClick={() => setStep('capture')}>
                 <Check className="h-4 w-4 mr-2" />
-                Continue to Capture
+                {t('image.continueTo')}
               </Button>
             </div>
           )}
@@ -144,7 +144,7 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
           {step === 'capture' && (
             <div className="space-y-4">
               <div>
-                <Label>Image Category</Label>
+                <Label>{t('image.category')}</Label>
                 <Select value={category} onValueChange={setCategory}>
                   <SelectTrigger className="mt-1">
                     <SelectValue />
@@ -166,7 +166,7 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
                   onClick={() => cameraInputRef.current?.click()}
                 >
                   <Camera className="h-8 w-8 text-primary" />
-                  <span className="text-xs">Take Photo</span>
+                  <span className="text-xs">{t('image.takePhoto')}</span>
                 </Button>
                 <Button
                   variant="outline"
@@ -174,7 +174,7 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <Upload className="h-8 w-8 text-muted-foreground" />
-                  <span className="text-xs">Upload File</span>
+                  <span className="text-xs">{t('image.uploadFile')}</span>
                 </Button>
               </div>
 
@@ -195,7 +195,7 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
               />
 
               <Button variant="ghost" className="w-full" onClick={() => setStep('consent')}>
-                Back
+                {t('common.back')}
               </Button>
             </div>
           )}
@@ -221,7 +221,7 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
               </div>
 
               <div>
-                <Label>Notes (optional)</Label>
+                <Label>{t('image.notes')}</Label>
                 <Textarea
                   value={notes}
                   onChange={e => setNotes(e.target.value)}
@@ -233,12 +233,26 @@ export function ImageCapture({ patientId, patientName, visitId, onCapture, onClo
 
               <div className="flex gap-2">
                 <Button variant="outline" className="flex-1" onClick={() => { setPreview(null); setStep('capture'); }}>
-                  Retake
+                  {t('image.retake')}
                 </Button>
                 <Button className="flex-1 gradient-primary text-primary-foreground border-0" disabled={saving} onClick={handleSave}>
-                  {saving ? 'Saving...' : 'Save Image'}
+                  {saving ? t('image.saving') : t('image.save')}
                 </Button>
               </div>
+            </div>
+          )}
+
+          {/* Step 4: Success */}
+          {step === 'success' && (
+            <div className="text-center py-6 space-y-3">
+              <div className="h-16 w-16 rounded-full bg-success-bg border-2 border-success flex items-center justify-center mx-auto">
+                <CheckCircle2 className="h-8 w-8 text-success" />
+              </div>
+              <p className="text-sm font-bold text-success-foreground">{t('image.linked')}</p>
+              <p className="text-xs text-muted-foreground">{t('image.storedLocally')}</p>
+              <Button variant="outline" className="mt-2" onClick={onClose}>
+                {t('common.back')}
+              </Button>
             </div>
           )}
         </>
