@@ -34,6 +34,7 @@ const App = () => {
   return (
     <>
       {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+      <I18nProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />
