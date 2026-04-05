@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getPatients, initStorage } from '@/lib/storage';
 import { Patient, RiskLevel } from '@/lib/types';
 import { RiskBadge } from '@/components/RiskBadge';
+import { RiskSparkline } from '@/components/RiskSparkline';
 import { getOverdueStatus, getDaysSinceLastVisit } from '@/lib/visit-utils';
 import { Navbar } from '@/components/Navbar';
 import { PageTransition } from '@/components/PageTransition';
