@@ -23,7 +23,7 @@ import { useI18n } from '@/lib/i18n';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { t } = useI18n();
+  const { t, tName } = useI18n();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -215,7 +215,7 @@ const Dashboard = () => {
                         alert.type === 'escalation' ? 'bg-danger' : 'bg-warning'
                       }`} />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium">{alert.patientName}</p>
+                        <p className="text-sm font-medium">{tName(alert.patientName)}</p>
                         <p className="text-xs text-muted-foreground truncate">{alert.message}</p>
                       </div>
                       <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
