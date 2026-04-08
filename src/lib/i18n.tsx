@@ -123,6 +123,39 @@ const translations: Record<string, Record<Language, string>> = {
   'settings.privacyPolicy': { en: 'Privacy Policy', ne: 'गोपनीयता नीति' },
   'settings.termsOfService': { en: 'Terms of Service', ne: 'सेवा सर्तहरू' },
 
+  // Patient name translations
+  'name.Sita Sharma': { en: 'Sita Sharma', ne: 'सीता शर्मा' },
+  'name.Maya Tamang': { en: 'Maya Tamang', ne: 'माया तामाङ' },
+  'name.Kamala Rai': { en: 'Kamala Rai', ne: 'कमला राई' },
+  'name.Priya Thapa': { en: 'Priya Thapa', ne: 'प्रिया थपा' },
+
+  // Hospital Portal / Health Ministry
+  'portal.title': { en: 'Health Ministry Dashboard', ne: 'स्वास्थ्य मन्त्रालय ड्यासबोर्ड' },
+  'portal.activeHighRisk': { en: 'Active High-Risk Cases', ne: 'सक्रिय उच्च-जोखिम केसहरू' },
+  'portal.pendingReferrals': { en: 'Pending Referrals', ne: 'विचाराधीन प्रेषणहरू' },
+  'portal.volunteerSync': { en: 'Volunteer Sync Status', ne: 'स्वयंसेविका सिंक स्थिति' },
+  'portal.recentAlerts': { en: 'Recent Alerts', ne: 'हालका सूचनाहरू' },
+  'portal.active': { en: 'Active', ne: 'सक्रिय' },
+  'portal.urgent': { en: 'Urgent', ne: 'अत्यावश्यक' },
+  'portal.discharged': { en: 'Discharged', ne: 'डिस्चार्ज' },
+  'portal.updateStatus': { en: 'Update Status', ne: 'स्थिति अपडेट' },
+  'portal.discharge': { en: 'Discharge', ne: 'डिस्चार्ज' },
+  'portal.noActive': { en: 'No active referrals', ne: 'कुनै सक्रिय प्रेषण छैन' },
+  'portal.noUrgent': { en: 'No urgent referrals', ne: 'कुनै अत्यावश्यक प्रेषण छैन' },
+  'portal.noDischarged': { en: 'No discharged referrals yet', ne: 'अहिलेसम्म डिस्चार्ज प्रेषण छैन' },
+  'portal.loading': { en: 'Loading referrals...', ne: 'प्रेषणहरू लोड हुँदैछ...' },
+
+  // Export referral
+  'export.title': { en: 'Export Referral Package', ne: 'प्रेषण प्याकेज निर्यात' },
+  'export.share': { en: 'Share via WhatsApp', ne: 'WhatsApp मार्फत साझा गर्नुहोस्' },
+  'export.copy': { en: 'Copy to Clipboard', ne: 'क्लिपबोर्डमा कपी गर्नुहोस्' },
+  'export.copied': { en: 'Copied!', ne: 'कपी भयो!' },
+  'export.sms': { en: 'Share via SMS', ne: 'SMS मार्फत साझा गर्नुहोस्' },
+
+  // Offline status
+  'offline.localMode': { en: 'Local Mode Active', ne: 'स्थानीय मोड सक्रिय' },
+  'offline.pendingSync': { en: 'Pending Sync', ne: 'सिंक बाँकी' },
+
   // Common
   'common.back': { en: 'Back', ne: 'पछाडि' },
   'common.all': { en: 'All', ne: 'सबै' },
@@ -144,12 +177,14 @@ interface I18nContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: (key: string) => string;
+  tName: (name: string) => string;
 }
 
 const I18nContext = createContext<I18nContextType>({
   language: 'en',
   setLanguage: () => {},
   t: (key: string) => key,
+  tName: (name: string) => name,
 });
 
 export function I18nProvider({ children }: { children: ReactNode }) {
@@ -167,8 +202,13 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     return translations[key]?.[language] || translations[key]?.en || key;
   }, [language]);
 
+  const tName = useCallback((name: string): string => {
+    const key = `name.${name}`;
+    return translations[key]?.[language] || name;
+  }, [language]);
+
   return (
-    <I18nContext.Provider value={{ language, setLanguage, t }}>
+    <I18nContext.Provider value={{ language, setLanguage, t, tName }}>
       {children}
     </I18nContext.Provider>
   );

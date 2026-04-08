@@ -15,21 +15,24 @@ import { Navbar } from '@/components/Navbar';
 import { useI18n } from '@/lib/i18n';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User, Brain, ShieldAlert, CheckCircle2, Camera, MessageCircle, Send, X, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Plus, FileText, ChevronRight, TrendingUp, TrendingDown, Minus, AlertTriangle, Activity, CalendarDays, Stethoscope, User, Brain, ShieldAlert, CheckCircle2, Camera, MessageCircle, Send, X, ExternalLink, Share2, Copy, Check } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Area, ComposedChart, Tooltip, Line } from 'recharts';
 
 
 const PatientDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { t } = useI18n();
+  const { t, tName } = useI18n();
   const [patient, setPatient] = useState<Patient | null>(null);
   const [ppVisits, setPpVisits] = useState<PostpartumVisit[]>([]);
   const [showImageCapture, setShowImageCapture] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [chatInput, setChatInput] = useState('');
   const [chatMessages, setChatMessages] = useState<{role: 'user' | 'ai'; text: string}[]>([]);
+  const [showExport, setShowExport] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     initStorage();
@@ -51,9 +54,10 @@ const PatientDetail = () => {
 
   // Mock AI responses (kept in English as specified)
   const mockAIResponses: Record<string, string> = {
-    'explain g2 p0': 'Retrieved from WHO Guidelines: G2 P0 means 2 pregnancies and 0 viable births. This indicates a history of pregnancy loss and flags the patient as High Risk.',
-    'what is preeclampsia': 'Retrieved from WHO Guidelines: Preeclampsia is a pregnancy complication characterized by high blood pressure (≥140/90 mmHg) and proteinuria after 20 weeks of gestation. It can lead to eclampsia if untreated.',
+    'explain g2 p0': 'Retrieved from WHO Guidelines: G2 (Gravida 2) means 2 pregnancies. P0 (Para 0) means 0 births reaching viability. This indicates a history of pregnancy loss and flags this pregnancy as high-risk.',
+    'what is preeclampsia': 'Preeclampsia is a serious blood pressure disorder that can happen after the 20th week of pregnancy. It can cause organ damage and is a leading cause of maternal mortality if not caught early.',
     'when to refer': 'Retrieved from WHO Guidelines: Refer immediately if systolic BP ≥160 mmHg, diastolic ≥110 mmHg, proteinuria ≥2+, severe headache, visual disturbances, or epigastric pain. Do not delay transport.',
+    'emergency signs': 'Look for severe headache, blurred vision, upper belly pain, and sudden swelling in the face or hands. These are danger signs that require immediate referral.',
   };
 
   const handleChatSend = () => {
@@ -144,7 +148,7 @@ const PatientDetail = () => {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-lg font-bold">{patient.name}</h1>
+            <h1 className="text-lg font-bold">{tName(patient.name)}</h1>
             <p className="text-sm text-muted-foreground">
               {patient.age}y · G{patient.gravida}P{patient.para} · {patient.gestationalAge}wk
             </p>
@@ -494,6 +498,16 @@ const PatientDetail = () => {
 
         {/* Actions */}
         <div className="flex flex-col gap-3 pb-6">
+          {/* Export Referral Package button */}
+          {lastVisit && (
+            <Button
+              className="bg-gradient-to-r from-primary to-[hsl(200,80%,50%)] text-primary-foreground border-0 h-12"
+              onClick={() => setShowExport(true)}
+            >
+              <Share2 className="h-4 w-4 mr-2" />
+              {t('export.title')}
+            </Button>
+          )}
           <Button className="gradient-primary text-primary-foreground border-0 h-12" onClick={() => navigate(`/patients/${patient.id}/visits/new`)}>
             <Plus className="h-4 w-4 mr-2" />
             {t('patient.addNewVisit')}
@@ -524,6 +538,57 @@ const PatientDetail = () => {
           )}
         </div>
       </main>
+
+      {/* Export Referral Modal */}
+      {lastVisit && (() => {
+        const symptoms = [
+          lastVisit.edema !== 'None' ? `Edema: ${lastVisit.edema}` : null,
+          lastVisit.headache !== 'None' ? `Headache: ${lastVisit.headache}` : null,
+          lastVisit.visualDisturbances ? 'Visual Disturbances' : null,
+          lastVisit.proteinuria !== 'Negative' ? `Proteinuria: ${lastVisit.proteinuria}` : null,
+        ].filter(Boolean).join(', ') || 'None noted';
+        const exportText = `MATRICARE REFERRAL: Patient: ${patient.name}. Risk Score: ${lastVisit.riskScore}/100 (${lastVisit.riskLevel}). History: G${patient.gravida} P${patient.para}. BP: ${lastVisit.systolic}/${lastVisit.diastolic}. Symptoms: ${symptoms}. Images attached in portal. Please prioritize for triage.`;
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(exportText)}`;
+        const smsUrl = `sms:?body=${encodeURIComponent(exportText)}`;
+
+        return (
+          <Dialog open={showExport} onOpenChange={setShowExport}>
+            <DialogContent className="max-w-sm">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Share2 className="h-4 w-4 text-primary" />
+                  {t('export.title')}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="bg-muted rounded-xl p-3 text-xs leading-relaxed font-mono">
+                {exportText}
+              </div>
+              <div className="flex flex-col gap-2">
+                <Button className="h-10 bg-[hsl(142,70%,40%)] hover:bg-[hsl(142,70%,35%)] text-white" onClick={() => window.open(whatsappUrl, '_blank')}>
+                  <Send className="h-4 w-4 mr-2" />
+                  {t('export.share')}
+                </Button>
+                <Button variant="outline" className="h-10" onClick={() => window.open(smsUrl, '_blank')}>
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  {t('export.sms')}
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="h-10"
+                  onClick={() => {
+                    navigator.clipboard.writeText(exportText);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                >
+                  {copied ? <Check className="h-4 w-4 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
+                  {copied ? t('export.copied') : t('export.copy')}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        );
+      })()}
 
       {/* Clinical Assistant FAB - always visible with z-[9999] */}
       <button

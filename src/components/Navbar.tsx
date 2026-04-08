@@ -1,16 +1,27 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, Users, Stethoscope, Moon, Sun } from 'lucide-react';
+import { Home, Users, Stethoscope, Moon, Sun, CloudOff } from 'lucide-react';
 import { useTheme } from '@/hooks/use-theme';
 import { useI18n } from '@/lib/i18n';
 import { ProfileMenu } from '@/components/ProfileMenu';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import matricareLogo from '@/assets/matricare-logo.png';
+import { useState, useEffect } from 'react';
 
 export function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { isDark, toggle } = useTheme();
   const { t } = useI18n();
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const on = () => setIsOnline(true);
+    const off = () => setIsOnline(false);
+    window.addEventListener('online', on);
+    window.addEventListener('offline', off);
+    return () => { window.removeEventListener('online', on); window.removeEventListener('offline', off); };
+  }, []);
 
   const navItems = [
     { path: '/', label: t('nav.dashboard'), icon: Home },
@@ -50,6 +61,14 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {/* Offline Status Indicator */}
+          {!isOnline && (
+            <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-warning/15 border border-warning/30">
+              <CloudOff className="h-3.5 w-3.5 text-warning" />
+              <span className="text-[10px] font-semibold text-warning hidden sm:inline">{t('offline.localMode')}</span>
+              <Badge variant="secondary" className="h-4 text-[9px] px-1.5 py-0">{t('offline.pendingSync')}: 4</Badge>
+            </div>
+          )}
           <button
             onClick={toggle}
             className="p-2 rounded-full bg-muted hover:bg-accent transition-colors duration-150"

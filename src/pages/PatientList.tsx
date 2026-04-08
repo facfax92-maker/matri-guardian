@@ -21,7 +21,7 @@ type FilterOption = 'ALL' | RiskLevel | 'OVERDUE';
 
 const PatientList = () => {
   const navigate = useNavigate();
-  const { t } = useI18n();
+  const { t, tName } = useI18n();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [search, setSearch] = useState('');
   const [riskFilter, setRiskFilter] = useState<FilterOption>('ALL');
@@ -171,7 +171,7 @@ const PatientList = () => {
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="font-semibold">{patient.name}</h3>
+                          <h3 className="font-semibold">{tName(patient.name)}</h3>
                           {overdueStatus === 'urgent-overdue' && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-danger-bg text-danger-foreground text-[10px] font-bold border border-danger pulse-red">
                               <AlertTriangle className="h-2.5 w-2.5" />
