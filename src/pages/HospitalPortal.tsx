@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/use-auth';
+import { useI18n } from '@/lib/i18n';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -17,7 +18,8 @@ import { Navbar } from '@/components/Navbar';
 import {
   ArrowLeft, Clock, CheckCircle2, Stethoscope, FileText,
   Send, MessageSquare, Activity, AlertTriangle, User,
-  Building2, Ambulance, ClipboardList, LogOut, Moon, Sun
+  Building2, Ambulance, ClipboardList, LogOut, Moon, Sun,
+  ShieldAlert, RefreshCw, Users, ChevronRight
 } from 'lucide-react';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -70,6 +72,7 @@ const statusConfig: Record<string, { label: string; icon: typeof Clock; color: s
 const HospitalPortal = () => {
   const { profile, signOut } = useAuth();
   const { isDark, toggle } = useTheme();
+  const { t, tName } = useI18n();
   const navigate = useNavigate();
   const [referrals, setReferrals] = useState<Referral[]>([]);
   const [updates, setUpdates] = useState<Record<string, ReferralUpdate[]>>({});
@@ -320,7 +323,7 @@ const HospitalPortal = () => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Stethoscope className="h-5 w-5 text-primary" />
-            <h1 className="text-lg font-bold">Hospital Portal</h1>
+            <h1 className="text-lg font-bold">{t('portal.title')}</h1>
           </div>
           <div className="flex items-center gap-2">
             <button onClick={signOut} className="p-2 rounded-full bg-muted hover:bg-accent transition-colors duration-150">
@@ -332,41 +335,68 @@ const HospitalPortal = () => {
       </div>
 
       <main className="container max-w-2xl mx-auto px-4 py-6 space-y-6">
-        {/* Stats */}
+        {/* Health Ministry Metric Cards */}
         <div className="grid grid-cols-3 gap-3">
           {[
-            { label: 'Active', value: activeReferrals.length, icon: Activity, gradient: 'card-gradient-primary' },
-            { label: 'Urgent', value: urgentReferrals.length, icon: AlertTriangle, gradient: 'card-gradient-danger' },
-            { label: 'Discharged', value: dischargedReferrals.length, icon: CheckCircle2, gradient: 'card-gradient-success' },
+            { label: t('portal.activeHighRisk'), value: 14, icon: ShieldAlert, gradient: 'card-gradient-danger', color: 'text-danger' },
+            { label: t('portal.pendingReferrals'), value: 6, icon: Clock, gradient: 'card-gradient-warning', color: 'text-warning' },
+            { label: t('portal.volunteerSync'), value: '92%', icon: RefreshCw, gradient: 'card-gradient-primary', color: 'text-primary', subtitle: 'Active' },
           ].map((stat, i) => (
-            <div key={stat.label}>
+            <div key={i}>
               <Card className={`text-center ${stat.gradient} border-0 shadow-sm`}>
                 <CardContent className="p-4">
-                  <stat.icon className="h-5 w-5 mx-auto mb-1 text-muted-foreground" />
+                  <stat.icon className={`h-5 w-5 mx-auto mb-1 ${stat.color}`} />
                   <p className="text-2xl font-bold">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground">{stat.label}</p>
+                  <p className="text-[10px] text-muted-foreground leading-tight mt-1">{stat.label}</p>
                 </CardContent>
               </Card>
             </div>
           ))}
         </div>
 
-        {/* Referral Tabs */}
+        {/* Recent Alerts - mock data for demo */}
+        <Card className="card-gradient border-0 shadow-sm">
+          <CardHeader className="pb-2">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-danger" />
+              <CardTitle className="text-base">{t('portal.recentAlerts')}</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-2 pt-0">
+            {[
+              { name: 'Sita Sharma', risk: 'HIGH', score: 85 },
+              { name: 'Kamala Rai', risk: 'MODERATE', score: 50 },
+              { name: 'Priya Thapa', risk: 'HIGH', score: 78 },
+            ].map((alert, i) => (
+              <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-muted/50 hover:bg-muted transition-colors">
+                <div className="flex items-center gap-2">
+                  <User className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium">{tName(alert.name)}</span>
+                </div>
+                <Badge variant={alert.risk === 'HIGH' ? 'destructive' : 'secondary'} className="text-[10px]">
+                  {alert.risk === 'HIGH' ? t('risk.high') : t('risk.moderate')} · {alert.score}
+                </Badge>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* Existing Referral Tabs */}
         <Tabs defaultValue="active" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="active">Active ({activeReferrals.length})</TabsTrigger>
-            <TabsTrigger value="urgent">Urgent ({urgentReferrals.length})</TabsTrigger>
-            <TabsTrigger value="discharged">Discharged ({dischargedReferrals.length})</TabsTrigger>
+            <TabsTrigger value="active">{t('portal.active')} ({activeReferrals.length})</TabsTrigger>
+            <TabsTrigger value="urgent">{t('portal.urgent')} ({urgentReferrals.length})</TabsTrigger>
+            <TabsTrigger value="discharged">{t('portal.discharged')} ({dischargedReferrals.length})</TabsTrigger>
           </TabsList>
 
           <TabsContent value="active" className="space-y-3 mt-4">
             {loading ? (
-              <p className="text-center text-muted-foreground py-8">Loading referrals...</p>
+              <p className="text-center text-muted-foreground py-8">{t('portal.loading')}</p>
             ) : activeReferrals.length === 0 ? (
               <Card className="card-gradient border-0">
                 <CardContent className="py-8 text-center text-muted-foreground">
                   <CheckCircle2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">No active referrals</p>
+                  <p className="text-sm">{t('portal.noActive')}</p>
                 </CardContent>
               </Card>
             ) : (
@@ -379,7 +409,7 @@ const HospitalPortal = () => {
               <Card className="card-gradient border-0">
                 <CardContent className="py-8 text-center text-muted-foreground">
                   <CheckCircle2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">No urgent referrals</p>
+                  <p className="text-sm">{t('portal.noUrgent')}</p>
                 </CardContent>
               </Card>
             ) : (
@@ -392,7 +422,7 @@ const HospitalPortal = () => {
               <Card className="card-gradient border-0">
                 <CardContent className="py-8 text-center text-muted-foreground">
                   <FileText className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">No discharged referrals yet</p>
+                  <p className="text-sm">{t('portal.noDischarged')}</p>
                 </CardContent>
               </Card>
             ) : (
