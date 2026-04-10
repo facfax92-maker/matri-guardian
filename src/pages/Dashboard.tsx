@@ -82,19 +82,27 @@ const Dashboard = () => {
           {isLoading ? <DashboardSkeleton /> : <>
           {/* Stats */}
           <div className="grid grid-cols-3 gap-3">
-            {stats.map((stat, i) => (
-              <Card
-                key={stat.label}
-                className={`text-center ${stat.gradient} border-0 shadow-sm card-hover list-item-in`}
-                style={{ animationDelay: `${i * 80}ms` }}
-              >
-                <CardContent className="p-4">
-                  <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
-                  <AnimatedCounter value={stat.value} className="text-2xl font-bold" />
-                  <p className="text-xs text-muted-foreground mt-1 leading-tight">{stat.label}</p>
-                </CardContent>
-              </Card>
-            ))}
+            {stats.map((stat, i) => {
+              const filterMap: Record<string, string> = {
+                [t('dashboard.activePregnancies')]: 'ALL',
+                [t('dashboard.highRiskCases')]: 'HIGH',
+                [t('dashboard.overdueVisits')]: 'OVERDUE',
+              };
+              return (
+                <Card
+                  key={stat.label}
+                  className={`text-center ${stat.gradient} border-0 shadow-sm card-hover list-item-in cursor-pointer`}
+                  style={{ animationDelay: `${i * 80}ms` }}
+                  onClick={() => navigate(`/patients?filter=${filterMap[stat.label] || 'ALL'}`)}
+                >
+                  <CardContent className="p-4">
+                    <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
+                    <AnimatedCounter value={stat.value} className="text-2xl font-bold" />
+                    <p className="text-xs text-muted-foreground mt-1 leading-tight underline decoration-dotted underline-offset-2">{stat.label}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
 
           {/* Risk Distribution Chart */}
@@ -120,13 +128,23 @@ const Dashboard = () => {
                             outerRadius={55}
                             paddingAngle={4}
                             dataKey="value"
-                            strokeWidth={0}
+                            stroke="white"
+                            strokeWidth={2}
                             isAnimationActive={true}
                             animationDuration={800}
                             animationEasing="ease-out"
+                            style={{ cursor: 'pointer' }}
+                            onClick={(_: any, index: number) => {
+                              const filterKeys = ['LOW', 'MODERATE', 'HIGH'];
+                              const actualIndex = pieData[index] ? filterKeys.find(k => {
+                                const nameMap: Record<string, string> = { LOW: t('risk.normal'), MODERATE: t('risk.moderate'), HIGH: t('risk.high') };
+                                return nameMap[k] === pieData[index].name;
+                              }) : 'ALL';
+                              navigate(`/patients?filter=${actualIndex || 'ALL'}`);
+                            }}
                           >
                             {pieData.map((entry, idx) => (
-                              <Cell key={idx} fill={entry.color} />
+                              <Cell key={idx} fill={entry.color} className="drop-shadow-sm" />
                             ))}
                           </Pie>
                           <Tooltip
@@ -137,15 +155,26 @@ const Dashboard = () => {
                       </ResponsiveContainer>
                     </div>
                     <div className="flex-1 space-y-2">
-                      {pieData.map(d => (
-                        <div key={d.name} className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <span className="h-3 w-3 rounded-full" style={{ background: d.color }} />
-                            <span className="text-sm">{d.name}</span>
+                      {pieData.map(d => {
+                        const riskFilterMap: Record<string, string> = {
+                          [t('risk.normal')]: 'LOW',
+                          [t('risk.moderate')]: 'MODERATE',
+                          [t('risk.high')]: 'HIGH',
+                        };
+                        return (
+                          <div
+                            key={d.name}
+                            className="flex items-center justify-between cursor-pointer hover:bg-muted/50 rounded-lg px-1 py-0.5 transition-colors"
+                            onClick={() => navigate(`/patients?filter=${riskFilterMap[d.name] || 'ALL'}`)}
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="h-3 w-3 rounded-full" style={{ background: d.color }} />
+                              <span className="text-sm">{d.name}</span>
+                            </div>
+                            <span className="text-sm font-bold">{d.value}</span>
                           </div>
-                          <span className="text-sm font-bold">{d.value}</span>
-                        </div>
-                      ))}
+                        );
+                      })}
                       <div className="pt-1 border-t">
                         <div className="flex items-center justify-between text-sm font-semibold">
                           <span>{t('common.total')}</span>

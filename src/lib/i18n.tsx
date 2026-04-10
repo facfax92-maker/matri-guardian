@@ -42,7 +42,15 @@ const translations: Record<string, Record<Language, string>> = {
   // Overdue
   'overdue': { en: 'OVERDUE', ne: 'म्याद नाघेको' },
   'overdue.followup': { en: 'Follow-up Overdue', ne: 'फलो-अप म्याद नाघेको' },
-  'overdue.urgentHighRisk': { en: 'URGENT: High Risk + Overdue', ne: 'अत्यावश्यक: उच्च जोखिम + म्याद नाघेको' },
+  'overdue.urgentHighRisk': { en: 'URGENT: High Risk Alert & Urgent Follow-up', ne: 'अत्यावश्यक: उच्च जोखिम अलर्ट र तुरुन्तै फलो-अप' },
+
+  // Patient card fields (Nepali localized)
+  'patient.age': { en: 'Age', ne: 'उमेर' },
+  'patient.years': { en: 'y', ne: 'वर्ष' },
+  'patient.pregnancy': { en: 'Pregnancy', ne: 'गर्भावस्था' },
+  'patient.weeks': { en: 'weeks', ne: 'हप्ता' },
+  'patient.address': { en: 'Address', ne: 'ठेगाना' },
+  'patient.daysAgo': { en: 'days ago', ne: 'दिन अघि' },
 
   // Patient detail
   'patient.info': { en: 'Patient Info', ne: 'बिरामी जानकारी' },
