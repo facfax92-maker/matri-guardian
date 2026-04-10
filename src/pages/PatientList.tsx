@@ -164,7 +164,7 @@ const PatientList = () => {
                 <Card
                   key={patient.id}
                   className={`cursor-pointer card-hover card-gradient border-0 shadow-sm list-item-in ${
-                    overdueStatus === 'urgent-overdue' ? 'ring-2 ring-danger/50' : ''
+                    overdueStatus === 'urgent-overdue' ? 'ring-2 ring-danger/50 pulse-red' : ''
                   }`}
                   style={{ animationDelay: `${i * 50}ms` }}
                   onClick={() => navigate(`/patients/${patient.id}`)}
