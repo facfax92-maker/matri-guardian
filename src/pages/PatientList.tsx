@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getPatients, initStorage } from '@/lib/storage';
 import { Patient, RiskLevel } from '@/lib/types';
 import { RiskBadge } from '@/components/RiskBadge';
@@ -21,10 +21,12 @@ type FilterOption = 'ALL' | RiskLevel | 'OVERDUE';
 
 const PatientList = () => {
   const navigate = useNavigate();
-  const { t, tName } = useI18n();
+  const [searchParams] = useSearchParams();
+  const { t, tName, language } = useI18n();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [search, setSearch] = useState('');
-  const [riskFilter, setRiskFilter] = useState<FilterOption>('ALL');
+  const initialFilter = (searchParams.get('filter') as FilterOption) || 'ALL';
+  const [riskFilter, setRiskFilter] = useState<FilterOption>(initialFilter);
   const [sortBy, setSortBy] = useState<SortOption>('name');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -186,16 +188,31 @@ const PatientList = () => {
                           )}
                         </div>
                         <p className="text-sm text-muted-foreground mt-0.5">
-                          {patient.age}y · {patient.gestationalAge} {t('common.weeksGA')}
+                          {language === 'ne' 
+                            ? `${t('patient.age')}: ${patient.age} ${t('patient.years')} | ${t('patient.pregnancy')}: ${patient.gestationalAge} ${t('patient.weeks')} | ${t('patient.address')}: ${patient.village}`
+                            : `${patient.age}y · ${patient.gestationalAge} ${t('common.weeksGA')}`
+                          }
                         </p>
-                        <p className="text-xs text-muted-foreground mt-1">{patient.village}</p>
-                        {lastVisit && (
+                        {language === 'ne' && lastVisit && (
                           <p className="text-xs text-muted-foreground mt-1">
                             {t('patients.lastVisit')}: {lastVisit.date}
                             {overdueStatus !== 'none' && (
-                              <span className="font-medium text-warning-foreground"> ({daysSince}{t('common.dAgo')})</span>
+                              <span className="font-medium text-warning-foreground"> ({daysSince} {t('patient.daysAgo')})</span>
                             )}
                           </p>
+                        )}
+                        {language === 'en' && (
+                          <>
+                            <p className="text-xs text-muted-foreground mt-1">{patient.village}</p>
+                            {lastVisit && (
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {t('patients.lastVisit')}: {lastVisit.date}
+                                {overdueStatus !== 'none' && (
+                                  <span className="font-medium text-warning-foreground"> ({daysSince}{t('common.dAgo')})</span>
+                                )}
+                              </p>
+                            )}
+                          </>
                         )}
                       </div>
                       <div className="flex flex-col items-end gap-1 shrink-0 ml-3">
